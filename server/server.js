@@ -14,7 +14,7 @@ const app = express()
   .set('view engine', 'ejs')
   .set('views', path.join(__dirname, 'views'))
   .get('/', getScoreBoard)
-  .post('/', postScore)
+  .post('/:chipid', postScore)
   .listen(process.env.PORT || 3000, onListen);
 
 const io = new Socket(app);
@@ -24,6 +24,7 @@ function getScoreBoard(req, res) {
 }
 
 function postScore(req, res) {
+  console.log(req.params.chipid);
   if (
     // player 1 score
     true
@@ -33,6 +34,7 @@ function postScore(req, res) {
     player2++;
   }
   io.emit('score', {player1, player2});
+  res.redirect('/');
 }
 
 function onListen() {
