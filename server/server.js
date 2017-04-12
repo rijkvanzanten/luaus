@@ -14,27 +14,24 @@ const app = express()
   .set('view engine', 'ejs')
   .set('views', path.join(__dirname, 'views'))
   .get('/', getScoreBoard)
-  .post('/:chipid', postScore)
   .listen(process.env.PORT || 3000, onListen);
 
 const io = new Socket(app);
 
-function getScoreBoard(req, res) {
-  res.render('scoreboard', {player1, player2});
-}
+io.on('connection', socket => {
+  console.log(socket.id);
+});
 
-function postScore(req, res) {
-  console.log(req.params.chipid);
-  if (
-    // player 1 score
-    true
-  ) {
-    player1++;
-  } else {
-    player2++;
+function getScoreBoard(req, res) {
+  if (req.query.id) {
+    if (req.query.id === '2936046') {
+      player1++;
+    } else {
+      player2++;
+    }
+    io.emit('score', {player1, player2});
   }
-  io.emit('score', {player1, player2});
-  res.redirect('/');
+  res.render('scoreboard', {player1, player2});
 }
 
 function onListen() {
