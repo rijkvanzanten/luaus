@@ -6,14 +6,20 @@ ws2812.init()
 local i, buffer = 0, ws2812.newBuffer(8, 3)
 local ledTimer = tmr.create()
 
--- function ledLoop(interval, g, r, b)
---   ledTimer:register(interval, 1, function()
---     i = i + 1
---       buffer:fade(2)
---       buffer:set(i % buffer:size() + 1, g, r, b)
---       ws2812.write(buffer)
---   end)
--- end
+function resetScore()
+    score = 0
+    buffer:fill(0, 0, 0)
+    ws2812.write(buffer)
+end
+
+function ledLoop(interval, g, r, b)
+  ledTimer:register(interval, 1, function()
+    i = i + 1
+      buffer:fade(2)
+      buffer:set(i % buffer:size() + 1, g, r, b)
+      ws2812.write(buffer)
+  end)
+end
 
 function init()
   -- Initializes LED-strip
@@ -40,8 +46,7 @@ function init()
   local state = 1
 
   -- Resets LED-strip
-  buffer:fill(0, 0, 0)
-  ws2812.write(buffer)
+  resetScore()
   ledTimer:stop()
 
   function onChange()
@@ -63,18 +68,10 @@ function init()
           ws2812.write(buffer)
         end
       elseif score == 8 then
-        ledTimer:register(50, 1, function()
-          i = i + 1
-          buffer:fade(2)
-          buffer:set(i % buffer:size() + 1, 75, 0, 50)
-          ws2812.write(buffer)
-        end)
+        ledLoop(50, 75, 0, 50)
         ledTimer:start()
       elseif score > 8 then
-        score = 0
-        buffer:fill(0, 0, 0)
-        ws2812.write(buffer)
-
+        resetScore()
         ledTimer:stop()
       end
     end
@@ -86,12 +83,7 @@ function init()
   gpio.trig(pin, 'both', onChange)
 end
 
-ledTimer:register(250, 1, function()
-  i = i + 1
-  buffer:fade(2)
-  buffer:set(i % buffer:size() + 1, 255, 255, 255)
-  ws2812.write(buffer)
-end)
+ledLoop(250, 255, 255, 255)
 ledTimer:start()
 
 wifimodule.connect(init)
