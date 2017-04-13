@@ -1,19 +1,166 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Minor WOT</title>
+<link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow" rel="stylesheet">
+<style>
+  body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+    font-family: 'PT Sans Narrow', sans-serif;
+    color: #fff;
+    background: linear-gradient(to right, #446fce 0%, #608cef 50%, #ef6060 50%, #ce4444 100%);
+  }
+  body::before, body::after {
+    position: absolute;
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  body::before {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    content: "⤵";
+    color: rgba(255, 255, 255, .25);
+    font-size: 16em;
+    background: linear-gradient(#7944f9, #a884ff);
+  }
+  body::after {
+    width: 75%;
+    font-size: 1.6em;
+    text-align: center;
+    content: "Switch orientation, please.";
+    z-index: 1;
+  }
+  body.p1-win {
+    background: none;
+    animation: win-back-p1 1s infinite alternate;
+  }
+  body.p1-win .p1 {
+    animation: win-text 1s infinite alternate;
+  }
+  body.p2-win {
+    background: none;
+    animation: win-back-p2 1s infinite alternate;
+  }
+  body.p2-win .p2 {
+    animation: win-text 1s infinite alternate;
+  }
+  h1 {
+    margin-bottom: .4em;
+    padding: .25em 0;
+    font-weight: normal;
+    text-align: center;
+    background-color: rgba(0, 0, 0, .5);
+  }
+  div {
+    display: flex;
+    justify-content: center;
+  }
+  div::after {
+    position: absolute;
+    align-self: center;
+    content: "-";
+    font-size: 3em;
+  }
+  span {
+    position: relative;
+    margin: .4em;
+    padding: .4em .6em;
+    font-size: 5em;
+    text-shadow: 0 .03em 0 rgba(0, 0, 0, .5);
+    border: 1px solid #fff;
+  }
+  span::before {
+    position: absolute;
+    top: .25em;
+    font-size: .25em;
+    width: 100%;
+    text-align: center;
+    text-shadow: none;
+    left: 0;
+  }
+  span.p1::before {
+    content: "Team 1";
+  }
+  span.p2::before {
+    content: "Team 2";
+  }
+  @media (orientation: portrait) {
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    body::before, body::after {
+      opacity: 1;
+    }
+    div {
+      display: none;
+    }
+  }
+  @keyframes win-text {
+  	20% {
+  		color: #00ff99;
+  	}
+  	40% {
+  		color: #fff35c;
+  	}
+  	60% {
+  		color: #ff6666;
+  	}
+  	80% {
+  		color: #00ccff;
+  	}
+  	100% {
+  		color: #7d7fe8;
+  	}
+  }
+  @keyframes win-back-p1 {
+  	0% {
+  		background-color: #294d9c;
+  	}
+  	50% {
+  		background-color: #446fce;
+  	}
+  	100% {
+  		background-color: #819ede;
+  	}
+  }
+  @keyframes win-back-p2 {
+  	0% {
+  		background-color: #9c2929;
+  	}
+  	50% {
+  		background-color: #ce4444;
+  	}
+  	100% {
+  		background-color: #de8181;
+  	}
+  }
+</style>
 <script src="/socket.io/socket.io.js"></script>
+<body class="">
 <h1>Scores</h1>
 <div>
-  <span><%= player1 %></span>
-  <span><%= player2 %></span>
+  <span class="p1"><%= player1 %></span>
+  <span class="p2"><%= player2 %></span>
 </div>
 <script>
   const socket = io();
 
+  const body  = document.querySelector('body');
   const spans = document.querySelectorAll('span');
 
   socket.on('score', data => {
+    body.className = data.winner;
     spans[0].innerHTML = data.player1;
     spans[1].innerHTML = data.player2;
   });
 </script>
+</body>

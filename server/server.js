@@ -7,6 +7,7 @@ const compression = require('compression');
 // Scores. Save in memory for know. Could be upgraded to a DB in the long run
 let player1 = 0;
 let player2 = 0;
+let winner  = false;
 
 const app = express()
   .use(compression())
@@ -29,9 +30,18 @@ function getScoreBoard(req, res) {
     } else {
       player2++;
     }
-    io.emit('score', {player1, player2});
+
+    if (player1 >= 8) {
+      winner = 'p1-win';
+    } else if (player2 >= 8) {
+      winner = 'p2-win';
+    } else {
+      winner = false;
+    }
+
+    io.emit('score', {player1, player2, winner});
   }
-  res.render('scoreboard', {player1, player2});
+  res.render('scoreboard', {player1, player2, winner});
 }
 
 function onListen() {
