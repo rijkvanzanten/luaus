@@ -159,15 +159,6 @@
   <span class="p2"><%= player2 %></span>
 </div>
 <script>
-  const socket = io();
-
-  const body  = document.querySelector('body');
-  const spans = document.querySelectorAll('span');
-
-  socket.on('score', data => {
-    body.className = data.winner;
-    spans[0].innerHTML = data.player1;
-    spans[1].innerHTML = data.player2;
-  });
+  const ws = new WebSocket('ws://localhost:3000');
 </script>
 </body>
