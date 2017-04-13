@@ -1,25 +1,8 @@
 local wifimodule = require 'wifimodule'
-local config = require 'config'
+local socketmodule = require 'socketmodule'
 
 function init()
-  -- Create socket connection
-  print('connect to ws at ws://' .. config.ip .. ':' .. config.port .. '/socket.io/?EIO=3&transport=websocket')
-  local ws = websocket.createClient()
-
-  ws:on('connection', function(ws)
-    print('Connected to socket')
-  end)
-
-  ws:on('receive', function(_, msg)
-    print('got message: ', msg)
-  end)
-
-  ws:on('close', function(_, status)
-    print('connection closed', status)
-    ws = nil
-  end)
-
-  ws:connect('ws://' .. config.ip .. ':' .. config.port .. '/socket.io/?EIO=3&transport=websocket')
+  local ws = socketmodule.initSocket()
 
   -- Read button
   local pin = 1
@@ -37,6 +20,13 @@ function init()
     if gpio.read(pin) < state then
       presses = presses + 1
       print('Button has been pressed ' .. presses .. ' times')
+
+      ok, json = pcall(cjson.encode, {type = 'nodemcu', code = 1, score = presses})
+      if ok then
+        ws:send(json)
+      else
+        print('failed to encode JSON!')
+      end
 
       for i = 1, presses do
         buffer:set(i % presses + 1, 75, 0, 50)

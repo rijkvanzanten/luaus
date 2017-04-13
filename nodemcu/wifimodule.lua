@@ -4,13 +4,13 @@ function wifimodule.connect(callback)
   -- Connect to Wi-Fi
   wifi.setmode(wifi.STATION)
   wifi.sta.config('HvA Open Wi-Fi', '')
-  wifi.sta.eventMonReg(wifi.STA_IDLE, function() print("STATION_IDLE") end)
-  wifi.sta.eventMonReg(wifi.STA_CONNECTING, function() print("STATION_CONNECTING") end)
-  wifi.sta.eventMonReg(wifi.STA_WRONGPWD, function() print("STATION_WRONG_PASSWORD") end)
-  wifi.sta.eventMonReg(wifi.STA_APNOTFOUND, function() print("STATION_NO_AP_FOUND") end)
-  wifi.sta.eventMonReg(wifi.STA_FAIL, function() print("STATION_CONNECT_FAIL") end)
+  wifi.sta.eventMonReg(wifi.STA_IDLE, function() print('[Wi-Fi] Idle') end)
+  wifi.sta.eventMonReg(wifi.STA_CONNECTING, function() print('[Wi-Fi] Connecting...') end)
+  wifi.sta.eventMonReg(wifi.STA_WRONGPWD, function() print('[Wi-Fi] Wrong Password') end)
+  wifi.sta.eventMonReg(wifi.STA_APNOTFOUND, function() print('[Wi-Fi] No access point found') end)
+  wifi.sta.eventMonReg(wifi.STA_FAIL, function() print('[Wi-Fi] Failed to connect') end)
   wifi.sta.eventMonReg(wifi.STA_GOTIP, function()
-    print("STATION_GOT_IP")
+    print('[Wi-Fi] Got IP')
     local conn = net.createConnection(net.TCP, false)
     ip, nm, gateway = wifi.sta.getip()
 
@@ -18,7 +18,7 @@ function wifimodule.connect(callback)
 
     -- Auto-accept HvA open wifi thingy
     conn:on('receive', function(sck, c)
-      print('Connected to HvA Open Wi-Fi!')
+      print('[Wi-Fi] Connected to HvA Open Wi-Fi!')
       callback()
     end)
 
