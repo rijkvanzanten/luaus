@@ -16,7 +16,10 @@
   }
   body::before, body::after {
     position: absolute;
+    top: 50%;
+    left: 50%;
     opacity: 0;
+    transform: translate(-50%, -50%);
     transition: opacity .3s ease;
   }
   body::before {
@@ -25,6 +28,7 @@
     align-items: center;
     width: 100vw;
     height: 100vh;
+    max-width: 100%;
     content: "⤵";
     color: rgba(255, 255, 255, .25);
     font-size: 16em;
@@ -35,6 +39,7 @@
     font-size: 1.6em;
     text-align: center;
     content: "Switch orientation, please.";
+    text-shadow: 0 .05em 0 rgba(0, 0, 0, 0.5);
     z-index: 1;
   }
   body.p1-win {
@@ -64,13 +69,15 @@
   }
   div::after {
     position: absolute;
-    align-self: center;
+    top: 2.6em;
+    left: 50%;
     content: "-";
     font-size: 3em;
+    transform: translateX(-50%);
   }
   span {
     position: relative;
-    margin: .4em;
+    margin: 0 .4em;
     padding: .4em .6em;
     font-size: 5em;
     text-shadow: 0 .03em 0 rgba(0, 0, 0, .5);
