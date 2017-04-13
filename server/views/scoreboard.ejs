@@ -1,19 +1,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Minor WOT</title>
-<script src="/socket.io/socket.io.js"></script>
 <h1>Scores</h1>
 <div>
   <span><%= player1 %></span>
   <span><%= player2 %></span>
 </div>
 <script>
-  const socket = io();
-
-  const spans = document.querySelectorAll('span');
-
-  socket.on('score', data => {
-    spans[0].innerHTML = data.player1;
-    spans[1].innerHTML = data.player2;
-  });
+  const ws = new WebSocket('ws://localhost:3000');
 </script>
