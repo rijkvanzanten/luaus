@@ -6,15 +6,7 @@ const compression = require('compression');
 const WebSocket = require('ws');
 
 // Scores. Save in memory for know. Could be upgraded to a DB in the long run
-const player1 = {
-  id: null,
-  score: 0
-};
-
-const player2 = {
-  id: null,
-  score: 0
-};
+let scores = {};
 
 const app = express()
   .use(compression())
@@ -26,6 +18,14 @@ const app = express()
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
+
+wss.broadcast = data => {
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  });
+};
 
 wss.on('connection', ws => {
   ws.on('message', message => {
@@ -41,44 +41,46 @@ server.listen(process.env.PORT || 3000, onListen);
 
 function socketMcu(ws, message) {
   switch (message.code) {
+    // New button connection
     case 0:
-      if (player1.id) {
-        player2.id = message.id;
-        return ws.send(JSON.stringify({type: 'color', color: 'red'}));
+      scores[message.id] = 0;
+      if (Object.keys(scores) % 2) {
+        wss.broadcast(JSON.stringify({type: 'color', id: message.id, color: 'red'}));
       }
 
-      player1.id = message.id;
-      return ws.send(JSON.stringify({type: 'color', color: 'blue'}));
+      wss.broadcast(JSON.stringify({type: 'color', id: message.id, color: 'blue'}));
+      break;
+    case 1:
+      scores[message.id]++;
+      wss.broadcast(JSON.stringify({type: 'score-update', id: message.id, score: scores[message.id]}));
+      break;
   }
 }
 
-function resetScore() {
-  player1.id = null;
-  player1.score = 0;
-
-  player2.id = null;
-  player2.score = 0;
+function resetScore(req, res) {
+  scores = {};
+  res.redirect('/');
 }
 
 function getScoreBoard(req, res) {
-  if (req.query.id) {
-    if (req.query.id === '2936046') {
-      player1++;
-    } else {
-      player2++;
-    }
-
-    if (player1 >= 8) {
-      winner = 'p1-win';
-    } else if (player2 >= 8) {
-      winner = 'p2-win';
-    } else {
-      winner = false;
-    }
-
-    io.emit('score', {player1, player2, winner});
-  }
-  res.render('scoreboard', {player1, player2, winner});
+  // if (req.query.id) {
+  //   if (req.query.id === '2936046') {
+  //     player1++;
+  //   } else {
+  //     player2++;
+  //   }
+  //
+  //   if (player1 >= 8) {
+  //     winner = 'p1-win';
+  //   } else if (player2 >= 8) {
+  //     winner = 'p2-win';
+  //   } else {
+  //     winner = false;
+  //   }
+  //
+  //   io.emit('score', {player1, player2, winner});
+  // }
+  res.render('scoreboard', {scores});
 }
 
 function onListen() {
