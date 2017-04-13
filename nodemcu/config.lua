@@ -1,6 +1,6 @@
 local config = {}
 
-config.ip = '100.72.3.130'
-config.port = 3000
+config.ip = 'wot.rijks.website'
+config.port = 80
 
 return config
