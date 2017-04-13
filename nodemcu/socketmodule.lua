@@ -10,16 +10,12 @@ module.initSocket = function ()
   ws:on('connection', function(ws)
     print('[WebSocket] Connected!')
 
-    ok, json = pcall(cjson.encode, {type = 'nodemcu', code = 0})
+    ok, json = pcall(cjson.encode, {device = 'nodemcu', code = 0, id = node.chipid()})
     if ok then
       ws:send(json)
     else
       print('[WebSocket] Failed to encode JSON!')
     end
-  end)
-
-  ws:on('receive', function(_, msg)
-    print('[WebSocket] Got message: ', msg)
   end)
 
   ws:on('close', function(_, status)
