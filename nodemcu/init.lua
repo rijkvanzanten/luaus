@@ -1,7 +1,8 @@
 local wifimodule = require 'wifimodule'
 local config = require 'config'
 
-function connectSocket()
+function init()
+  -- Create socket connection
   print('connect to ws at ws://' .. config.ip .. ':' .. config.port .. '/socket.io/?EIO=3&transport=websocket')
   local ws = websocket.createClient()
 
@@ -19,23 +20,24 @@ function connectSocket()
   end)
 
   ws:connect('ws://' .. config.ip .. ':' .. config.port .. '/socket.io/?EIO=3&transport=websocket')
-end
 
-wifimodule.connect(connectSocket)
 
--- Read button
-local pin = 1
-local presses = 0
-local state = 1
+  -- Read button
+  local pin = 1
+  local presses = 0
+  local state = 1
 
-function onChange()
-  if gpio.read(pin) < state then
-    presses = presses + 1
-    print('Button has been pressed ' .. presses .. ' times')
+  function onChange()
+    if gpio.read(pin) < state then
+      presses = presses + 1
+      print('Button has been pressed ' .. presses .. ' times')
+    end
+
+    state = gpio.read(pin)
   end
 
-  state = gpio.read(pin)
+  gpio.mode(pin, gpio.INT, gpio.PULLUP)
+  gpio.trig(pin, 'both', onChange)
 end
 
-gpio.mode(pin, gpio.INT, gpio.PULLUP)
-gpio.trig(pin, 'both', onChange)
+wifimodule.connect(init)
