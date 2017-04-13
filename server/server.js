@@ -44,11 +44,11 @@ function socketMcu(ws, message) {
     // New button connection
     case 0:
       scores[message.id] = 0;
-      if (Object.keys(scores) % 2) {
+      if (Object.keys(scores).length % 2) {
         wss.broadcast(JSON.stringify({type: 'color', id: message.id, color: 'red'}));
+      } else {
+        wss.broadcast(JSON.stringify({type: 'color', id: message.id, color: 'blue'}));
       }
-
-      wss.broadcast(JSON.stringify({type: 'color', id: message.id, color: 'blue'}));
       break;
     case 1:
       scores[message.id]++;
