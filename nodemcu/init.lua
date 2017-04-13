@@ -6,11 +6,13 @@ ws2812.init()
 local i, buffer = 0, ws2812.newBuffer(8, 3)
 local ledTimer = tmr.create()
 
-function resetScore()
-    score = 0
-    buffer:fill(0, 0, 0)
-    ws2812.write(buffer)
-end
+score = 0
+
+-- function resetScore()
+    -- score = 0
+    -- buffer:fill(0, 0, 0)
+    -- ws2812.write(buffer)
+-- end
 
 function ledLoop(interval, g, r, b)
   ledTimer:register(interval, 1, function()
@@ -42,11 +44,12 @@ function init()
 
   -- Read button
   local pin = 1
-  local score = 0
   local state = 1
 
   -- Resets LED-strip
-  resetScore()
+  score = 0
+  buffer:fill(0, 0, 0)
+  ws2812.write(buffer)
   ledTimer:stop()
 
   function onChange()
@@ -71,7 +74,9 @@ function init()
         ledLoop(50, 75, 0, 50)
         ledTimer:start()
       elseif score > 8 then
-        resetScore()
+        score = 0
+        buffer:fill(0, 0, 0)
+        ws2812.write(buffer)
         ledTimer:stop()
       end
     end
