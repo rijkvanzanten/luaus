@@ -86,4 +86,12 @@ function init()
   gpio.trig(pin, 'both', onChange)
 end
 
+ledTimer:register(250, 1, function()
+  i = i + 1
+  buffer:fade(2)
+  buffer:set(i % buffer:size() + 1, 255, 255, 255)
+  ws2812.write(buffer)
+end)
+ledTimer:start()
+
 wifimodule.connect(init)
