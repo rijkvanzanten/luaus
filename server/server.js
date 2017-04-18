@@ -50,14 +50,23 @@ function onSocketConnection(socket) {
   function onSocketMessage(message) {
     try {
       message = JSON.parse(message);
+
+      switch (message.device) {
+        case 'nodemcu': return nodemcuMessage(message);
+        case 'scoreboard': return scoreboardMessage(message);
+        default:
+          console.log('Type not recognized: ', message.type);
+      }
     } catch (err) {
-      console.log(`Cannot parse message: ${message}`, err);
-    }
-
-    if (message.device === 'nodemcu') {
-
-    } else if (message.device === 'client') {
-
+      console.log(`Message not in JSON: ${message}`);
     }
   }
+}
+
+function nodemcuMessage(message) {
+  console.log(message);
+}
+
+function scoreboardMessage(message) {
+  console.log(message);
 }
