@@ -1,0 +1,15 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minor WOT</title>
+<link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow" rel="stylesheet">
+<h1>Scores</h1>
+
+<script>
+  var ws = new WebSocket('ws://localhost:3000');
+
+  ws.addEventListener('open', function(event) {
+    console.log('Socket connected');
+  });
+
+  ws.addEventListener('message', function(event) {});
+</script>

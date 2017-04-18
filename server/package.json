@@ -11,10 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.17.1",
-    "compression": "^1.6.2",
     "ejs": "^2.5.6",
     "express": "^4.15.2",
+    "lowdb": "^0.16.2",
     "ws": "^2.2.3"
   },
   "xo": {
