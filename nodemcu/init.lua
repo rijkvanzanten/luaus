@@ -1,33 +1,32 @@
 local wifimodule = require 'wifimodule'
 local socketmodule = require 'socketmodule'
+local config = require 'config'
 
--- Initializes LED-strip
+-- Initialize LED-strip and Timer
 ws2812.init()
 local i, buffer = 0, ws2812.newBuffer(8, 3)
 local ledTimer = tmr.create()
 
-score = 0
-
--- function resetScore()
-    -- score = 0
-    -- buffer:fill(0, 0, 0)
-    -- ws2812.write(buffer)
--- end
-
-function ledLoop(interval, g, r, b)
+-- Make the LED-strip loop
+function ledLoop(interval, colorArray)
   ledTimer:register(interval, 1, function()
     i = i + 1
       buffer:fade(2)
-      buffer:set(i % buffer:size() + 1, g, r, b)
+      buffer:set(i % buffer:size() + 1, colorArray[1], colorArray[2], colorArray[3])
       ws2812.write(buffer)
   end)
+
+  ledTimer:start()
 end
 
-function init()
-  -- Initializes LED-strip
-  ws2812.init()
-  local i, buffer = 0, ws2812.newBuffer(8, 3)
+function resetStrip()
+  buffer:fill(0, 0, 0)
+  ws2812.write(buffer)
+  ledTimer:stop()
+end
 
+-- Initialize application on NodeMCU
+function init()
   -- Receive socket events
   local ws = socketmodule.initSocket()
 
@@ -43,52 +42,40 @@ function init()
   end)
 
   -- Read button
-  local pin = 1
-  local state = 1
+  local button = 1
+  local isPressed = 1
 
-  -- Resets LED-strip
-  score = 0
-  buffer:fill(0, 0, 0)
-  ws2812.write(buffer)
-  ledTimer:stop()
+  -- Reset LED-strip
+  resetStrip()
 
+  -- When button has been pressed or released
   function onChange()
-    if gpio.read(pin) < state then
-      score = score + 1
-      print('Button has been pressed ' .. score .. ' times')
+    if gpio.read(button) < isPressed then
+      print('Button pressed!')
 
-      ok, json = pcall(cjson.encode, {device = 'nodemcu', code = 1, id = node.chipid(), score = score})
+      ok, json = pcall(cjson.encode, {
+        device = 'nodemcu',
+        action = 'UPDATE_SCORE',
+        id = node.chipid()
+      })
       if ok then
         ws:send(json)
       else
         print('failed to encode JSON!')
       end
-
-      if score < 8 then
-        for i = 1, score do
-          buffer:set(i % score + 1, 75, 0, 50)
-          -- buffer:set(i % score + 1, 25, 150, 0) RED
-          ws2812.write(buffer)
-        end
-      elseif score == 8 then
-        ledLoop(50, 75, 0, 50)
-        ledTimer:start()
-      elseif score > 8 then
-        score = 0
-        buffer:fill(0, 0, 0)
-        ws2812.write(buffer)
-        ledTimer:stop()
-      end
     end
 
-    state = gpio.read(pin)
+    isPressed = gpio.read(button)
   end
 
-  gpio.mode(pin, gpio.INT, gpio.PULLUP)
-  gpio.trig(pin, 'both', onChange)
+  gpio.mode(button, gpio.INT, gpio.PULLUP)
+  gpio.trig(button, 'both', onChange)
 end
 
-ledLoop(250, 255, 255, 255)
-ledTimer:start()
+-- Provide Wi-fi connection feedback
+ledLoop(250, {
+  255, 255, 255
+})
 
-wifimodule.connect(init)
+-- Initilize Wi-fi connection
+wifimodule.connect(config, init)
