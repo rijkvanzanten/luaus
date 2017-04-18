@@ -73,10 +73,16 @@ function nodemcuMessage(socket, message) {
   console.log(message);
   switch (message.action) {
     case 'JOIN_GAME':
-      const color = colors[Object.keys(players).length % colors.length];
-      players[message.id] = {
-        color, score: 0
-      };
+      let color;
+
+      if (players[message.id]) {
+        color = players[message.id].color;
+      } else {
+        color = colors[Object.keys(players).length % colors.length];
+        players[message.id] = {
+          color, score: 0
+        };
+      }
 
       return socket.send(JSON.stringify({
         action: 'CHANGE_COLOR',
