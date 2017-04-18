@@ -1,16 +1,16 @@
 const http = require('http');
 const path = require('path');
 const express = require('express');
-const low = require('lowdb');
 const WebSocket = require('ws');
 
 const port = process.env.PORT || 3000;
 
-const db = low('db.json');
+const players = {};
 
-db.defaults({
-  players: []
-});
+// Colors are in g, r, b
+const colors = [
+  [25, 150, 0] // Red
+];
 
 const app = express()
   .set('view engine', 'ejs')
@@ -52,19 +52,32 @@ function onSocketConnection(socket) {
       message = JSON.parse(message);
 
       switch (message.device) {
-        case 'nodemcu': return nodemcuMessage(message);
+        case 'nodemcu': return nodemcuMessage(socket, message);
         case 'scoreboard': return scoreboardMessage(message);
         default:
-          console.log('Type not recognized: ', message.type);
+          console.log('Device not recognized: ', message.device);
       }
     } catch (err) {
-      console.log(`Message not in JSON: ${message}`);
+      console.log('Message not in JSON:', message);
     }
   }
 }
 
-function nodemcuMessage(message) {
+function nodemcuMessage(socket, message) {
   console.log(message);
+  switch (message.action) {
+    case 'JOIN_GAME':
+      const color = colors[Object.keys(players).length % colors.length];
+      players[message.id] = {
+        color, score: 0
+      };
+
+      return socket.send(JSON.stringify({
+        action: 'CHANGE_COLOR',
+        color
+      }));
+    default: return false;
+  }
 }
 
 function scoreboardMessage(message) {
