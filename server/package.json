@@ -5,14 +5,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon server.js --ignore db.json",
     "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.17.1",
-    "compression": "^1.6.2",
     "ejs": "^2.5.6",
     "express": "^4.15.2",
     "ws": "^2.2.3"
@@ -21,6 +20,7 @@
     "space": true
   },
   "devDependencies": {
+    "nodemon": "^1.11.0",
     "xo": "^0.18.1"
   }
 }

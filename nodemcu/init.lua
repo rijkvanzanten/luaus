@@ -33,8 +33,8 @@ function init()
   ws:on('receive', function(_, msg)
     local data = cjson.decode(msg)
 
-    -- handle colour input
-
+    -- handle colour input\
+    
   end)
 
   -- Read button
