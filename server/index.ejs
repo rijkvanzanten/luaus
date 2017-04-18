@@ -50,6 +50,16 @@
     }
   }
 
+  @keyframes flow {
+    from {
+      transform: scale(.7) rotate(-10deg);
+    }
+
+    to {
+      transform: scale(1) rotate(10deg);
+    }
+  }
+
   * {
     font-size: inherit;
     font-family: inherit;
@@ -73,6 +83,7 @@
     padding-top: 250px;
     margin: 0 auto;
     position: relative;
+    animation: flow 1.4s ease-in-out infinite alternate;
   }
 
   #logo h1 {
@@ -92,12 +103,12 @@
 
   #logo img:first-of-type {
     left: 0;
-    animation: pulsateLeft 1s .3s infinite alternate;
+    animation: pulsateLeft 1.4s .3s infinite alternate;
   }
 
   #logo img:last-of-type {
     right: 0;
-    animation: pulsateRight 1s infinite alternate;
+    animation: pulsateRight 1.4s infinite alternate;
   }
 
   #logo span {
@@ -200,7 +211,7 @@
 
 </style>
 <div id="logo">
-  <img src="/berend.png" />
+  <img src="/berend32.png" />
   <h1>
     <span>l</span>
     <span>u</span>
@@ -208,7 +219,7 @@
     <span>u</span>
     <span>s</span>
   </h1>
-  <img src="/rijk.png" />
+  <img src="/rijk32.png" />
 </div>
 
 <form id="setup">
