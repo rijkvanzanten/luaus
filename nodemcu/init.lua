@@ -25,7 +25,7 @@ function ledLoop(interval, colorArray)
   ledTimer:start()
 end
 
-function resetStrip()
+function clearStrip()
   buffer:fill(0, 0, 0)
   ws2812.write(buffer)
   ledTimer:stop()
@@ -42,7 +42,14 @@ function init()
     if data.action == 'CHANGE_COLOR' then
       setStrip(data.color)
     elseif data.action == 'END_GAME' then
-      print('game has ended')
+      -- Check if button belongs to winner
+      if data.winner == node.chipid() then
+        ledLoop(50, {
+          data.color
+        })
+      else
+        clearStrip()
+      end
     end
   end)
 
@@ -50,8 +57,8 @@ function init()
   local button = 1
   local isPressed = 1
 
-  -- Reset LED-strip
-  resetStrip()
+  -- clear LED-strip
+  clearStrip()
 
   -- When button has been pressed or released
   function onChange()
