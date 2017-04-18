@@ -7,6 +7,12 @@ ws2812.init()
 local i, buffer = 0, ws2812.newBuffer(8, 3)
 local ledTimer = tmr.create()
 
+-- Fill the LED_strip with a single color
+function setStrip(colorArray)
+  buffer:fill(colorArray[1], colorArray[2], colorArray[3])
+  ws2812.write(buffer)
+end
+
 -- Make the LED-strip loop
 function ledLoop(interval, colorArray)
   ledTimer:register(interval, 1, function()
@@ -33,8 +39,11 @@ function init()
   ws:on('receive', function(_, msg)
     local data = cjson.decode(msg)
 
-    -- handle colour input\
-    
+    if data.action == 'CHANGE_COLOR' then
+      setStrip(data.color)
+    elseif data.action == 'END_GAME' then
+      print('game has ended')
+    end
   end)
 
   -- Read button
