@@ -151,14 +151,27 @@
   	}
   }
 </style>
-<script src="/socket.io/socket.io.js"></script>
 <body class="">
 <h1>Scores</h1>
 <div>
-  <span class="p1"><%= player1 %></span>
-  <span class="p2"><%= player2 %></span>
+  <% Object.keys(scores).forEach(id => { %>
+    <span data-id="<%= id %>"><%= scores[id] %></span>
+  <% }); %>
 </div>
 <script>
-  const ws = new WebSocket('ws://localhost:3000');
+  var ws = new WebSocket('ws://localhost:3000');
+
+  ws.addEventListener('open', function(event) {
+    console.log('Socket connected');
+  });
+
+  ws.addEventListener('message', function(event) {
+    var message = JSON.parse(event.data);
+    if (message.type === 'color' && !document.querySelector('[data-id="' + message.id + '"]')) {
+      document.querySelector('div').innerHTML += '<span data-id="' + message.id + '">0</span>';
+    } else if (message.type === 'score-update') {
+      document.querySelector('[data-id="' + message.id + '"]').innerHTML = message.score;
+    }
+  });
 </script>
 </body>
