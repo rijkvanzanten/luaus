@@ -12,11 +12,6 @@
     }
   }
 
-  body {
-    background-image: url('/pow-star.png');
-    animation: animatedBackground 1s linear infinite;
-  }
-
   @font-face {
     font-family: 'pixel';
     src: url('pixel.woff2') format('woff2'),
@@ -55,6 +50,25 @@
     }
   }
 
+  * {
+    font-size: inherit;
+    font-family: inherit;
+  }
+
+  html {
+    height: 100%;
+  }
+
+  body {
+    font-family: 'pixel', cursive;
+    background-image: url('/pow-star.png');
+    animation: animatedBackground 1s linear infinite;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
   #logo {
     padding-top: 250px;
     margin: 0 auto;
@@ -64,7 +78,6 @@
   #logo h1 {
     letter-spacing: -16px;
     text-align: center;
-    font-family: 'pixel', cursive;
     font-size: 76px;
   }
 
@@ -78,12 +91,12 @@
   }
 
   #logo img:first-of-type {
-    left: 30%;
+    left: 0;
     animation: pulsateLeft 1s .3s infinite alternate;
   }
 
   #logo img:last-of-type {
-    right: 30%;
+    right: 0;
     animation: pulsateRight 1s infinite alternate;
   }
 
@@ -120,6 +133,71 @@
     color: #b40a96;
   }
 
+  #setup {
+    font-size: 3rem;
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  #min, #plus, input {
+    display: inline-block;
+    transition: .3s ease;
+  }
+
+  #min:hover,
+  #plus:hover {
+    transform: scale(1.2);
+  }
+
+  #min:active,
+  #plus:active {
+    transform: scale(0.9);
+  }
+
+  input {
+    background-color: transparent;
+    border: 0;
+    width: 10rem;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  button[type=submit] {
+    display: block;
+    margin: 2rem auto;
+  }
+
+  #players {
+    /*background-color: blue;*/
+    width: 100%;
+    flex-grow: 1;
+  }
+
+  button {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: none;
+    margin: 0 4rem;
+    cursor: pointer;
+  }
+
+  button:focus {
+    outline: 0; /* just because */
+  }
+
+  button[type=submit] {
+    transition: .3s ease;
+  }
+
+  button[type=submit]:hover {
+    transform: scaleX(1.4);
+  }
+
+  button[type=submit]:active {
+    transform: scaleX(0.8);
+  }
+
 </style>
 <div id="logo">
   <img src="/berend.png" />
@@ -133,6 +211,17 @@
   <img src="/rijk.png" />
 </div>
 
+<form id="setup">
+  <button id="min">-</button>
+  <input type="number" name="max-score" min="1" value="8" />
+  <button id="plus">+</button>
+  <button type="submit">start</button>
+</form>
+
+<div id="players">
+
+</div>
+
 <script>
   var ws = new WebSocket('ws://localhost:3000');
 
@@ -142,4 +231,16 @@
   });
 
   ws.addEventListener('message', function(event) {});
+
+  document.querySelector('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+  });
+
+  document.querySelector('#min').addEventListener('click', function (e) {
+    document.querySelector('input').value = Number(document.querySelector('input').value) - 1;
+  });
+
+  document.querySelector('#plus').addEventListener('click', function (e) {
+    document.querySelector('input').value = Number(document.querySelector('input').value) + 1;
+  });
 </script>
