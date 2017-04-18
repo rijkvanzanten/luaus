@@ -2,6 +2,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Minor WOT</title>
 <style>
+  @keyframes animatedBackground {
+    0% {
+      background-position: -400px 400px
+    }
+
+    100% {
+      background-position: 0 0
+    }
+  }
+
+  body {
+    background-image: url('/pow-star.png');
+    animation: animatedBackground 1s linear infinite;
+  }
   @font-face {
     font-family: 'pixel';
     src: url('pixel.woff2') format('woff2'),
@@ -23,55 +37,53 @@
   @keyframes pulsateRight {
     from {
       transform: scale(1) rotate(0);
-      opacity: 0.5;
     }
 
     to {
       transform: scale(1.2) rotate(10deg);
-      opacity: 1;
     }
   }
 
   @keyframes pulsateLeft {
     from {
       transform: scale(1) rotate(0);
-      opacity: 0.5;
     }
 
     to {
       transform: scale(1.2) rotate(-10deg);
-      opacity: 1;
     }
   }
 
   #logo {
-    padding-top: 12em;
-    width: 35em;
+    padding-top: 250px;
     margin: 0 auto;
     position: relative;
-  }
-
-  #logo img {
-    display: block;
-    position: absolute;
-    bottom: 8em;
-    z-index: -1;
-    filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.5));
-  }
-
-  #logo img:first-of-type {
-    left: 25%;
-    animation: pulsateLeft 1s .3s infinite alternate;
-  }
-
-  #logo img:last-of-type {
-    right: 25%;
-    animation: pulsateRight 1s infinite alternate;
   }
 
   #logo h1 {
     letter-spacing: -16px;
     text-align: center;
+    font-family: 'pixel', cursive;
+    font-size: 76px;
+  }
+
+  #logo img {
+    display: block;
+    position: absolute;
+    top: 50px;
+    width: 160px;
+    image-rendering: pixelated;
+    z-index: -1;
+  }
+
+  #logo img:first-of-type {
+    left: 30%;
+    animation: pulsateLeft 1s .3s infinite alternate;
+  }
+
+  #logo img:last-of-type {
+    right: 30%;
+    animation: pulsateRight 1s infinite alternate;
   }
 
   #logo span {
@@ -107,12 +119,6 @@
     color: #b40a96;
   }
 
-
-
-  h1 {
-    font-family: 'pixel', cursive;
-    font-size: 4em;
-  }
 </style>
 <div id="logo">
   <img src="/berend.png" />
