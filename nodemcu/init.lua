@@ -32,13 +32,9 @@ function init()
 
   ws:on('receive', function(_, msg)
     local data = cjson.decode(msg)
-    if data.type == 'color' and data.id == node.chipid() then
-      if data.color == 'red' then
-        print('[Led] Turn RED')
-      else
-        print('[Led] Turn BLUE')
-      end
-    end
+
+    -- handle colour input
+
   end)
 
   -- Read button
