@@ -9,7 +9,12 @@ const players = {};
 
 // Colors are in g, r, b
 const colors = [
-  [25, 150, 0] // Red
+  [75, 0, 50], // Blue
+  [25, 150, 0], // Red
+  [100, 200, 0], // Orange
+  [150, 125, 0], // Yellow
+  [0, 150, 175], // Purple
+  [175, 0, 25] // Green
 ];
 
 const app = express()
