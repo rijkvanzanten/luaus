@@ -212,9 +212,9 @@
 </div>
 
 <form id="setup">
-  <button id="min">-</button>
+  <button id="min" type="button">-</button>
   <input type="number" name="max-score" min="1" value="8" />
-  <button id="plus">+</button>
+  <button id="plus" type="button">+</button>
   <button type="submit">start</button>
 </form>
 
@@ -234,6 +234,7 @@
 
   document.querySelector('form').addEventListener('submit', function (e) {
     e.preventDefault();
+    ws.send(JSON.stringify({device: 'scoreboard', action: 'START_GAME', maxScore: Number(document.querySelector('input').value)}));
   });
 
   document.querySelector('#min').addEventListener('click', function (e) {
