@@ -1,16 +1,18 @@
 local config = require 'config'
-
 local module = {}
 
 module.initSocket = function ()
   -- Create socket connection
-  print('[WebSocket] Connecting to ws at ws://' .. config.ip .. ':' .. config.port .. '...')
   local ws = websocket.createClient()
 
   ws:on('connection', function(ws)
     print('[WebSocket] Connected!')
 
-    ok, json = pcall(cjson.encode, {device = 'nodemcu', code = 0, id = node.chipid()})
+    ok, json = pcall(cjson.encode, {
+      device = 'nodemcu',
+      action = 'JOIN_GAME',
+      id = node.chipid()
+    })
     if ok then
       ws:send(json)
     else
@@ -23,7 +25,8 @@ module.initSocket = function ()
     ws = nil
   end)
 
-  ws:connect('ws://' .. config.ip .. ':' .. config.port)
+  print('[WebSocket] Connecting to ws at ws://' .. config.address .. ':' .. config.port .. '...')
+  ws:connect('ws://' .. config.address .. ':' .. config.port)
 
   return ws
 end
