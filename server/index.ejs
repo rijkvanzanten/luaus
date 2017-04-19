@@ -12,6 +12,16 @@
     }
   }
 
+  @keyframes fadeout {
+    from {
+      opacity: .7;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
   @font-face {
     font-family: 'pixel';
     src: url('pixel.woff2') format('woff2'),
@@ -211,6 +221,21 @@
     transform: scaleX(0.8);
   }
 
+  div[data-clientid] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 150ms ease;
+    background-image: url('/pointer.png');
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 100px;
+    pointer-events: none;
+    overflow: visible;
+    filter: grayscale(100%);
+    opacity: 1;
+  }
+
 </style>
 <div id="logo">
   <img src="/berend32.png" />
@@ -237,34 +262,4 @@
 
 <audio src="/8bit-love-machine.mp3" loop autoplay></audio>
 
-<script>
-  var ws = new WebSocket('ws://localhost:3000');
-
-  ws.addEventListener('open', function(event) {
-    console.log('Socket connected');
-  });
-
-  ws.addEventListener('message', function(event) {
-    var data = JSON.parse(event.data);
-    switch (data.action) {
-      case 'SET_MAX_SCORE':
-        document.querySelector('input').value = data.maxScore;
-        break;
-    }
-  });
-
-  document.querySelector('form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    ws.send(JSON.stringify({device: 'scoreboard', action: 'START_GAME', maxScore: Number(document.querySelector('input').value)}));
-  });
-
-  document.querySelector('#min').addEventListener('click', function (e) {
-    document.querySelector('input').value = Number(document.querySelector('input').value) - 1;
-    ws.send(JSON.stringify({device: 'scoreboard', action: 'SET_MAX_SCORE', maxScore: Number(document.querySelector('input').value)}));
-  });
-
-  document.querySelector('#plus').addEventListener('click', function (e) {
-    document.querySelector('input').value = Number(document.querySelector('input').value) + 1;
-    ws.send(JSON.stringify({device: 'scoreboard', action: 'SET_MAX_SCORE', maxScore: Number(document.querySelector('input').value)}));
-  });
-</script>
+<script src="app.js"></script>
