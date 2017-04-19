@@ -489,6 +489,10 @@ const convert = require('convert-range');
       case 'START_GAME':
         document.querySelector('#setup').remove();
         break;
+
+      case 'NEW_PLAYER':
+        alert('new player');
+        break;
       default: return false;
     }
   }

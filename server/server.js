@@ -2,6 +2,7 @@ const http = require('http');
 const path = require('path');
 const express = require('express');
 const WebSocket = require('ws');
+const bodyParser = require('body-parser');
 
 const port = process.env.PORT || 3000;
 
@@ -22,10 +23,13 @@ const colors = [
 ];
 
 const app = express()
+  .use(bodyParser.urlencoded({extended: false}))
   .use(express.static(path.join(__dirname, 'public')))
   .set('view engine', 'ejs')
   .set('views', path.join(__dirname))
-  .get('/', getApp);
+  .get('/', getApp)
+  .get('/controller', getController)
+  .post('/controller', postController);
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
@@ -38,6 +42,25 @@ server.listen(port, onListen);
 
 function getApp(req, res) {
   res.render('index', {maxScore: game.maxScore, started: game.started});
+}
+
+function getController(req, res) {
+  res.render('controller', {player: false});
+}
+
+function postController(req, res) {
+  let color;
+  if (game.players[req.body.name]) {
+    color = game.players[req.body.name].color;
+  } else {
+    color = colors[Object.keys(game.players).length % colors.length];
+    game.players[req.body.name] = {
+      color, score: 0
+    };
+  }
+
+  wss.broadcast(JSON.stringify({action: 'NEW_PLAYER', player: game.players[req.body.name]}));
+  res.render('controller', {player: game.players[req.body.name], name: req.body.name});
 }
 
 function onListen() {
@@ -87,6 +110,8 @@ function nodemcuMessage(socket, message) {
           color, score: 0
         };
       }
+
+      wss.broadcast(JSON.stringify({action: 'NEW_PLAYER', player: game.players[message.id]}));
 
       return socket.send(JSON.stringify({
         action: 'CHANGE_COLOR',
