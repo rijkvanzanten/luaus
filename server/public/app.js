@@ -457,6 +457,7 @@ const convert = require('convert-range');
   function onFormSubmit(e) {
     e.preventDefault();
     ws.send(JSON.stringify({device: 'scoreboard', action: 'START_GAME', maxScore: Number(document.querySelector('input').value)}));
+    return false;
   }
 
   function onOpenSocket() {
@@ -476,12 +477,17 @@ const convert = require('convert-range');
             document.body.innerHTML += `<div data-clientid="${data.id}"></div>`;
           }
 
-          document.querySelector(`div[data-clientid="${data.id}"]`).style.transform = `translate(${convert(data.clientX, {min: 0, max: data.innerWidth}, {min: 0, max: window.innerWidth})}px, ${convert(data.clientY, {min: 0, max: data.innerHeight}, {min: 0, max: window.innerHeight})}px)`;
+          // document.querySelector(`div[data-clientid="${data.id}"]`).style.transform = `translate(${convert(data.clientX, {min: 0, max: data.innerWidth}, {min: 0, max: window.innerWidth})}px, ${convert(data.clientY, {min: 0, max: data.innerHeight}, {min: 0, max: window.innerHeight})}px)`;
+          document.querySelector(`div[data-clientid="${data.id}"]`).style.transform = `translate(${data.clientX}px, ${data.clientY}px)`;
           document.querySelector(`div[data-clientid="${data.id}"]`).style.animation = 'none'; // 💩
           setTimeout(() => {
             document.querySelector(`div[data-clientid="${data.id}"]`).style.animation = 'fadeout .5s linear forwards';
           }, 10);
         }
+        break;
+
+      case 'START_GAME':
+        document.querySelector('#setup').remove();
         break;
       default: return false;
     }

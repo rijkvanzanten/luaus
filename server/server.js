@@ -37,7 +37,7 @@ wss.on('connection', onSocketConnection);
 server.listen(port, onListen);
 
 function getApp(req, res) {
-  res.render('index', {maxScore: game.maxScore});
+  res.render('index', {maxScore: game.maxScore, started: game.started});
 }
 
 function onListen() {
@@ -107,5 +107,9 @@ function scoreboardMessage(socket, message) {
     case 'MOVE_MOUSE':
       wss.broadcast(JSON.stringify(message));
     default: return false;
+    case 'START_GAME':
+      game.started = true;
+      wss.broadcast(JSON.stringify({action: 'START_GAME', maxScore: game.maxScore}));
+      break;
   }
 }
