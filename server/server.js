@@ -37,7 +37,7 @@ wss.on('connection', onSocketConnection);
 server.listen(port, onListen);
 
 function getApp(req, res) {
-  res.render('index');
+  res.render('index', {maxScore: game.maxScore});
 }
 
 function onListen() {
