@@ -64,6 +64,7 @@
     font-size: inherit;
     font-family: inherit;
     cursor: inherit;
+    user-select: none;
   }
 
   html {
@@ -253,9 +254,11 @@
 
   document.querySelector('#min').addEventListener('click', function (e) {
     document.querySelector('input').value = Number(document.querySelector('input').value) - 1;
+    ws.send(JSON.stringify({device: 'scoreboard', action: 'SET_MAX_SCORE', maxScore: Number(document.querySelector('input').value)}));
   });
 
   document.querySelector('#plus').addEventListener('click', function (e) {
     document.querySelector('input').value = Number(document.querySelector('input').value) + 1;
+    ws.send(JSON.stringify({device: 'scoreboard', action: 'SET_MAX_SCORE', maxScore: Number(document.querySelector('input').value)}));
   });
 </script>
