@@ -242,10 +242,16 @@
 
   ws.addEventListener('open', function(event) {
     console.log('Socket connected');
-    ws.send(JSON.stringify({device: 'scoreboard', msg: 'test'}));
   });
 
-  ws.addEventListener('message', function(event) {});
+  ws.addEventListener('message', function(event) {
+    var data = JSON.parse(event.data);
+    switch (data.action) {
+      case 'SET_MAX_SCORE':
+        document.querySelector('input').value = data.maxScore;
+        break;
+    }
+  });
 
   document.querySelector('form').addEventListener('submit', function (e) {
     e.preventDefault();

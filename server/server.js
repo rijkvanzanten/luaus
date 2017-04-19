@@ -5,7 +5,11 @@ const WebSocket = require('ws');
 
 const port = process.env.PORT || 3000;
 
-const players = {};
+const game = {
+  players: {},
+  maxScore: 8,
+  started: false
+};
 
 // Colors are in g, r, b
 const colors = [
@@ -56,15 +60,15 @@ function onSocketConnection(socket) {
   function onSocketMessage(message) {
     try {
       message = JSON.parse(message);
-
-      switch (message.device) {
-        case 'nodemcu': return nodemcuMessage(socket, message);
-        case 'scoreboard': return scoreboardMessage(message);
-        default:
-          console.log('Device not recognized: ', message.device);
-      }
     } catch (err) {
       console.log('Message not in JSON:', message);
+    }
+
+    switch (message.device) {
+      case 'nodemcu': return nodemcuMessage(socket, message);
+      case 'scoreboard': return scoreboardMessage(message);
+      default:
+        console.log('Device not recognized: ', message.device);
     }
   }
 }
@@ -75,11 +79,11 @@ function nodemcuMessage(socket, message) {
     case 'JOIN_GAME':
       let color;
 
-      if (players[message.id]) {
-        color = players[message.id].color;
+      if (game.players[message.id]) {
+        color = game.players[message.id].color;
       } else {
-        color = colors[Object.keys(players).length % colors.length];
-        players[message.id] = {
+        color = colors[Object.keys(game.players).length % colors.length];
+        game.players[message.id] = {
           color, score: 0
         };
       }
@@ -94,4 +98,12 @@ function nodemcuMessage(socket, message) {
 
 function scoreboardMessage(message) {
   console.log(message);
+
+  switch (message.action) {
+    case 'SET_MAX_SCORE':
+      game.maxScore = message.maxScore;
+      wss.broadcast(JSON.stringify({action: 'SET_MAX_SCORE', maxScore: game.maxScore}));
+      break;
+    default: return false;
+  }
 }
