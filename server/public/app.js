@@ -477,6 +477,10 @@ const convert = require('convert-range');
           }
 
           document.querySelector(`div[data-clientid="${data.id}"]`).style.transform = `translate(${convert(data.clientX, {min: 0, max: data.innerWidth}, {min: 0, max: window.innerWidth})}px, ${convert(data.clientY, {min: 0, max: data.innerHeight}, {min: 0, max: window.innerHeight})}px)`;
+          document.querySelector(`div[data-clientid="${data.id}"]`).style.animation = 'none'; // 💩
+          setTimeout(() => {
+            document.querySelector(`div[data-clientid="${data.id}"]`).style.animation = 'fadeout .5s linear forwards';
+          }, 10);
         }
         break;
       default: return false;

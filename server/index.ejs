@@ -12,6 +12,16 @@
     }
   }
 
+  @keyframes fadeout {
+    from {
+      opacity: .7;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
   @font-face {
     font-family: 'pixel';
     src: url('pixel.woff2') format('woff2'),
@@ -223,6 +233,7 @@
     pointer-events: none;
     overflow: visible;
     filter: grayscale(100%);
+    opacity: 1;
   }
 
 </style>
