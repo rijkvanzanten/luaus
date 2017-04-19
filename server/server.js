@@ -66,7 +66,7 @@ function onSocketConnection(socket) {
 
     switch (message.device) {
       case 'nodemcu': return nodemcuMessage(socket, message);
-      case 'scoreboard': return scoreboardMessage(message);
+      case 'scoreboard': return scoreboardMessage(socket, message);
       default:
         console.log('Device not recognized: ', message.device);
     }
@@ -96,7 +96,7 @@ function nodemcuMessage(socket, message) {
   }
 }
 
-function scoreboardMessage(message) {
+function scoreboardMessage(socket, message) {
   console.log(message);
 
   switch (message.action) {

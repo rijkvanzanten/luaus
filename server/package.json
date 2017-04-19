@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.js --ignore db.json",
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "browserify src/app.js -p bundle-collapser/plugin | esmangle > public/app.js",
+    "watch": "watchify src/app.js -o public/app.js"
   },
   "keywords": [],
   "author": "",
@@ -14,13 +16,22 @@
   "dependencies": {
     "ejs": "^2.5.6",
     "express": "^4.15.2",
+    "throttle-debounce": "^1.0.1",
     "ws": "^2.2.3"
   },
   "xo": {
-    "space": true
+    "space": true,
+    "envs": [
+      "browser",
+      "node"
+    ]
   },
   "devDependencies": {
+    "browserify": "^14.3.0",
+    "bundle-collapser": "^1.2.1",
+    "esmangle": "^1.0.1",
     "nodemon": "^1.11.0",
+    "watchify": "^3.9.0",
     "xo": "^0.18.1"
   }
 }

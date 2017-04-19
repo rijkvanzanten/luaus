@@ -237,34 +237,4 @@
 
 <audio src="/8bit-love-machine.mp3" loop autoplay></audio>
 
-<script>
-  var ws = new WebSocket('ws://localhost:3000');
-
-  ws.addEventListener('open', function(event) {
-    console.log('Socket connected');
-  });
-
-  ws.addEventListener('message', function(event) {
-    var data = JSON.parse(event.data);
-    switch (data.action) {
-      case 'SET_MAX_SCORE':
-        document.querySelector('input').value = data.maxScore;
-        break;
-    }
-  });
-
-  document.querySelector('form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    ws.send(JSON.stringify({device: 'scoreboard', action: 'START_GAME', maxScore: Number(document.querySelector('input').value)}));
-  });
-
-  document.querySelector('#min').addEventListener('click', function (e) {
-    document.querySelector('input').value = Number(document.querySelector('input').value) - 1;
-    ws.send(JSON.stringify({device: 'scoreboard', action: 'SET_MAX_SCORE', maxScore: Number(document.querySelector('input').value)}));
-  });
-
-  document.querySelector('#plus').addEventListener('click', function (e) {
-    document.querySelector('input').value = Number(document.querySelector('input').value) + 1;
-    ws.send(JSON.stringify({device: 'scoreboard', action: 'SET_MAX_SCORE', maxScore: Number(document.querySelector('input').value)}));
-  });
-</script>
+<script src="app.js"></script>
