@@ -104,6 +104,8 @@ function scoreboardMessage(socket, message) {
       game.maxScore = message.maxScore;
       wss.broadcast(JSON.stringify({action: 'SET_MAX_SCORE', maxScore: game.maxScore}));
       break;
+    case 'MOVE_MOUSE':
+      wss.broadcast(JSON.stringify(message));
     default: return false;
   }
 }

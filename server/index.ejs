@@ -211,6 +211,20 @@
     transform: scaleX(0.8);
   }
 
+  div[data-clientid] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 150ms ease;
+    background-image: url('/pointer.png');
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 100px;
+    pointer-events: none;
+    overflow: visible;
+    filter: grayscale(100%);
+  }
+
 </style>
 <div id="logo">
   <img src="/berend32.png" />
