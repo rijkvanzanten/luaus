@@ -44,7 +44,8 @@ function getApp(req, res) {
   res.render('index', {
     maxScore: game.maxScore,
     players: game.players,
-    started: game.started
+    started: game.started,
+    message: ''
   });
 }
 
@@ -54,28 +55,38 @@ function getController(req, res) {
 
 function postController(req, res) {
   let color;
-  if (game.players[req.body.name]) {
-    color = game.players[req.body.name].color;
-  } else {
-    color = colors[Object.keys(game.players).length % colors.length];
-    game.players[req.body.name] = {
-      type: 'phone',
-      color,
-      score: 0
-    };
-  }
+  if (!game.started) {
+    if (game.players[req.body.name]) {
+      color = game.players[req.body.name].color;
+    } else {
+      color = colors[Object.keys(game.players).length % colors.length];
+      game.players[req.body.name] = {
+        type: 'phone',
+        color,
+        score: 0
+      };
+    }
 
-  wss.broadcast(
-    JSON.stringify({
-      action: 'NEW_PLAYER',
-      player: game.players[req.body.name]
-    })
-  );
-  
-  res.render('controller', {
-    player: game.players[req.body.name],
-    name: req.body.name
-  });
+    wss.broadcast(
+      JSON.stringify({
+        device: 'phone',
+        action: 'NEW_PLAYER',
+        player: game.players[req.body.name]
+      })
+    );
+
+    res.render('controller', {
+      player: game.players[req.body.name],
+      name: req.body.name
+    });
+  } else {
+    res.render('index', {
+      maxScore: game.maxScore,
+      players: game.players,
+      started: game.started,
+      message: 'Game already started, you are now spectating'
+    });
+  }
 }
 
 function onListen() {
@@ -128,12 +139,15 @@ function nodemcuMessage(socket, message) {
           color,
           score: 0
         };
-        wss.broadcast(
-          JSON.stringify({
-            action: 'NEW_PLAYER',
-            player: game.players[message.id]
-          })
-        );
+
+        if (!game.started) {
+          wss.broadcast(
+            JSON.stringify({
+              action: 'NEW_PLAYER',
+              player: game.players[message.id]
+            })
+          );
+        }
       }
 
       return socket.send(
@@ -148,25 +162,31 @@ function nodemcuMessage(socket, message) {
 }
 
 function scoreboardMessage(socket, message) {
-  // console.log(message);
-
   switch (message.action) {
     case 'SET_MAX_SCORE':
+      console.log(message);
+
       game.maxScore = message.maxScore;
       wss.broadcast(JSON.stringify({
         action: 'SET_MAX_SCORE',
         maxScore: game.maxScore
       }));
+
       break;
     case 'MOVE_MOUSE':
       wss.broadcast(JSON.stringify(message));
     default:
       return false;
     case 'START_GAME':
-      game.started = true;
-      wss.broadcast(
-        JSON.stringify({ action: 'START_GAME', maxScore: game.maxScore })
-      );
+      if (Object.keys(game.players).length > 1) {
+        console.log(message);
+
+        game.started = true;
+        wss.broadcast(
+          JSON.stringify({ action: 'START_GAME', maxScore: game.maxScore })
+        );
+      }
+
       break;
   }
 }
