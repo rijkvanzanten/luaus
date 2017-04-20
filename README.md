@@ -8,6 +8,8 @@
 	<b>🚨 Scoreboard @ <a href="http://wot.rijks.website">wot.rijks.website</a> 🚨</b>
 </p>
 
+[![styled with prettier](https://img.shields.io/badge/styled_with-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+
 <br>
 
 **luau** |ˈlo͞oou|  
