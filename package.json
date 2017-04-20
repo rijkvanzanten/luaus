@@ -5,14 +5,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.js --ignore db.json",
-    "start": "node server.js",
-    "build": "browserify src/app.js -p bundle-collapser/plugin | esmangle > public/app.js",
-    "watch": "watchify src/app.js -o public/app.js"
+    "dev": "nodemon app/server.js --ignore db.json",
+    "start": "node app/server.js",
+    "build": "browserify app/src/app.js -p bundle-collapser/plugin | esmangle > app/public/app.js",
+    "watch": "watchify app/src/app.js -o app/public/app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["luaus", "real", "time", "scoreboard"],
+  "author": "Rijk van Zanten <rijkvanzanten@me.com> (rijks.website)",
+  "contributors": ["Rijk van Zanten <rijkvanzanten@me.com> (rijks.website)", "Berend Pronk <berendpronk1994@gmail.com> (oege.ie.hva.nl/~pronkb001/)"],
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.1",
     "convert-range": "^1.0.0",
