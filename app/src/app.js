@@ -1,6 +1,6 @@
 const throttle = require('throttle-debounce/throttle');
 const shortid = require('shortid');
-const convert = require('convert-range');
+// const convert = require('convert-range');
 
 (function () {
   const ws = new WebSocket('ws://' + location.hostname + ':' + location.port);
