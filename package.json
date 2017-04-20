@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app/server.js",
-    "fix": "prettier --single-quote --trailing-comma none --write \"app/src/*.js\"",
+    "fix": "prettier --single-quote --trailing-comma none --write \"app/src/*.js\" \"app/server.js\"",
     "build-js": "browserify -t [ babelify --presets [ es2015 ] ] app/src/app.js -p bundle-collapser/plugin | esmangle > app/public/app.js",
     "build-css": "postcss app/src/*.css --use postcss-cssnext | csso -o app/public/style.css",
     "build": "npm run build-js & npm run build-css",
