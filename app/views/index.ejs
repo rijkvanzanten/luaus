@@ -1,0 +1,29 @@
+<%- include partials/head %>
+<div id="logo">
+  <img src="/berend32.png" />
+  <h1>
+    <span>l</span>
+    <span>u</span>
+    <span>a</span>
+    <span>u</span>
+    <span>s</span>
+  </h1>
+  <img src="/rijk32.png" />
+</div>
+
+<% if (!started) { %>
+<form id="setup">
+  <button id="min" type="button">-</button>
+  <input type="number" name="max-score" min="1" value="<%= maxScore %>" />
+  <button id="plus" type="button">+</button>
+  <button type="submit">start</button>
+</form>
+<% } %>
+
+<div id="players">
+
+</div>
+
+<audio src="/8bit-love-machine.mp3" loop autoplay></audio>
+
+<script src="app.js"></script>
