@@ -26,7 +26,7 @@ const app = express()
   .use(bodyParser.urlencoded({extended: false}))
   .use(express.static(path.join(__dirname, 'public')))
   .set('view engine', 'ejs')
-  .set('views', path.join(__dirname))
+  .set('views', path.join(__dirname, 'views'))
   .get('/', getApp)
   .get('/controller', getController)
   .post('/controller', postController);
