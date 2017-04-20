@@ -112,6 +112,29 @@ body.controller .back {
   /* Needs styling */
 }
 
+#app-banner {
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+}
+
+#app-banner a {
+  display: flex;
+  justify-content: center;
+  padding: 2em;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  background-color: #15d7d4;
+}
+
+/*@media (min-width: 40em) {
+  #app-banner {
+    display: none;
+  }
+}*/
+
 #logo {
   padding-top: 250px;
   margin: 0 auto;
@@ -234,37 +257,22 @@ button[type=submit] {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   flex-grow: 1;
   filter: brightness(500%);
 }
 
-#players li img {
+#players img {
   width: 5em;
   filter: brightness(20%);
 }
 
-#app-banner {
-  position: fixed;
-  bottom: 0;
-  z-index: 1;
-  width: 100%;
+#players.started img {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  width: 3em;
 }
-
-#app-banner a {
-  display: flex;
-  justify-content: center;
-  padding: 2em;
-  width: 100%;
-  text-align: center;
-  color: #fff;
-  background-color: #15d7d4;
-}
-
-/*@media (min-width: 40em) {
-  #app-banner {
-    display: none;
-  }
-}*/
 
 button {
   appearance: none;
