@@ -1,6 +1,6 @@
 <%- include partials/head %>
 <% if (message) { %>
-  <div class="message"><%= message %></div>
+  <div id="message"><%= message %></div>
 <% } %>
 
 <div id="logo">
@@ -13,6 +13,10 @@
     <span>s</span>
   </h1>
   <img src="/rijk32.png" />
+</div>
+
+<div id="app-banner">
+  <a href="/controller">Want to play along? Click here.</a>
 </div>
 
 <% if (!started) { %>

@@ -108,6 +108,10 @@ body.controller .back {
   z-index: -1
 }
 
+#message {
+  /* Needs styling */
+}
+
 #logo {
   padding-top: 250px;
   margin: 0 auto;
@@ -238,6 +242,29 @@ button[type=submit] {
   width: 5em;
   filter: brightness(20%);
 }
+
+#app-banner {
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+}
+
+#app-banner a {
+  display: flex;
+  justify-content: center;
+  padding: 2em;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  background-color: #15d7d4;
+}
+
+/*@media (min-width: 40em) {
+  #app-banner {
+    display: none;
+  }
+}*/
 
 button {
   appearance: none;
