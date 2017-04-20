@@ -41,6 +41,10 @@ function init()
 
     if data.action == 'CHANGE_COLOR' then
       setStrip(data.color)
+    elseif data.action == 'SPECTATE' then
+      ledLoop(100, {
+        0, 255, 0
+      })
     elseif data.action == 'END_GAME' then
       -- Check if button belongs to winner
       if data.winner == node.chipid() then
@@ -64,6 +68,15 @@ function init()
   function onChange()
     if gpio.read(button) < isPressed then
       print('Button pressed!')
+
+      -- local color = buffer:get(1)
+      -- print(color .. color2 .. color3)
+
+      -- ledTimer:alarm(1000, tmr.ALARM_SINGLE, function()
+      --   ledLoop(50, {
+      --
+      --   })
+      -- end)
 
       ok, json = pcall(cjson.encode, {
         device = 'nodemcu',

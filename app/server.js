@@ -128,19 +128,19 @@ function nodemcuMessage(socket, message) {
   console.log(message);
   switch (message.action) {
     case 'JOIN_GAME':
-      let color;
+      if (!game.started) {
+        let color;
 
-      if (game.players[message.id]) {
-        color = game.players[message.id].color;
-      } else {
-        color = colors[Object.keys(game.players).length % colors.length];
-        game.players[message.id] = {
-          type: 'nodemcu',
-          color,
-          score: 0
-        };
+        if (game.players[message.id]) {
+          color = game.players[message.id].color;
+        } else {
+          color = colors[Object.keys(game.players).length % colors.length];
+          game.players[message.id] = {
+            type: 'nodemcu',
+            color,
+            score: 0
+          };
 
-        if (!game.started) {
           wss.broadcast(
             JSON.stringify({
               action: 'NEW_PLAYER',
@@ -148,14 +148,20 @@ function nodemcuMessage(socket, message) {
             })
           );
         }
-      }
 
-      return socket.send(
-        JSON.stringify({
-          action: 'CHANGE_COLOR',
-          color
-        })
-      );
+        return socket.send(
+          JSON.stringify({
+            action: 'CHANGE_COLOR',
+            color
+          })
+        );
+      } else {
+        return socket.send(
+          JSON.stringify({
+            action: 'SPECTATE'
+          })
+        );
+      }
     default:
       return false;
   }
