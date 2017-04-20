@@ -79,6 +79,7 @@ html {
 }
 
 body {
+  position: relative;
   font-family: 'pixel', cursive;
   background-image: url('/pow-star.png');
   animation: animatedBackground 1s linear infinite;
@@ -189,9 +190,41 @@ button[type=submit] {
 
 #players {
   /*background-color: blue;*/
+  position: relative;
   width: 100%;
   flex-grow: 1;
 }
+
+#players ul {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+ }
+
+ #players li {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+ }
+
+ #players li img {
+  width: 5em;
+ }
+
+ #players li[data-type="nodemcu"] {
+  filter: brightness(1000%);
+ }
+
+ #players li[data-type="nodemcu"] img {
+  filter: brightness(10%);
+ }
 
 button {
   appearance: none;

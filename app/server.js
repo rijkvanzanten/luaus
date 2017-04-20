@@ -71,6 +71,7 @@ function postController(req, res) {
       player: game.players[req.body.name]
     })
   );
+  
   res.render('controller', {
     player: game.players[req.body.name],
     name: req.body.name
