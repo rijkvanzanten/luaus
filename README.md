@@ -16,3 +16,18 @@
 noun (plural same or luaus)  
 
 a Hawaiian party or feast, especially one accompanied by entertainment.
+
+
+## Usage
+
+Clone the repo and install the dependencies with
+`$ npm install`
+
+To start the app run
+`$ npm run start`
+
+To start the server with nodemon run
+`$ npm run dev-server`
+
+To watch for client-side file changes run
+`$ npn run dev-client`
