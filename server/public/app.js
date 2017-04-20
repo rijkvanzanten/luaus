@@ -485,13 +485,22 @@ const convert = require('convert-range');
           }, 10);
         }
         break;
-
       case 'START_GAME':
         document.querySelector('#setup').remove();
         break;
-
       case 'NEW_PLAYER':
-        alert('new player');
+        const playerList = document.querySelector('#players ul');
+        const newPlayer = document.createElement('li');
+        const playerType = document.createElement('img');
+        const colors = data.player.color;
+
+        newPlayer.style.backgroundColor = `rgb(${colors[1]}, ${colors[0]}, ${colors[2]})`;
+        newPlayer.setAttribute('data-type', data.player.type);
+        
+        playerType.src = `/${data.player.type}.png`;
+
+        newPlayer.appendChild(playerType);
+        playerList.appendChild(newPlayer);
         break;
       default: return false;
     }

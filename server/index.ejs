@@ -83,6 +83,7 @@
   }
 
   body {
+    position: relative;
     font-family: 'pixel', cursive;
     background-image: url('/pow-star.png');
     animation: animatedBackground 1s linear infinite;
@@ -90,6 +91,8 @@
     display: flex;
     flex-direction: column;
     height: 100%;
+    max-height: 100vh;
+    overflow: hidden;
   }
 
   #logo {
@@ -193,8 +196,40 @@
 
   #players {
     /*background-color: blue;*/
+    position: relative;
     width: 100%;
     flex-grow: 1;
+  }
+
+  #players ul {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  #players li {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  #players li img {
+    width: 5em;
+  }
+
+  #players li[data-type="nodemcu"] {
+    filter: brightness(1000%);
+  }
+
+  #players li[data-type="nodemcu"] img {
+    filter: brightness(10%);
   }
 
   button {
@@ -259,7 +294,15 @@
 <% } %>
 
 <div id="players">
-
+  <ul>
+    <% if (players) { %>
+      <% Object.keys(players).forEach(function(key, index) { %>
+        <li style="<%= `background-color: rgb(${players[key].color[1]}, ${players[key].color[0]}, ${players[key].color[2]})` %>" data-type="<%= players[key].type %>">
+            <img src="/<%= players[key].type %>.png" alt="Player uses <%= players[key].type %>">
+        </li>
+      <% }); %>
+    <% } %>
+  </ul>
 </div>
 
 <audio src="/8bit-love-machine.mp3" loop autoplay></audio>
