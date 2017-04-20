@@ -16,19 +16,22 @@ function wifimodule.connect(network, callback)
 
     local redirHost = gateway .. ':8002'
 
-    -- Auto-accept HvA open wifi thingy
     conn:on('receive', function(sck, c)
       print('[Wi-Fi] Connected to ' .. network.ssid .. '!')
       callback()
     end)
 
-    if network.ssid == 'HvA Open Wi-Fi' then
-      conn:on('connection', function(sck, c)
+    conn:on('connection', function(sck, c)
+      -- Auto-accept HvA open wifi
+      if network.ssid == 'HvA Open Wi-Fi' then
         sck:send('POST / HTTP/1.1\r\nHost: ' .. redirHost .. '\r\nOrigin: http://' .. redirHost .. '\r\nContent-Type: application/x-www-form-urlencoded\r\nReferer: http://' .. redirHost .. '/index.php\r\nContent-Length: 52\r\n\r\nredirurl=http%3A%2F%2Fwww.hva.nl%2F&accept=Verbinden')
-      end)
-    end
+      else
+        sck:send("GET /get HTTP/1.1\r\nHost: httpbin.org\r\nConnection: keep-alive\r\nAccept: */*\r\n\r\n")
+      end
+    end)
 
-    conn:connect(8002, gateway)
+    -- conn:connect(8002, gateway)
+    conn:connect(80,"httpbin.org")
   end)
   wifi.sta.eventMonStart()
   wifi.sta.connect()
