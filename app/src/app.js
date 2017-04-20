@@ -2,7 +2,7 @@ const throttle = require('throttle-debounce/throttle');
 const shortid = require('shortid');
 // const convert = require('convert-range');
 
-(function () {
+(function() {
   const ws = new WebSocket('ws://' + location.hostname + ':' + location.port);
   const id = shortid.generate();
 
@@ -12,12 +12,19 @@ const shortid = require('shortid');
 
   document.querySelector('form').addEventListener('submit', onFormSubmit);
 
-  document.querySelectorAll('[type=button]')
+  document
+    .querySelectorAll('[type=button]')
     .forEach(button => button.addEventListener('click', onButtonClick));
 
   function onFormSubmit(e) {
     e.preventDefault();
-    ws.send(JSON.stringify({device: 'scoreboard', action: 'START_GAME', maxScore: Number(document.querySelector('input').value)}));
+    ws.send(
+      JSON.stringify({
+        device: 'scoreboard',
+        action: 'START_GAME',
+        maxScore: Number(document.querySelector('input').value)
+      })
+    );
     return false;
   }
 
@@ -33,16 +40,26 @@ const shortid = require('shortid');
         break;
       case 'MOVE_MOUSE':
         if (data.id !== id) {
-          const element = document.querySelector(`div[data-clientid="${data.id}"]`);
+          const element = document.querySelector(
+            `div[data-clientid="${data.id}"]`
+          );
           if (!element) {
             document.body.innerHTML += `<div data-clientid="${data.id}"></div>`;
           }
 
           // document.querySelector(`div[data-clientid="${data.id}"]`).style.transform = `translate(${convert(data.clientX, {min: 0, max: data.innerWidth}, {min: 0, max: window.innerWidth})}px, ${convert(data.clientY, {min: 0, max: data.innerHeight}, {min: 0, max: window.innerHeight})}px)`;
-          document.querySelector(`div[data-clientid="${data.id}"]`).style.transform = `translate(${data.clientX}px, ${data.clientY}px)`;
-          document.querySelector(`div[data-clientid="${data.id}"]`).style.animation = 'none'; // 💩
+          document.querySelector(
+            `div[data-clientid="${data.id}"]`
+          ).style.transform = `translate(${data.clientX}px, ${data.clientY}px)`;
+          document.querySelector(
+            `div[data-clientid="${data.id}"]`
+          ).style.animation =
+            'none'; // 💩
           setTimeout(() => {
-            document.querySelector(`div[data-clientid="${data.id}"]`).style.animation = 'fadeout .5s linear forwards';
+            document.querySelector(
+              `div[data-clientid="${data.id}"]`
+            ).style.animation =
+              'fadeout .5s linear forwards';
           }, 10);
         }
         break;
@@ -54,12 +71,23 @@ const shortid = require('shortid');
       case 'NEW_PLAYER':
         alert('new player');
         break;
-      default: return false;
+      default:
+        return false;
     }
   }
 
   function onMouseMove(e) {
-    ws.send(JSON.stringify({device: 'scoreboard', id, action: 'MOVE_MOUSE', clientX: e.clientX, clientY: e.clientY, innerWidth: window.innerWidth, innerHeight: window.innerHeight}));
+    ws.send(
+      JSON.stringify({
+        device: 'scoreboard',
+        id,
+        action: 'MOVE_MOUSE',
+        clientX: e.clientX,
+        clientY: e.clientY,
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight
+      })
+    );
   }
 
   function onButtonClick(e) {
@@ -73,6 +101,13 @@ const shortid = require('shortid');
 
     document.querySelector('input').value = value;
 
-    ws.send(JSON.stringify({device: 'scoreboard', id, action: 'SET_MAX_SCORE', maxScore: value}));
+    ws.send(
+      JSON.stringify({
+        device: 'scoreboard',
+        id,
+        action: 'SET_MAX_SCORE',
+        maxScore: value
+      })
+    );
   }
 })();
