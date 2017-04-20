@@ -47,7 +47,6 @@ const shortid = require('shortid');
             document.body.innerHTML += `<div data-clientid="${data.id}"></div>`;
           }
 
-          // document.querySelector(`div[data-clientid="${data.id}"]`).style.transform = `translate(${convert(data.clientX, {min: 0, max: data.innerWidth}, {min: 0, max: window.innerWidth})}px, ${convert(data.clientY, {min: 0, max: data.innerHeight}, {min: 0, max: window.innerHeight})}px)`;
           document.querySelector(
             `div[data-clientid="${data.id}"]`
           ).style.transform = `translate(${data.clientX}px, ${data.clientY}px)`;
@@ -63,13 +62,23 @@ const shortid = require('shortid');
           }, 10);
         }
         break;
-
       case 'START_GAME':
         document.querySelector('#setup').remove();
         break;
-
       case 'NEW_PLAYER':
-        alert('new player');
+        const playerList = document.querySelector('#players ul');
+        const newPlayer = document.createElement('li');
+        const playerType = document.createElement('img');
+        const colors = data.player.color;
+
+        newPlayer.style.backgroundColor = `rgb(${colors[1]}, ${colors[0]}, ${colors[2]})`;
+        newPlayer.setAttribute('data-type', data.player.type);
+
+        playerType.src = `/${data.player.type}.png`;
+        playerType.alt = `Player uses ${data.player.type}`;
+
+        newPlayer.appendChild(playerType);
+        playerList.appendChild(newPlayer);
         break;
       default:
         return false;
