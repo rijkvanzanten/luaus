@@ -5,14 +5,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon app/server.js --ignore db.json",
     "start": "node app/server.js",
-    "build": "browserify app/src/app.js -p bundle-collapser/plugin | esmangle > app/public/app.js",
-    "watch": "watchify app/src/app.js -o app/public/app.js"
+    "build-js": "browserify -t [ babelify --presets [ es2015 ] ] app/src/app.js -p bundle-collapser/plugin | esmangle > app/public/app.js",
+    "build-css": "postcss app/src/*.css --use postcss-cssnext | csso -o app/public/style.css",
+    "build": "npm run build-js & npm run build-css",
+    "dev-server": "nodemon app/server.js",
+    "dev-client": "nodemon -e css,js --watch src --exec \"npm run build\""
   },
-  "keywords": ["luaus", "real", "time", "scoreboard"],
+  "keywords": [
+    "luaus",
+    "real",
+    "time",
+    "scoreboard"
+  ],
   "author": "Rijk van Zanten <rijkvanzanten@me.com> (rijks.website)",
-  "contributors": ["Rijk van Zanten <rijkvanzanten@me.com> (rijks.website)", "Berend Pronk <berendpronk1994@gmail.com> (oege.ie.hva.nl/~pronkb001/)"],
+  "contributors": [
+    "Rijk van Zanten <rijkvanzanten@me.com> (rijks.website)",
+    "Berend Pronk <berendpronk1994@gmail.com> (oege.ie.hva.nl/~pronkb001/)"
+  ],
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.1",
@@ -31,10 +41,16 @@
     ]
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
     "browserify": "^14.3.0",
     "bundle-collapser": "^1.2.1",
+    "csso-cli": "^1.0.0",
     "esmangle": "^1.0.1",
     "nodemon": "^1.11.0",
+    "postcss": "^5.2.17",
+    "postcss-cli": "^3.1.1",
+    "postcss-cssnext": "^2.10.0",
     "watchify": "^3.9.0",
     "xo": "^0.18.1"
   }
