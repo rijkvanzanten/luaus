@@ -89,6 +89,25 @@ body {
   height: 100%;
 }
 
+body.controller {
+  background-image: none;
+  animation: none;
+  filter: brightness(500%);
+}
+
+body.controller > *:not(.back) {
+  filter: brightness(20%);
+}
+
+body.controller .back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1
+}
+
 #logo {
   padding-top: 250px;
   margin: 0 auto;
@@ -204,27 +223,21 @@ button[type=submit] {
   height: 100%;
   margin: 0;
   padding: 0;
- }
+}
 
- #players li {
+#players li {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
- }
+  filter: brightness(500%);
+}
 
- #players li img {
+#players li img {
   width: 5em;
- }
-
- #players li[data-type="nodemcu"] {
-  filter: brightness(1000%);
- }
-
- #players li[data-type="nodemcu"] img {
-  filter: brightness(10%);
- }
+  filter: brightness(20%);
+}
 
 button {
   appearance: none;
@@ -276,6 +289,7 @@ body {
 h1 {
   color: white;
   font-size: 5em;
+  text-shadow: 0 0.1em 0 black;
 }
 
 #bigredbutton {
