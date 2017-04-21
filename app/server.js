@@ -18,7 +18,7 @@ const client = new Twitter({
 
 const game = {
   players: {},
-  maxScore: 8,
+  maxScore: 10,
   started: false
 };
 
@@ -54,7 +54,8 @@ function getApp(req, res) {
   res.render('index', {
     maxScore: game.maxScore,
     players: game.players,
-    started: game.started
+    started: game.started,
+    message: ''
   });
 }
 
@@ -64,28 +65,39 @@ function getController(req, res) {
 
 function postController(req, res) {
   let color;
-  if (game.players[req.body.name]) {
-    color = game.players[req.body.name].color;
+  if (!game.started) {
+    if (game.players[req.body.name]) {
+      color = game.players[req.body.name].color;
+    } else {
+      color = colors[Object.keys(game.players).length % colors.length];
+      game.players[req.body.name] = {
+        id: req.body.name,
+        type: 'phone',
+        color,
+        score: 0
+      };
+    }
+
+    wss.broadcast(
+      JSON.stringify({
+        device: 'phone',
+        action: 'NEW_PLAYER',
+        player: game.players[req.body.name]
+      })
+    );
+
+    res.render('controller', {
+      player: game.players[req.body.name],
+      name: req.body.name
+    });
   } else {
-    color = colors[Object.keys(game.players).length % colors.length];
-    game.players[req.body.name] = {
-      type: 'phone',
-      color,
-      score: 0
-    };
+    res.render('index', {
+      maxScore: game.maxScore,
+      players: game.players,
+      started: game.started,
+      message: 'Game already started, you are now spectating'
+    });
   }
-
-  wss.broadcast(
-    JSON.stringify({
-      action: 'NEW_PLAYER',
-      player: game.players[req.body.name]
-    })
-  );
-
-  res.render('controller', {
-    player: game.players[req.body.name],
-    name: req.body.name
-  });
 }
 
 function onListen() {
@@ -126,58 +138,105 @@ function onSocketConnection(socket) {
 function nodemcuMessage(socket, message) {
   switch (message.action) {
     case 'JOIN_GAME':
-      let color;
+      console.log(message);
+      if (!game.started) {
+        let color;
 
-      if (game.players[message.id]) {
-        color = game.players[message.id].color;
-      } else {
-        color = colors[Object.keys(game.players).length % colors.length];
-        game.players[message.id] = {
-          type: 'nodemcu',
-          color,
-          score: 0
-        };
-        wss.broadcast(
+        if (game.players[message.id]) {
+          color = game.players[message.id].color;
+        } else {
+          color = colors[Object.keys(game.players).length % colors.length];
+          game.players[message.id] = {
+            id: message.id,
+            type: 'nodemcu',
+            color,
+            score: 0
+          };
+
+          console.log(game.players)
+
+          wss.broadcast(
+            JSON.stringify({
+              action: 'NEW_PLAYER',
+              player: game.players[message.id]
+            })
+          );
+        }
+
+        return socket.send(
           JSON.stringify({
-            action: 'NEW_PLAYER',
-            player: game.players[message.id]
+            action: 'CHANGE_COLOR',
+            color
+          })
+        );
+      } else {
+        return socket.send(
+          JSON.stringify({
+            action: 'SPECTATE'
           })
         );
       }
+    case 'UPDATE_SCORE':
+      if (game.started) {
+        console.log(message);
 
-      return socket.send(
-        JSON.stringify({
-          action: 'CHANGE_COLOR',
-          color
-        })
-      );
+        game.players[message.id].score = game.players[message.id].score + 1;
+
+        console.log(game.players[message.id]);
+
+        wss.broadcast(
+          JSON.stringify({
+            action: 'UPDATE_SCORE',
+            id: message.id
+          })
+        );
+
+        if (game.players[message.id].score === game.maxScore) {
+          wss.broadcast(
+            JSON.stringify({
+              action: 'END_GAME',
+              winner: game.players[message.id]
+            })
+          );
+        }
+      }
+      break;
     default:
       return false;
   }
 }
 
 function scoreboardMessage(socket, message) {
-  // console.log(message);
-
   switch (message.action) {
     case 'SET_MAX_SCORE':
+      console.log(message);
+
       game.maxScore = message.maxScore;
       wss.broadcast(JSON.stringify({
         action: 'SET_MAX_SCORE',
         maxScore: game.maxScore
       }));
+
       break;
     case 'MOVE_MOUSE':
       wss.broadcast(JSON.stringify(message));
+      break;
+    case 'START_GAME':
+      if (Object.keys(game.players).length > 1) {
+        console.log(message);
+
+        game.started = true;
+        wss.broadcast(
+          JSON.stringify({
+            action: 'START_GAME',
+            maxScore: game.maxScore,
+            players: game.players
+          })
+        );
+      }
+      break;
     default:
       return false;
-    case 'START_GAME':
-      game.started = true;
-      wss.broadcast(
-        JSON.stringify({ action: 'START_GAME', maxScore: game.maxScore })
-      );
-      tweet('Daar gaan we!');
-      break;
   }
 }
 

@@ -89,6 +89,67 @@ body {
   height: 100%;
 }
 
+body.controller {
+  background-image: none;
+  animation: none;
+  filter: brightness(500%);
+}
+
+body.controller > *:not(.back) {
+  filter: brightness(20%);
+}
+
+body.controller .back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1
+}
+
+body.started #setup, body.started #app-banner {
+  display: none;
+}
+
+body.started #players img {
+  position: absolute;
+  top: 1em;
+  width: 3em;
+  left: 1em;
+}
+
+body.started #players span {
+  display: block;
+}
+
+#message {
+  /* Needs styling */
+}
+
+#app-banner {
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+}
+
+#app-banner a {
+  display: flex;
+  justify-content: center;
+  padding: 2em;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  background-color: #15d7d4;
+}
+
+@media (min-width: 40em) {
+  #app-banner {
+    display: none;
+  }
+}
+
 #logo {
   padding-top: 250px;
   margin: 0 auto;
@@ -204,27 +265,39 @@ button[type=submit] {
   height: 100%;
   margin: 0;
   padding: 0;
- }
+}
 
- #players li {
+#players li {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   flex-grow: 1;
- }
+  filter: brightness(500%);
+}
 
- #players li img {
+#players li.won {
+  animation: pulsateRight 1s ease-in-out infinite alternate;
+}
+
+#players li.lost {
+  filter: grayscale(100%);
+}
+
+#players img {
   width: 5em;
- }
+  filter: brightness(20%);
+}
 
- #players li[data-type="nodemcu"] {
-  filter: brightness(1000%);
- }
+#players h2 {
+  /* Needs styling */
+}
 
- #players li[data-type="nodemcu"] img {
-  filter: brightness(10%);
- }
+#players span {
+  display: none;
+  /* Needs styling */
+}
 
 button {
   appearance: none;
@@ -276,6 +349,7 @@ body {
 h1 {
   color: white;
   font-size: 5em;
+  text-shadow: 0 0.1em 0 black;
 }
 
 #bigredbutton {

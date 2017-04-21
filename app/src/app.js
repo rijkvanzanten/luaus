@@ -62,23 +62,51 @@ const shortid = require('shortid');
           }, 10);
         }
         break;
-      case 'START_GAME':
-        document.querySelector('#setup').remove();
-        break;
       case 'NEW_PLAYER':
         const playerList = document.querySelector('#players ul');
         const newPlayer = document.createElement('li');
         const playerType = document.createElement('img');
+        const playerName = document.createElement('h2');
+        const playerScore = document.createElement('span');
         const colors = data.player.color;
 
         newPlayer.style.backgroundColor = `rgb(${colors[1]}, ${colors[0]}, ${colors[2]})`;
+        newPlayer.setAttribute('data-id', data.player.id);
         newPlayer.setAttribute('data-type', data.player.type);
 
         playerType.src = `/${data.player.type}.png`;
         playerType.alt = `Player uses ${data.player.type}`;
 
+        playerName.textContent = data.player.id;
+        playerScore.textContent = data.player.score;
+
         newPlayer.appendChild(playerType);
+        newPlayer.appendChild(playerName);
+        newPlayer.appendChild(playerScore);
         playerList.appendChild(newPlayer);
+        break;
+      case 'START_GAME':
+        document.querySelector('body').classList.add('started');
+        break;
+      case 'UPDATE_SCORE':
+        const player = document.querySelector(`#players li[data-id="${data.id}"]`);
+        const score = player.querySelector('span');
+
+        score.textContent = Number(score.textContent) + 1;
+        break;
+      case 'END_GAME':
+        const players = document.querySelectorAll('#players li');
+        const winner = data.winner.id;
+
+        players
+          .forEach(player => {
+            if (player.getAttribute('data-id') === String(winner)) {
+              player.classList.add('won');
+            } else {
+              player.classList.add('lost');
+            }
+          });
+
         break;
       default:
         return false;
