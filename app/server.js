@@ -3,8 +3,18 @@ const path = require('path');
 const express = require('express');
 const WebSocket = require('ws');
 const bodyParser = require('body-parser');
+const Twitter = require('twitter');
+
+require('dotenv').config();
 
 const port = process.env.PORT || 3000;
+
+const client = new Twitter({
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token_key: process.env.TWITTER_CONSUMER_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.TWITTER_CONSUMER_ACCESS_TOKEN_SECRET
+});
 
 const game = {
   players: {},
@@ -212,7 +222,7 @@ function scoreboardMessage(socket, message) {
       wss.broadcast(JSON.stringify(message));
       break;
     case 'START_GAME':
-      // if (Object.keys(game.players).length > 1) {
+      if (Object.keys(game.players).length > 1) {
         console.log(message);
 
         game.started = true;
@@ -223,9 +233,15 @@ function scoreboardMessage(socket, message) {
             players: game.players
           })
         );
-      // }
+      }
       break;
     default:
       return false;
   }
+}
+
+function tweet(message) {
+  client.post('statuses/update', {status: message},  function(error, tweet, response) {
+    if(error) console.log(message);
+  });
 }
