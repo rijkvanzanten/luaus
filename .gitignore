@@ -2,3 +2,4 @@
 node_modules
 app/public/app.js
 app/public/style.css
+config.lua

@@ -21,7 +21,15 @@
 <% } %>
 
 <div id="players">
-
+  <ul>
+    <% if (players) { %>
+      <% Object.keys(players).forEach(function(key, index) { %>
+        <li style="<%= `background-color: rgb(${players[key].color[1]}, ${players[key].color[0]}, ${players[key].color[2]})` %>" data-type="<%= players[key].type %>">
+         <img src="/<%= players[key].type %>.png" alt="Player uses <%= players[key].type %>">
+        </li>
+      <% }); %>
+    <% } %>
+  </ul>
 </div>
 
 <audio src="/8bit-love-machine.mp3" loop autoplay></audio>

@@ -41,7 +41,11 @@ wss.on('connection', onSocketConnection);
 server.listen(port, onListen);
 
 function getApp(req, res) {
-  res.render('index', { maxScore: game.maxScore, started: game.started });
+  res.render('index', {
+    maxScore: game.maxScore,
+    players: game.players,
+    started: game.started
+  });
 }
 
 function getController(req, res) {
@@ -55,6 +59,7 @@ function postController(req, res) {
   } else {
     color = colors[Object.keys(game.players).length % colors.length];
     game.players[req.body.name] = {
+      type: 'phone',
       color,
       score: 0
     };
@@ -66,6 +71,7 @@ function postController(req, res) {
       player: game.players[req.body.name]
     })
   );
+  
   res.render('controller', {
     player: game.players[req.body.name],
     name: req.body.name
@@ -117,17 +123,17 @@ function nodemcuMessage(socket, message) {
       } else {
         color = colors[Object.keys(game.players).length % colors.length];
         game.players[message.id] = {
+          type: 'nodemcu',
           color,
           score: 0
         };
+        wss.broadcast(
+          JSON.stringify({
+            action: 'NEW_PLAYER',
+            player: game.players[message.id]
+          })
+        );
       }
-
-      wss.broadcast(
-        JSON.stringify({
-          action: 'NEW_PLAYER',
-          player: game.players[message.id]
-        })
-      );
 
       return socket.send(
         JSON.stringify({
@@ -141,14 +147,15 @@ function nodemcuMessage(socket, message) {
 }
 
 function scoreboardMessage(socket, message) {
-  console.log(message);
+  // console.log(message);
 
   switch (message.action) {
     case 'SET_MAX_SCORE':
       game.maxScore = message.maxScore;
-      wss.broadcast(
-        JSON.stringify({ action: 'SET_MAX_SCORE', maxScore: game.maxScore })
-      );
+      wss.broadcast(JSON.stringify({
+        action: 'SET_MAX_SCORE',
+        maxScore: game.maxScore
+      }));
       break;
     case 'MOVE_MOUSE':
       wss.broadcast(JSON.stringify(message));
