@@ -40,3 +40,23 @@ TWITTER_CONSUMER_SECRET=<consumer_secret>
 TWITTER_ACCESS_TOKEN_KEY=<access_token_key>
 TWITTER_ACCESS_TOKEN_SECRET=<access_token_secret>
 ```
+
+## TODOs & Wishlist
+-  [ ] Button feedback on press
+-  [ ] Sound effects when updating score
+-  [ ] Update cursor to [more fun one](https://previews.123rf.com/images/marigranula/marigranula1203/marigranula120300280/12657766-hand-pointing-up-Stock-Photo-finger.jpg)
+-  [ ] Allow user to add name to box
+-  [ ] Responsive design woop
+-  [ ] Add more colors to pick from
+-  [ ] Ability to kick players from lobby
+_Checkout the [projects page](https://github.com/rijkvanzanten/luaus/projects/1) for a more up-to-date overview_
+
+## Team
+![Rijk van Zanten](https://avatars0.githubusercontent.com/u/9141017?v=3&s=460) | ![Berend Pronk](https://avatars3.githubusercontent.com/u/12401943?v=3&s=460)
+---|---
+[Rijk van Zanten](https://github.com/rijkvanzanten) | [Berend Pronk](https://github.com/berendpronk)
+
+## License
+MIT License
+
+Copyright &copy; 2017 Rijk van Zanten & Berend Pronk
