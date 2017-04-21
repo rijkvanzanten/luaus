@@ -13,10 +13,11 @@
 
 <br>
 
-**luau** |ˈlo͞oou|  
-noun (plural same or luaus)  
-
+# **luaus** |ˈlo͞oou|  
+noun  
 a Hawaiian party or feast, especially one accompanied by entertainment.
+
+Luaus is an online scoreboard for all your favorite (board) games. Wanna play a match of fooßball? Keep track of your score with Luaus!
 
 
 ## Usage
@@ -44,7 +45,7 @@ TWITTER_ACCESS_TOKEN_SECRET=<access_token_secret>
 ## TODOs & Wishlist
 -  [ ] Button feedback on press
 -  [ ] Sound effects when updating score
--  [ ] Update cursor to [more fun one](https://previews.123rf.com/images/marigranula/marigranula1203/marigranula120300280/12657766-hand-pointing-up-Stock-Photo-finger.jpg)
+-  [ ] Update cursor to a [more fun one](https://previews.123rf.com/images/marigranula/marigranula1203/marigranula120300280/12657766-hand-pointing-up-Stock-Photo-finger.jpg)
 -  [ ] Allow user to add name to box
 -  [ ] Responsive design woop
 -  [ ] Add more colors to pick from
