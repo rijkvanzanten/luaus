@@ -108,7 +108,6 @@ function onSocketConnection(socket) {
 }
 
 function nodemcuMessage(socket, message) {
-  console.log(message);
   switch (message.action) {
     case 'JOIN_GAME':
       let color;
