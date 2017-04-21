@@ -61,6 +61,7 @@ function postController(req, res) {
     } else {
       color = colors[Object.keys(game.players).length % colors.length];
       game.players[req.body.name] = {
+        id: req.body.name,
         type: 'phone',
         color,
         score: 0
@@ -136,10 +137,13 @@ function nodemcuMessage(socket, message) {
         } else {
           color = colors[Object.keys(game.players).length % colors.length];
           game.players[message.id] = {
+            id: message.id,
             type: 'nodemcu',
             color,
             score: 0
           };
+
+          console.log(game.players)
 
           wss.broadcast(
             JSON.stringify({
@@ -189,7 +193,11 @@ function scoreboardMessage(socket, message) {
 
         game.started = true;
         wss.broadcast(
-          JSON.stringify({ action: 'START_GAME', maxScore: game.maxScore })
+          JSON.stringify({
+            action: 'START_GAME',
+            maxScore: game.maxScore,
+            players: game.players
+          })
         );
       }
 

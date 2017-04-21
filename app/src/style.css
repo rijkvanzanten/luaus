@@ -108,6 +108,21 @@ body.controller .back {
   z-index: -1
 }
 
+body.started #setup, body.started #app-banner {
+  display: none;
+}
+
+body.started #players img {
+  position: absolute;
+  top: 1em;
+  width: 3em;
+  left: 1em;
+}
+
+body.started #players span {
+  display: block;
+}
+
 #message {
   /* Needs styling */
 }
@@ -129,11 +144,11 @@ body.controller .back {
   background-color: #15d7d4;
 }
 
-/*@media (min-width: 40em) {
+@media (min-width: 40em) {
   #app-banner {
     display: none;
   }
-}*/
+}
 
 #logo {
   padding-top: 250px;
@@ -267,11 +282,13 @@ button[type=submit] {
   filter: brightness(20%);
 }
 
-#players.started img {
-  position: absolute;
-  top: 1em;
-  left: 1em;
-  width: 3em;
+#players h2 {
+  /* Needs styling */
+}
+
+#players span {
+  display: none;
+  /* Needs styling */
 }
 
 button {

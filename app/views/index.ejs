@@ -1,4 +1,10 @@
 <%- include partials/head %>
+<body
+  <% if (started) { %>
+    class="started"
+  <% } %>
+>
+
 <% if (message) { %>
   <div id="message"><%= message %></div>
 <% } %>
@@ -34,6 +40,8 @@
       <% Object.keys(players).forEach(function(key, index) { %>
         <li style="<%= `background-color: rgb(${players[key].color[1]}, ${players[key].color[0]}, ${players[key].color[2]})` %>" data-type="<%= players[key].type %>">
          <img src="/<%= players[key].type %>.png" alt="Player uses <%= players[key].type %>">
+         <h2><%= players[key].id %></h2>
+         <span><%= players[key].score %></span>
         </li>
       <% }); %>
     <% } %>
