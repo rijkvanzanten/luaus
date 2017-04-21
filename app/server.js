@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000;
 
 const game = {
   players: {},
-  maxScore: 8,
+  maxScore: 10,
   started: false
 };
 
@@ -126,9 +126,9 @@ function onSocketConnection(socket) {
 }
 
 function nodemcuMessage(socket, message) {
-  console.log(message);
   switch (message.action) {
     case 'JOIN_GAME':
+      console.log(message);
       if (!game.started) {
         let color;
 
@@ -166,6 +166,31 @@ function nodemcuMessage(socket, message) {
           })
         );
       }
+    case 'UPDATE_SCORE':
+      if (game.started) {
+        console.log(message);
+
+        game.players[message.id].score = game.players[message.id].score + 1;
+
+        console.log(game.players[message.id]);
+
+        wss.broadcast(
+          JSON.stringify({
+            action: 'UPDATE_SCORE',
+            id: message.id
+          })
+        );
+
+        if (game.players[message.id].score === game.maxScore) {
+          wss.broadcast(
+            JSON.stringify({
+              action: 'END_GAME',
+              winner: game.players[message.id]
+            })
+          );
+        }
+      }
+      break;
     default:
       return false;
   }
@@ -185,10 +210,9 @@ function scoreboardMessage(socket, message) {
       break;
     case 'MOVE_MOUSE':
       wss.broadcast(JSON.stringify(message));
-    default:
-      return false;
+      break;
     case 'START_GAME':
-      if (Object.keys(game.players).length > 1) {
+      // if (Object.keys(game.players).length > 1) {
         console.log(message);
 
         game.started = true;
@@ -199,8 +223,9 @@ function scoreboardMessage(socket, message) {
             players: game.players
           })
         );
-      }
-
+      // }
       break;
+    default:
+      return false;
   }
 }

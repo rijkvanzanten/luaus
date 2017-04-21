@@ -277,6 +277,14 @@ button[type=submit] {
   filter: brightness(500%);
 }
 
+#players li.won {
+  animation: pulsateRight 1s ease-in-out infinite alternate;
+}
+
+#players li.lost {
+  filter: grayscale(100%);
+}
+
 #players img {
   width: 5em;
   filter: brightness(20%);
