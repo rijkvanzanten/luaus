@@ -105,7 +105,11 @@ body.controller .back {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1
+  z-index: -1;
+}
+
+body.controller.lost {
+  filter: brightness(500%) grayscale(100%);
 }
 
 body.started #setup, body.started #app-banner {
@@ -278,7 +282,7 @@ button[type=submit] {
 }
 
 #players li.won {
-  animation: pulsateRight 1s ease-in-out infinite alternate;
+  /* Needs styling */
 }
 
 #players li.lost {
@@ -363,11 +367,10 @@ h1 {
   appearance: none;
   width: 50vw;
   height: 50vw;
-  background-color: rgb(122, 12, 12);
-  border: 5px solid white;
-  box-shadow: 0 15px 3px 0 rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
   position: relative;
+  background-image: url('/button-controller.png');
+  background-size: 200%;
+  background-repeat: no-repeat;
 }
 
 #bigredbutton:focus {
@@ -375,6 +378,9 @@ h1 {
 }
 
 #bigredbutton:active {
-  box-shadow: none;
-  top: 15px;
+  background-position-x: 100%;
+}
+
+#bigredbutton:disabled {
+  filter: brightness(20%) grayscale(100%);
 }
