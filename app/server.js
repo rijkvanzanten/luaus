@@ -127,6 +127,8 @@ function onSocketConnection(socket) {
     switch (message.device) {
       case 'nodemcu':
         return nodemcuMessage(socket, message);
+      case 'phone':
+        return phoneMessage(socket, message);
       case 'scoreboard':
         return scoreboardMessage(socket, message);
       default:
@@ -182,8 +184,6 @@ function nodemcuMessage(socket, message) {
 
         game.players[message.id].score = game.players[message.id].score + 1;
 
-        console.log(game.players[message.id]);
-
         wss.broadcast(
           JSON.stringify({
             action: 'UPDATE_SCORE',
@@ -198,6 +198,37 @@ function nodemcuMessage(socket, message) {
               winner: game.players[message.id]
             })
           );
+        }
+      }
+      break;
+    default:
+      return false;
+  }
+}
+
+function phoneMessage(socket, message) {
+  switch (message.action) {
+    case 'UPDATE_SCORE':
+      if (game.started) {
+        const player = game.players[message.id];
+        console.log(message);
+
+        player.score = player.score + 1;
+
+        wss.broadcast(
+          JSON.stringify({
+            action: 'UPDATE_SCORE',
+            id: message.id
+          })
+        );
+
+        if (player.score === game.maxScore) {
+          wss.broadcast(
+            JSON.stringify({
+              action: 'END_GAME',
+              winner: player
+            })
+          )
         }
       }
       break;

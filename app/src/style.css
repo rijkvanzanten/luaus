@@ -108,6 +108,10 @@ body.controller .back {
   z-index: -1
 }
 
+body.controller.lost {
+  filter: brightness(500%) grayscale(100%);
+}
+
 body.started #setup, body.started #app-banner {
   display: none;
 }
@@ -278,7 +282,7 @@ button[type=submit] {
 }
 
 #players li.won {
-  animation: pulsateRight 1s ease-in-out infinite alternate;
+  /* Needs styling */
 }
 
 #players li.lost {
@@ -368,4 +372,8 @@ h1 {
 
 #bigredbutton:active {
   background-position-x: 100%;
+}
+
+#bigredbutton:disabled {
+  filter: brightness(20%) grayscale(100%);
 }
