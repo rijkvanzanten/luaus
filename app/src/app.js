@@ -6,50 +6,7 @@ const shortid = require('shortid');
   const ws = new WebSocket('ws://' + location.hostname + ':' + location.port);
   const id = shortid.generate();
 
-  if (document.body.classList.contains('controller')) {
-    const btn = document.querySelector('#bigredbutton');
-    const btnID = document.querySelector('h1').innerText;
-
-    ws.addEventListener('open', onOpenSocket);
-    ws.addEventListener('message', onSocketMessage);
-
-    btn.addEventListener('click', updateScore);
-
-    function onOpenSocket() {
-      console.log('Socket connected');
-      btn.disabled = true;
-    }
-
-    function onSocketMessage(event) {
-      const data = JSON.parse(event.data);
-
-      switch (data.action) {
-        case 'START_GAME':
-          btn.disabled = false;
-          break;
-        case 'END_GAME':
-          btn.disabled = true;
-          // btn.removeEventListener('click', updateScore);
-
-          if (btnID !== data.winner.id) {
-            document.querySelector('.controller').classList.add('lost');
-          }
-          break;
-        default:
-          return false;
-      }
-    }
-
-    function updateScore() {
-      ws.send(
-        JSON.stringify({
-          device: 'phone',
-          action: 'UPDATE_SCORE',
-          id: btnID
-        })
-      )
-    }
-  } else {
+  if (!isController()) {
     ws.addEventListener('open', onOpenSocket);
     ws.addEventListener('message', onSocketMessage);
     document.body.addEventListener('mousemove', throttle(10, onMouseMove));
@@ -190,6 +147,57 @@ const shortid = require('shortid');
           maxScore: value
         })
       );
+    }
+  } else {
+    const btn = document.querySelector('#bigredbutton');
+    const btnID = document.querySelector('h1').innerText;
+
+    ws.addEventListener('open', onOpenSocket);
+    ws.addEventListener('message', onSocketMessage);
+
+    btn.addEventListener('click', updateScore);
+
+    function onOpenSocket() {
+      console.log('Socket connected');
+      btn.disabled = true;
+    }
+
+    function onSocketMessage(event) {
+      const data = JSON.parse(event.data);
+
+      switch (data.action) {
+        case 'START_GAME':
+          btn.disabled = false;
+          break;
+        case 'END_GAME':
+          btn.disabled = true;
+          // btn.removeEventListener('click', updateScore);
+
+          if (btnID !== data.winner.id) {
+            document.querySelector('.controller').classList.add('lost');
+          }
+          break;
+        default:
+          return false;
+      }
+    }
+
+    function updateScore() {
+      ws.send(
+        JSON.stringify({
+          device: 'phone',
+          action: 'UPDATE_SCORE',
+          id: btnID
+        })
+      )
+    }
+  }
+
+  function isController() {
+    if (document.body.classList.contains('controller')) {
+      return true;
+    } else {
+      return false;
     }
   }
 })();
