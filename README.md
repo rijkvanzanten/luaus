@@ -13,10 +13,11 @@
 
 <br>
 
-**luau** |ˈlo͞oou|  
-noun (plural same or luaus)  
-
+# **luaus** |ˈlo͞oou|  
+noun  
 a Hawaiian party or feast, especially one accompanied by entertainment.
+
+Luaus is an online scoreboard for all your favorite (board) games. Wanna play a match of fooßball? Keep track of your score with Luaus!
 
 
 ## Usage
@@ -40,3 +41,31 @@ TWITTER_CONSUMER_SECRET=<consumer_secret>
 TWITTER_ACCESS_TOKEN_KEY=<access_token_key>
 TWITTER_ACCESS_TOKEN_SECRET=<access_token_secret>
 ```
+
+## NodeMCU module used
+[`cjson`](https://nodemcu.readthedocs.io/en/master/en/modules/cjson/) - The JSON support module. Allows encoding and decoding to/from JSON.  
+[`file`](https://nodemcu.readthedocs.io/en/master/en/modules/file/) - The file module provides access to the file system and its individual files.  
+[`gpio`](https://nodemcu.readthedocs.io/en/master/en/modules/gpio/) - This module provides access to the GPIO (General Purpose Input/Output) subsystem.  
+[`http`](https://nodemcu.readthedocs.io/en/master/en/modules/http/) - Basic HTTP client module that provides an interface to do GET/POST/PUT/DELETE over HTTP(S), as well as customized requests.  
+[`net`](https://nodemcu.readthedocs.io/en/master/en/modules/net/) - This module is used for different server and client actions, like creating and closing a server  
+[`node`](https://nodemcu.readthedocs.io/en/master/en/modules/node/) - The node module provides access to system-level features such as sleep, restart and various info and IDs.  
+[`tmr`](https://nodemcu.readthedocs.io/en/master/en/modules/tmr/) - The tmr module allows access to simple timers, the system counter and uptime.  
+[`uart`](https://nodemcu.readthedocs.io/en/master/en/modules/uart/) - The UART (Universal asynchronous receiver/transmitter) module allows configuration of and communication over the UART serial port.  
+[`websocket`](https://nodemcu.readthedocs.io/en/master/en/modules/websocket/) - A websocket client module that implements RFC6455 (version 13) and provides a simple interface to send and receive messages.  
+[`wifi`](https://nodemcu.readthedocs.io/en/master/en/modules/wifi/) - This module provides overall wifi configuration  
+[`ws2812`](https://nodemcu.readthedocs.io/en/master/en/modules/ws2812/) - ws2812 is a library to handle ws2812-like led strips. It works at least on WS2812, WS2812b, APA104, SK6812 (RGB or RGBW).
+
+## TODOs & Wishlist
+-  [ ] Button feedback on press
+-  [ ] Sound effects when updating score
+-  [ ] Update cursor to a [more fun one](https://previews.123rf.com/images/marigranula/marigranula1203/marigranula120300280/12657766-hand-pointing-up-Stock-Photo-finger.jpg)
+-  [ ] Allow user to add name to box
+-  [ ] Responsive design woop
+-  [ ] Add more colors to pick from
+-  [ ] Ability to kick players from lobby
+_Checkout the [projects page](https://github.com/rijkvanzanten/luaus/projects/1), or our [issues](https://github.com/rijkvanzanten/luaus/issues) for a more up-to-date overview_
+
+## License
+MIT License
+
+Copyright &copy; 2017 Rijk van Zanten & Berend Pronk
