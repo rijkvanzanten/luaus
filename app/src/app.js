@@ -71,8 +71,9 @@ const shortid = require('shortid');
         const colors = data.player.color;
 
         newPlayer.style.backgroundColor = `rgb(${colors[1]}, ${colors[0]}, ${colors[2]})`;
-        newPlayer.setAttribute('data-id', data.player.id);
-        newPlayer.setAttribute('data-type', data.player.type);
+        newPlayer
+          .setAttribute('data-id', data.player.id)
+          .setAttribute('data-type', data.player.type);
 
         playerType.src = `/${data.player.type}.png`;
         playerType.alt = `Player uses ${data.player.type}`;
@@ -80,12 +81,19 @@ const shortid = require('shortid');
         playerName.textContent = data.player.id;
         playerScore.textContent = data.player.score;
 
-        newPlayer.appendChild(playerType);
-        newPlayer.appendChild(playerName);
-        newPlayer.appendChild(playerScore);
+        newPlayer
+          .appendChild(playerType)
+          .appendChild(playerName)
+          .appendChild(playerScore);
         playerList.appendChild(newPlayer);
         break;
       case 'START_GAME':
+        const scoreGoal = document.createElement('section');
+
+        scoreGoal.classList.add('score-goal');
+        scoreGoal.textContent = data.maxScore;
+
+        document.querySelector('#players').insertAdjacentHTML('beforebegin', scoreGoal.outerHTML);
         document.querySelector('body').classList.add('started');
         break;
       case 'UPDATE_SCORE':
@@ -96,11 +104,10 @@ const shortid = require('shortid');
         break;
       case 'END_GAME':
         const players = document.querySelectorAll('#players li');
-        const winner = data.winner.id;
 
         players
           .forEach(player => {
-            if (player.getAttribute('data-id') === String(winner)) {
+            if (player.getAttribute('data-id') === String(data.winner.id)) {
               player.classList.add('won');
             } else {
               player.classList.add('lost');
