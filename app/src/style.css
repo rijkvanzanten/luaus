@@ -105,7 +105,7 @@ body.controller .back {
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1
+  z-index: -1;
 }
 
 body.controller.lost {
