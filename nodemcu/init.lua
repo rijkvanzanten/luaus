@@ -1,6 +1,7 @@
 local wifimodule = require 'wifimodule'
 local socketmodule = require 'socketmodule'
 local config = require 'config'
+local color = nil
 
 -- Initialize LED-strip and Timer
 ws2812.init()
@@ -40,6 +41,8 @@ function init()
     local data = cjson.decode(msg)
 
     if data.action == 'CHANGE_COLOR' then
+      color = data.color
+
       setStrip(data.color)
     elseif data.action == 'SPECTATE' then
       ledLoop(100, {
@@ -49,11 +52,14 @@ function init()
       -- Check if button belongs to winner
       if data.winner.id == node.chipid() then
         ledLoop(50, {
-          data.winner.color
+          color
         })
       else
         clearStrip()
       end
+    elseif data.action == 'RESET_GAME' then
+      clearStrip()
+      setStrip(color)
     end
   end)
 
