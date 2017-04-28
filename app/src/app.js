@@ -17,8 +17,11 @@ const shortid = require('shortid');
       .querySelectorAll('[type=button]')
       .forEach(button => button.addEventListener('click', onButtonClick));
 
+    document.querySelector('#reset').addEventListener('click', resetGame);
+
     function onFormSubmit(e) {
       e.preventDefault();
+
       ws.send(
         JSON.stringify({
           device: 'scoreboard',
@@ -102,6 +105,9 @@ const shortid = require('shortid');
         case 'END_GAME':
           const players = document.querySelectorAll('#players li');
 
+          document.body.classList.remove('started');
+          document.body.classList.add('ended');
+
           players
             .forEach(player => {
               if (player.getAttribute('data-id') === String(data.winner.id)) {
@@ -149,6 +155,10 @@ const shortid = require('shortid');
         })
       );
     }
+
+    function resetGame() {
+      window.location.replace('/reset');
+    }
   } else {
     const btn = document.querySelector('#bigredbutton');
     const btnID = document.querySelector('h1').innerText;
@@ -169,6 +179,7 @@ const shortid = require('shortid');
       switch (data.action) {
         case 'START_GAME':
           btn.disabled = false;
+          document.body.classList.remove('lost');
           break;
         case 'END_GAME':
           btn.disabled = true;

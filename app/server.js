@@ -19,7 +19,8 @@ const client = new Twitter({
 const game = {
   players: {},
   maxScore: 10,
-  playing: false
+  playing: false,
+  ended: false,
 };
 
 // Colors are in g, r, b
@@ -39,6 +40,7 @@ const app = express()
   .set('views', path.join(__dirname, 'views'))
   .get('/', getApp)
   .get('/controller', getController)
+  .get('/reset', resetGame)
   .post('/controller', postController);
 
 const server = http.createServer(app);
@@ -55,12 +57,35 @@ function getApp(req, res) {
     maxScore: game.maxScore,
     players: game.players,
     playing: game.playing,
+    ended: game.ended,
     message: ''
   });
 }
 
 function getController(req, res) {
   res.render('controller', { player: false });
+}
+
+function resetGame(req, res) {
+  Object.keys(game.players).forEach(function(key, index) {
+    game.players[key].score = 0;
+  });
+
+  res.render('index', {
+    maxScore: game.maxScore,
+    players: game.players,
+    playing: false,
+    ended: false,
+    message: ''
+  });
+
+  // Reset color on NodeMCUs
+  wss.broadcast(
+    JSON.stringify({
+      device: 'nodemcu',
+      action: 'RESET_GAME'
+    })
+  );
 }
 
 function postController(req, res) {
@@ -178,6 +203,7 @@ function nodemcuMessage(socket, message) {
           })
         );
       }
+      break;
     case 'UPDATE_SCORE':
       if (game.playing) {
         const player = game.players[message.id];
@@ -194,6 +220,7 @@ function nodemcuMessage(socket, message) {
 
         if (player.score === game.maxScore) {
           game.playing = false;
+          game.ended = true;
 
           wss.broadcast(
             JSON.stringify({
@@ -212,7 +239,7 @@ function nodemcuMessage(socket, message) {
 function phoneMessage(socket, message) {
   switch (message.action) {
     case 'UPDATE_SCORE':
-      if (game.started) {
+      if (game.playing) {
         const player = game.players[message.id];
         console.log(message);
 
@@ -227,6 +254,7 @@ function phoneMessage(socket, message) {
 
         if (player.score === game.maxScore) {
           game.playing = false;
+          game.ended = true;
 
           wss.broadcast(
             JSON.stringify({
