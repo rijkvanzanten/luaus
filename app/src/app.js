@@ -89,7 +89,7 @@ const shortid = require('shortid');
           playerList.appendChild(newPlayer);
           break;
         case 'START_GAME':
-          document.querySelector('#players').insertAdjacentHTML('beforebegin', `<section class="score-goal">${data.maxScore}</section>`);
+          document.querySelector('#players').insertAdjacentHTML('beforebegin', `<section id="score-goal">${data.maxScore}</section>`);
 
           document.body.classList.add('started');
           break;

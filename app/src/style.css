@@ -116,6 +116,10 @@ body.started #setup, body.started #app-banner {
   display: none;
 }
 
+body.started #score-goal {
+  display: block;
+}
+
 body.started #players img {
   position: absolute;
   top: 1em;
@@ -251,6 +255,10 @@ input {
 button[type=submit] {
   display: block;
   margin: 2rem auto;
+}
+
+#score-goal {
+  display: none;
 }
 
 #players {
