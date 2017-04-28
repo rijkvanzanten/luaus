@@ -19,7 +19,7 @@ const client = new Twitter({
 const game = {
   players: {},
   maxScore: 10,
-  started: false
+  playing: false
 };
 
 // Colors are in g, r, b
@@ -54,7 +54,7 @@ function getApp(req, res) {
   res.render('index', {
     maxScore: game.maxScore,
     players: game.players,
-    started: game.started,
+    playing: game.playing,
     message: ''
   });
 }
@@ -65,7 +65,7 @@ function getController(req, res) {
 
 function postController(req, res) {
   let color;
-  if (!game.started) {
+  if (!game.playing) {
     if (game.players[req.body.name]) {
       color = game.players[req.body.name].color;
     } else {
@@ -94,7 +94,7 @@ function postController(req, res) {
     res.render('index', {
       maxScore: game.maxScore,
       players: game.players,
-      started: game.started,
+      playing: game.playing,
       message: 'Game already started, you are now spectating'
     });
   }
@@ -141,7 +141,7 @@ function nodemcuMessage(socket, message) {
   switch (message.action) {
     case 'JOIN_GAME':
       console.log(message);
-      if (!game.started) {
+      if (!game.playing) {
         let color;
 
         if (game.players[message.id]) {
@@ -179,7 +179,7 @@ function nodemcuMessage(socket, message) {
         );
       }
     case 'UPDATE_SCORE':
-      if (game.started) {
+      if (game.playing) {
         console.log(message);
 
         game.players[message.id].score = game.players[message.id].score + 1;
@@ -256,7 +256,8 @@ function scoreboardMessage(socket, message) {
       if (Object.keys(game.players).length > 1) {
         console.log(message);
 
-        game.started = true;
+        game.playing = true;
+
         wss.broadcast(
           JSON.stringify({
             action: 'START_GAME',

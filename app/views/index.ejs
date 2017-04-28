@@ -1,6 +1,6 @@
 <%- include partials/head %>
 <body
-  <% if (started) { %>
+  <% if (playing) { %>
     class="started"
   <% } %>
 >
@@ -25,7 +25,7 @@
   <img src="/rijk32.png" />
 </div>
 
-<% if (!started) { %>
+<% if (!playing) { %>
 <form id="setup">
   <button id="min" type="button">-</button>
   <input type="number" name="max-score" min="1" value="<%= maxScore %>" />
