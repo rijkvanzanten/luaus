@@ -112,7 +112,8 @@ body.controller.lost {
   filter: brightness(500%) grayscale(100%);
 }
 
-body.started #setup, body.started #app-banner {
+body.started #setup, body.started #app-banner,
+body.ended #setup, body.ended #app-banner {
   display: none;
 }
 
@@ -120,14 +121,20 @@ body.started #score-goal {
   display: block;
 }
 
-body.started #players img {
+body.started #players img,
+body.ended #players img {
   position: absolute;
   top: 1em;
   width: 3em;
   left: 1em;
 }
 
-body.started #players span {
+body.started #players span,
+body.ended #players span {
+  display: block;
+}
+
+body.ended #reset {
   display: block;
 }
 
@@ -255,6 +262,10 @@ input {
 button[type=submit] {
   display: block;
   margin: 2rem auto;
+}
+
+#reset {
+  display: none;
 }
 
 #score-goal {

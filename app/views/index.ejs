@@ -2,6 +2,8 @@
 <body
   <% if (playing) { %>
     class="started"
+  <% } else if (ended) { %>
+    class="ended"
   <% } %>
 >
 
@@ -25,7 +27,7 @@
   <img src="/rijk32.png" />
 </div>
 
-<% if (!playing) { %>
+<% if (!playing && !ended) { %>
 <form id="setup">
   <button id="min" type="button">-</button>
   <input type="number" name="max-score" min="1" value="<%= maxScore %>" />
@@ -38,6 +40,7 @@
 </section>
 <% } %>
 
+<button id="reset">Play again?</button>
 
 <div id="players">
   <ul>
