@@ -180,9 +180,10 @@ function nodemcuMessage(socket, message) {
       }
     case 'UPDATE_SCORE':
       if (game.playing) {
+        const player = game.players[message.id];
         console.log(message);
 
-        game.players[message.id].score = game.players[message.id].score + 1;
+        player.score = player.score + 1;
 
         wss.broadcast(
           JSON.stringify({
@@ -191,11 +192,11 @@ function nodemcuMessage(socket, message) {
           })
         );
 
-        if (game.players[message.id].score === game.maxScore) {
+        if (player.score === game.maxScore) {
           wss.broadcast(
             JSON.stringify({
               action: 'END_GAME',
-              winner: game.players[message.id]
+              winner: player
             })
           );
         }
