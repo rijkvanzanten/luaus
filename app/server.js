@@ -193,6 +193,8 @@ function nodemcuMessage(socket, message) {
         );
 
         if (player.score === game.maxScore) {
+          game.playing = false;
+
           wss.broadcast(
             JSON.stringify({
               action: 'END_GAME',
@@ -224,6 +226,8 @@ function phoneMessage(socket, message) {
         );
 
         if (player.score === game.maxScore) {
+          game.playing = false;
+
           wss.broadcast(
             JSON.stringify({
               action: 'END_GAME',
