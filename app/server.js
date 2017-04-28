@@ -19,7 +19,8 @@ const client = new Twitter({
 const game = {
   players: {},
   maxScore: 10,
-  started: false
+  playing: false,
+  ended: false,
 };
 
 // Colors are in g, r, b
@@ -39,6 +40,7 @@ const app = express()
   .set('views', path.join(__dirname, 'views'))
   .get('/', getApp)
   .get('/controller', getController)
+  .get('/reset', resetGame)
   .post('/controller', postController);
 
 const server = http.createServer(app);
@@ -54,7 +56,8 @@ function getApp(req, res) {
   res.render('index', {
     maxScore: game.maxScore,
     players: game.players,
-    started: game.started,
+    playing: game.playing,
+    ended: game.ended,
     message: ''
   });
 }
@@ -63,9 +66,31 @@ function getController(req, res) {
   res.render('controller', { player: false });
 }
 
+function resetGame(req, res) {
+  Object.keys(game.players).forEach(function(key, index) {
+    game.players[key].score = 0;
+  });
+
+  res.render('index', {
+    maxScore: game.maxScore,
+    players: game.players,
+    playing: false,
+    ended: false,
+    message: ''
+  });
+
+  // Reset color on NodeMCUs
+  wss.broadcast(
+    JSON.stringify({
+      device: 'nodemcu',
+      action: 'RESET_GAME'
+    })
+  );
+}
+
 function postController(req, res) {
   let color;
-  if (!game.started) {
+  if (!game.playing) {
     if (game.players[req.body.name]) {
       color = game.players[req.body.name].color;
     } else {
@@ -94,7 +119,7 @@ function postController(req, res) {
     res.render('index', {
       maxScore: game.maxScore,
       players: game.players,
-      started: game.started,
+      playing: game.playing,
       message: 'Game already started, you are now spectating'
     });
   }
@@ -141,7 +166,7 @@ function nodemcuMessage(socket, message) {
   switch (message.action) {
     case 'JOIN_GAME':
       console.log(message);
-      if (!game.started) {
+      if (!game.playing) {
         let color;
 
         if (game.players[message.id]) {
@@ -178,38 +203,9 @@ function nodemcuMessage(socket, message) {
           })
         );
       }
-    case 'UPDATE_SCORE':
-      if (game.started) {
-        console.log(message);
-
-        game.players[message.id].score = game.players[message.id].score + 1;
-
-        wss.broadcast(
-          JSON.stringify({
-            action: 'UPDATE_SCORE',
-            id: message.id
-          })
-        );
-
-        if (game.players[message.id].score === game.maxScore) {
-          wss.broadcast(
-            JSON.stringify({
-              action: 'END_GAME',
-              winner: game.players[message.id]
-            })
-          );
-        }
-      }
       break;
-    default:
-      return false;
-  }
-}
-
-function phoneMessage(socket, message) {
-  switch (message.action) {
     case 'UPDATE_SCORE':
-      if (game.started) {
+      if (game.playing) {
         const player = game.players[message.id];
         console.log(message);
 
@@ -223,6 +219,43 @@ function phoneMessage(socket, message) {
         );
 
         if (player.score === game.maxScore) {
+          game.playing = false;
+          game.ended = true;
+
+          wss.broadcast(
+            JSON.stringify({
+              action: 'END_GAME',
+              winner: player
+            })
+          );
+        }
+      }
+      break;
+    default:
+      return false;
+  }
+}
+
+function phoneMessage(socket, message) {
+  switch (message.action) {
+    case 'UPDATE_SCORE':
+      if (game.playing) {
+        const player = game.players[message.id];
+        console.log(message);
+
+        player.score = player.score + 1;
+
+        wss.broadcast(
+          JSON.stringify({
+            action: 'UPDATE_SCORE',
+            id: message.id
+          })
+        );
+
+        if (player.score === game.maxScore) {
+          game.playing = false;
+          game.ended = true;
+
           wss.broadcast(
             JSON.stringify({
               action: 'END_GAME',
@@ -256,7 +289,8 @@ function scoreboardMessage(socket, message) {
       if (Object.keys(game.players).length > 1) {
         console.log(message);
 
-        game.started = true;
+        game.playing = true;
+
         wss.broadcast(
           JSON.stringify({
             action: 'START_GAME',
