@@ -75,14 +75,15 @@ function init()
     if gpio.read(button) < isPressed then
       print('Button pressed!')
 
-      -- local color = buffer:get(1)
-      -- print(color .. color2 .. color3)
+      -- Temporary turns off lights on button press
+      clearStrip()
+      ledTimer:start()
 
-      -- ledTimer:alarm(1000, tmr.ALARM_SINGLE, function()
-      --   ledLoop(50, {
-      --
-      --   })
-      -- end)
+      -- End feedback after 500ms
+      ledTimer:alarm(500, tmr.ALARM_SINGLE, function()
+        setStrip(color)
+        ledTimer:stop()
+      end)
 
       ok, json = pcall(cjson.encode, {
         device = 'nodemcu',
