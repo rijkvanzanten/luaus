@@ -20,17 +20,23 @@ const game = {
   players: {},
   maxScore: 10,
   playing: false,
-  ended: false,
+  ended: false
 };
 
 // Colors are in g, r, b
 const colors = [
-  [75, 0, 50], // Blue
-  [25, 150, 0], // Red
-  [100, 200, 0], // Orange
-  [150, 125, 0], // Yellow
-  [0, 150, 175], // Purple
-  [175, 0, 25] // Green
+  [75, 0, 50], // Lagoon
+  [25, 150, 0], // Inferno
+  [100, 200, 0], // Topaz
+  [150, 125, 0], // Electric
+  [0, 150, 175], // Amethyst
+  [175, 0, 25], // Forest
+  [0, 175, 75], // Pink
+  [200, 75, 75], // Mint
+  [50, 50, 200], // Steel
+  [50, 200, 50], // Peach
+  [0, 0, 175], // Sapphire
+  [175, 0, 0] // Emerald
 ];
 
 const app = express()
@@ -80,12 +86,7 @@ function resetGame(req, res) {
   });
 
   // Reset color on NodeMCUs
-  wss.broadcast(
-    JSON.stringify({
-      device: 'nodemcu',
-      action: 'RESET_GAME'
-    })
-  );
+  wss.broadcast(JSON.stringify({ action: 'RESET_GAME' }));
 }
 
 function postController(req, res) {

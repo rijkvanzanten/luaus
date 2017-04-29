@@ -1,4 +1,4 @@
-@keyframes animatedBackground {
+/*@keyframes animatedBackground {
   0% {
     background-position: -400px 400px
   }
@@ -16,7 +16,7 @@
   to {
     opacity: 0;
   }
-}
+}*/
 
 @font-face {
   font-family: 'pixel';
@@ -25,7 +25,7 @@
   font-weight: normal;
   font-style: normal;
 }
-
+/*
 @keyframes wave {
   from {
     transform: translateY(0);
@@ -64,7 +64,7 @@
   to {
     transform: scale(1) rotate(10deg);
   }
-}
+}*/
 
 * {
   font-size: inherit;
@@ -92,11 +92,11 @@ body {
 body.controller {
   background-image: none;
   animation: none;
-  filter: brightness(500%);
+  filter: brightness(200%);
 }
 
 body.controller > *:not(.back) {
-  filter: brightness(20%);
+  filter: brightness(50%);
 }
 
 body.controller .back {
@@ -297,7 +297,7 @@ button[type=submit] {
   align-items: center;
   flex-direction: column;
   flex-grow: 1;
-  filter: brightness(500%);
+  filter: brightness(200%);
 }
 
 #players li.won {
@@ -310,7 +310,7 @@ button[type=submit] {
 
 #players img {
   width: 5em;
-  filter: brightness(20%);
+  filter: brightness(50%);
   image-rendering: optimizeSpeed;
   image-rendering: -moz-crisp-edges;
   image-rendering: -o-crisp-edges;
