@@ -20,7 +20,7 @@ const game = {
   players: {},
   maxScore: 10,
   playing: false,
-  ended: false,
+  ended: false
 };
 
 // Colors are in g, r, b
@@ -80,12 +80,7 @@ function resetGame(req, res) {
   });
 
   // Reset color on NodeMCUs
-  wss.broadcast(
-    JSON.stringify({
-      device: 'nodemcu',
-      action: 'RESET_GAME'
-    })
-  );
+  wss.broadcast(JSON.stringify({ action: 'RESET_GAME' }));
 }
 
 function postController(req, res) {
