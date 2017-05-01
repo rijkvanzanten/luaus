@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const WebSocket = require('ws');
+const shortid = require('shortid');
 const broadcast = require('./broadcast');
 
 /**
@@ -20,7 +21,7 @@ const broadcast = require('./broadcast');
  * }
  * @type {Object}
  */
-const rooms = {};
+const games = {};
 
 const port = process.env.PORT || 3000;
 
@@ -29,7 +30,8 @@ const app = express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('view engine', 'ejs')
   .set('views', path.join(__dirname, 'views'))
-  .get('/', getHome);
+  .get('/', getHome)
+  .post('/', createRoom);
 
 const server = http.createServer(app);
 const webSocketServer = new WebSocket.Server({ server });
@@ -41,5 +43,20 @@ server.listen(port, function onListen() {
 });
 
 function getHome(req, res) {
-  res.render('index', { rooms });
+  res.render('index', { games });
+}
+
+function createRoom(req, res) {
+  const id = shortid.generate();
+  games[id] = new Game();
+  res.redirect('/game/' + id);
+}
+
+function Game() {
+  return {
+    players: {},
+    maxScore: 10,
+    playing: false,
+    ended: false
+  }
 }
