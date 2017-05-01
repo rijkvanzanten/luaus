@@ -69,6 +69,14 @@ body.controller .back {
   height: 100vh;
 }
 
+body.controller.won {
+  animation: win-back .75s linear infinite alternate;
+}
+
+body.controller.won .back {
+  display: none;
+}
+
 body.controller.lost {
   filter: brightness(500%) grayscale(100%);
 }
@@ -347,7 +355,8 @@ body.ended #reset {
 }
 
 #players li.won {
-  /* Needs styling */
+  filter: none;
+  animation: win-back .75s linear infinite alternate;
 }
 
 #players li.lost {
@@ -508,6 +517,7 @@ div[data-clientid] {
     transform: translateY(0);
     color: blue;
   }
+
   to {
     transform: translateY(-35px);
   }
@@ -520,6 +530,20 @@ div[data-clientid] {
 
   to {
     transform: scale(1) rotate(2.5deg);
+  }
+}
+
+@keyframes win-back {
+  0% {
+    background-color: #f7b8f8;
+  }
+
+  50% {
+    background-color: #b9f8b8;
+  }
+
+  100% {
+    background-color: #b8f8f7;
   }
 }
 
