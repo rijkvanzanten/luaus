@@ -1,11 +1,342 @@
-@keyframes animatedBackground {
-  0% {
-    background-position: -400px 400px
-  }
+@font-face {
+  font-family: 'pixel';
+  src: url('pixel.woff2') format('woff2'),
+       url('pixel.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
-  100% {
-    background-position: 0 0
+* {
+  font-size: inherit;
+  font-family: inherit;
+  cursor: inherit;
+  user-select: none;
+}
+
+html {
+  height: 100%;
+  cursor: url(pointer.png) -15 0, auto;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 100%;
+  margin: 0;
+  font-family: 'pixel', cursive;
+  background-image: url('/pow-star.png');
+  animation: animatedBackground 1s linear infinite;
+}
+
+h1 {
+  font-size: 5em;
+  color: white;
+  text-shadow: 0 0.1em 0 black;
+}
+
+body.controller {
+  filter: brightness(200%);
+  background-image: none;
+  animation: none;
+}
+
+body.controller > *:not(.back) {
+  filter: brightness(50%);
+}
+
+body.controller #score-goal {
+  display: block;
+}
+
+body.controller .back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+}
+
+body.controller.lost {
+  filter: brightness(500%) grayscale(100%);
+}
+
+body.started #setup, body.started #app-banner,
+body.ended #setup, body.ended #app-banner {
+  display: none;
+}
+
+body.started #score-goal {
+  display: block;
+}
+
+body.started #players img,
+body.ended #players img {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  width: 3em;
+}
+
+body.started #players span,
+body.ended #players span {
+  display: block;
+}
+
+body.ended #reset {
+  display: block;
+}
+
+#message {
+  /* Needs styling */
+}
+
+#app-banner {
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+}
+
+#app-banner a {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 2em;
+  text-align: center;
+  color: #fff;
+  background-color: #15d7d4;
+}
+
+@media (min-width: 40em) {
+  #app-banner {
+    display: none;
   }
+}
+
+#logo {
+  position: relative;
+  top: 3rem;
+  margin: 0 auto;
+  padding-top: 16rem;
+  animation: flow 1.4s ease-in-out infinite alternate;
+}
+
+#logo h1 {
+  font-size: 3.4em;
+  text-align: center;
+  letter-spacing: -1rem;
+}
+
+#logo img {
+  display: block;
+  position: absolute;
+  top: 6rem;
+  z-index: -1;
+  width: 7rem;
+  image-rendering: pixelated;
+}
+
+#logo img:first-of-type {
+  left: 0;
+  animation: pulsateLeft 1.4s .3s infinite alternate;
+}
+
+#logo img:last-of-type {
+  right: 0;
+  animation: pulsateRight 1.4s infinite alternate;
+}
+
+#logo span {
+  display: inline-block;
+  animation: wave .3s infinite alternate;
+}
+
+#logo span:nth-child(1) {
+  animation-delay: -0.7s;
+  color: #780a8c;
+}
+
+#logo span:nth-child(2) {
+  animation-delay: -0.6s;
+  color: #8c0a7d;
+}
+
+#logo span:nth-child(3) {
+  animation-delay: -0.5s;
+  color: #a00a6e;
+}
+
+#logo span:nth-child(4) {
+  animation-delay: -0.4s;
+  color: #b40a96;
+}
+
+#logo span:nth-child(5) {
+  animation-delay: -0.3s;
+  color: #b40a96;
+}
+
+#setup {
+  padding: 2rem 0;
+  font-size: 3rem;
+  text-align: center;
+}
+
+#min, #plus, input {
+  display: inline-block;
+  transition: .3s ease;
+}
+
+#min:hover,
+#plus:hover {
+  transform: scale(1.2);
+}
+
+#min:active,
+#plus:active {
+  transform: scale(0.9);
+}
+
+input {
+  width: 10rem;
+  text-align: center;
+  pointer-events: none;
+  border: 0;
+  background-color: transparent;
+}
+
+button[type=submit] {
+  display: block;
+  margin: 2rem auto;
+}
+
+#reset {
+  display: none;
+}
+
+#score-goal {
+  display: none;
+}
+
+#players {
+  flex-grow: 1;
+  position: relative;
+  width: 100%;
+}
+
+#players ul {
+  display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#players li {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  filter: brightness(200%);
+}
+
+#players li.won {
+  /* Needs styling */
+}
+
+#players li.lost {
+  filter: grayscale(100%);
+}
+
+#players img {
+  width: 5em;
+  filter: brightness(50%);
+  image-rendering: optimizeSpeed;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -o-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: pixelated;
+  image-rendering: optimize-contrast;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+
+#players h2 {
+  /* Needs styling */
+}
+
+#players span {
+  display: none;
+  /* Needs styling */
+}
+
+button {
+  margin: 0 4rem;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: none;
+}
+
+button:focus {
+  outline: 0; /* just because */
+}
+
+button[type=submit] {
+  transition: .3s ease;
+}
+
+button[type=submit]:hover {
+  transform: scaleX(1.4);
+}
+
+button[type=submit]:active {
+  transform: scaleX(0.8);
+}
+
+div[data-clientid] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  overflow: visible;
+  pointer-events: none;
+  filter: grayscale(100%);
+  background-image: url('/pointer.png');
+  background-repeat: no-repeat;
+  transition: transform 150ms ease;
+  opacity: 1;
+}
+
+#bigredbutton {
+  position: relative;
+  width: 50vw;
+  height: 50vw;
+  appearance: none;
+  background-image: url('/button-controller.png');
+  background-size: 200%;
+  background-repeat: no-repeat;
+}
+
+#bigredbutton:focus {
+  outline: 0;
+}
+
+#bigredbutton:active {
+  background-position-x: 100%;
+}
+
+#bigredbutton:disabled {
+  filter: brightness(20%) grayscale(100%);
 }
 
 @keyframes fadeout {
@@ -18,12 +349,14 @@
   }
 }
 
-@font-face {
-  font-family: 'pixel';
-  src: url('pixel.woff2') format('woff2'),
-       url('pixel.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
+@keyframes animatedBackground {
+  0% {
+    background-position: -400px 400px
+  }
+
+  100% {
+    background-position: 0 0
+  }
 }
 
 @keyframes wave {
@@ -64,346 +397,4 @@
   to {
     transform: scale(1) rotate(10deg);
   }
-}
-
-* {
-  font-size: inherit;
-  font-family: inherit;
-  cursor: inherit;
-  user-select: none;
-}
-
-html {
-  height: 100%;
-  cursor: url(pointer.png) -15 0, auto;
-}
-
-body {
-  position: relative;
-  font-family: 'pixel', cursive;
-  background-image: url('/pow-star.png');
-  animation: animatedBackground 1s linear infinite;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-body.controller {
-  background-image: none;
-  animation: none;
-  filter: brightness(200%);
-}
-
-body.controller > *:not(.back) {
-  filter: brightness(50%);
-}
-
-body.controller #score-goal {
-  display: block;
-}
-
-body.controller .back {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-}
-
-body.controller.lost {
-  filter: brightness(500%) grayscale(100%);
-}
-
-body.started #setup, body.started #app-banner,
-body.ended #setup, body.ended #app-banner {
-  display: none;
-}
-
-body.started #score-goal {
-  display: block;
-}
-
-body.started #players img,
-body.ended #players img {
-  position: absolute;
-  top: 1em;
-  width: 3em;
-  left: 1em;
-}
-
-body.started #players span,
-body.ended #players span {
-  display: block;
-}
-
-body.ended #reset {
-  display: block;
-}
-
-#message {
-  /* Needs styling */
-}
-
-#app-banner {
-  position: fixed;
-  bottom: 0;
-  z-index: 1;
-  width: 100%;
-}
-
-#app-banner a {
-  display: flex;
-  justify-content: center;
-  padding: 2em;
-  width: 100%;
-  text-align: center;
-  color: #fff;
-  background-color: #15d7d4;
-}
-
-@media (min-width: 40em) {
-  #app-banner {
-    display: none;
-  }
-}
-
-#logo {
-  padding-top: 250px;
-  margin: 0 auto;
-  position: relative;
-  animation: flow 1.4s ease-in-out infinite alternate;
-}
-
-#logo h1 {
-  letter-spacing: -16px;
-  text-align: center;
-  font-size: 76px;
-}
-
-#logo img {
-  display: block;
-  position: absolute;
-  top: 50px;
-  width: 160px;
-  image-rendering: pixelated;
-  z-index: -1;
-}
-
-#logo img:first-of-type {
-  left: 0;
-  animation: pulsateLeft 1.4s .3s infinite alternate;
-}
-
-#logo img:last-of-type {
-  right: 0;
-  animation: pulsateRight 1.4s infinite alternate;
-}
-
-#logo span {
-  display: inline-block;
-  animation-duration: 0.3s;
-  animation-name: wave;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-}
-
-#logo span:nth-child(1) {
-  animation-delay: -0.7s;
-  color: #780a8c;
-}
-
-#logo span:nth-child(2) {
-  animation-delay: -0.6s;
-  color: #8c0a7d;
-}
-
-#logo span:nth-child(3) {
-  animation-delay: -0.5s;
-  color: #a00a6e;
-}
-
-#logo span:nth-child(4) {
-  animation-delay: -0.4s;
-  color: #b40a96;
-}
-
-#logo span:nth-child(5) {
-  animation-delay: -0.3s;
-  color: #b40a96;
-}
-
-#setup {
-  font-size: 3rem;
-  text-align: center;
-  padding: 2rem 0;
-}
-
-#min, #plus, input {
-  display: inline-block;
-  transition: .3s ease;
-}
-
-#min:hover,
-#plus:hover {
-  transform: scale(1.2);
-}
-
-#min:active,
-#plus:active {
-  transform: scale(0.9);
-}
-
-input {
-  background-color: transparent;
-  border: 0;
-  width: 10rem;
-  text-align: center;
-  pointer-events: none;
-}
-
-button[type=submit] {
-  display: block;
-  margin: 2rem auto;
-}
-
-#reset {
-  display: none;
-}
-
-#score-goal {
-  display: none;
-}
-
-#players {
-  /*background-color: blue;*/
-  position: relative;
-  width: 100%;
-  flex-grow: 1;
-}
-
-#players ul {
-  position: absolute;
-  bottom: 0;
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-#players li {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  flex-grow: 1;
-  filter: brightness(200%);
-}
-
-#players li.won {
-  /* Needs styling */
-}
-
-#players li.lost {
-  filter: grayscale(100%);
-}
-
-#players img {
-  width: 5em;
-  filter: brightness(50%);
-  image-rendering: optimizeSpeed;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -o-crisp-edges;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: pixelated;
-  image-rendering: optimize-contrast;
-  -ms-interpolation-mode: nearest-neighbor;
-}
-
-#players h2 {
-  /* Needs styling */
-}
-
-#players span {
-  display: none;
-  /* Needs styling */
-}
-
-button {
-  appearance: none;
-  -webkit-appearance: none;
-  background-color: transparent;
-  border: none;
-  margin: 0 4rem;
-}
-
-button:focus {
-  outline: 0; /* just because */
-}
-
-button[type=submit] {
-  transition: .3s ease;
-}
-
-button[type=submit]:hover {
-  transform: scaleX(1.4);
-}
-
-button[type=submit]:active {
-  transform: scaleX(0.8);
-}
-
-div[data-clientid] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: transform 150ms ease;
-  background-image: url('/pointer.png');
-  background-repeat: no-repeat;
-  width: 100px;
-  height: 100px;
-  pointer-events: none;
-  overflow: visible;
-  filter: grayscale(100%);
-  opacity: 1;
-}
-
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  font-family: 'pixel', cursive;
-}
-
-h1 {
-  color: white;
-  font-size: 5em;
-  text-shadow: 0 0.1em 0 black;
-}
-
-#bigredbutton {
-  appearance: none;
-  width: 50vw;
-  height: 50vw;
-  position: relative;
-  background-image: url('/button-controller.png');
-  background-size: 200%;
-  background-repeat: no-repeat;
-}
-
-#bigredbutton:focus {
-  outline: 0;
-}
-
-#bigredbutton:active {
-  background-position-x: 100%;
-}
-
-#bigredbutton:disabled {
-  filter: brightness(20%) grayscale(100%);
 }
