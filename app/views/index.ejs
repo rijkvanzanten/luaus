@@ -3,8 +3,8 @@
 
 <% if (Object.keys(games).length > 0) { %>
   <ul>
-    <% Object.keys(games).forEach(function (id) { %>
-    <li><a href="<%= id %>"><%= id %> <%= Object.keys(games[id].players).length %> / 12</a></li>
+    <% Object.keys(games).forEach(function (gameID) { %>
+    <li><a href="<%= gameID %>"><%= gameID %> <%= Object.keys(games[gameID].players).length %> / 12</a></li>
     <% }); %>
   </ul>
 <% } else { %>

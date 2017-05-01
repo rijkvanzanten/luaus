@@ -1,20 +1,7 @@
 <%- include partials/head %>
-<body class="controller">
-  <% if(player) { %>
-    <div class="back" style="background-color: rgb(<%= player.color[1] %>, <%= player.color[0] %>, <%= player.color[2] %>)"></div>
-  <% } %>
 
-  <% if (!player) { %>
-  <form method="POST" action="/controller">
-    <label>Enter your name:
-      <input type="text" name="name" />
-    </label>
-    <button type="submit">Join game!</button>
-  </form>
-  <% } else { %>
-    <h1><%= name %></h1>
-    <button id="bigredbutton"></button>
-  <% } %>
-
-  <script src="app.js"></script>
-</body>
+<h1><%= name %></h1>
+<form method="POST" action="/<%= gameID%>/<%= playerID %>" >
+  <button id="bigredbutton"></button>
+  <input type="hidden" name="playerID" value="<%= playerID %>">
+</form>

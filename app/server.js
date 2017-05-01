@@ -37,9 +37,13 @@ const app = express()
   .use(express.static(path.join(__dirname, 'public')))
   .set('view engine', 'ejs')
   .set('views', path.join(__dirname, 'views'))
-  .get('/', getHome)
+  .get('/', renderHome)
   .post('/', createRoom)
-  .get('/:id', getRoom);
+  .get('/:gameID', renderSingleRoom)
+  .get('/new-player/:gameID', renderNewPlayerForm)
+  .post('/new-player/:gameID', addNewPlayerToGame)
+  .get('/:gameID/:playerID', getController)
+  .post('/:gameID/:playerID', updateScore);
 
 const server = http.createServer(app);
 const webSocketServer = new WebSocket.Server({ server });
@@ -55,7 +59,7 @@ server.listen(port, function onListen() {
  * @param  {Object} req Express request object
  * @param  {Object} res Express response object
  */
-function getHome(req, res) {
+function renderHome(req, res) {
   res.render('index', { games });
 }
 
@@ -66,9 +70,9 @@ function getHome(req, res) {
  * @param  {Object} res Express response object
  */
 function createRoom(req, res) {
-  const id = shortid.generate();
-  games[id] = new Game();
-  res.redirect(id);
+  const gameID = shortid.generate();
+  games[gameID] = new Game();
+  res.redirect(gameID);
 }
 
 /**
@@ -77,13 +81,71 @@ function createRoom(req, res) {
  * @param  {Object} req Express request object
  * @param  {Object} res Express response object
  */
-function getRoom(req, res) {
-  // Return the user to the homepage when the room is invalid
-  if (!games[req.params.id]) {
+function renderSingleRoom(req, res) {
+  // Return the user to the homepage when the room doesn't exist
+  if (!games[req.params.gameID]) {
     return res.redirect('/');
   }
 
-  return res.render('room', {gameID: req.params.id, game: games[req.params.id]});
+  return res.render('room', {
+    gameID: req.params.gameID,
+    game: games[req.params.gameID]
+  });
+}
+
+/**
+ * [GET] /controller/:id
+ * renders a form which allows the user to create a new controller instance
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function renderNewPlayerForm(req, res) {
+  res.render('new-player', { gameID: req.params.gameID });
+}
+
+/**
+ * [POST] /controller/:id
+ * Adds new user to game with corresponding ID and redirects to buttonview
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function addNewPlayerToGame(req, res) {
+  const playerID = shortid.generate();
+  games[req.params.gameID].players[playerID] = new Player('web', req.body.name);
+  res.redirect(`/${req.params.gameID}/${playerID}`);
+}
+
+/**
+ * [GET] /:gameID/:playerID
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function getController(req, res) {
+  if (games[req.params.gameID] && games[req.params.gameID].players[req.params.playerID]) {
+    return res.render('controller', {
+      name: games[req.params.gameID].players[req.params.playerID].name,
+      gameID: req.params.gameID,
+      playerID: req.params.playerID
+    });
+  }
+
+  return res.redirect('/');
+}
+
+/**
+ * [POST] /:gameID/:playerID
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function updateScore(req, res) {
+  if (games[req.params.gameID] && games[req.params.gameID].players[req.params.playerID]) {
+    games[req.params.gameID].players[req.params.playerID].score++;
+    res.redirect(`/${req.params.gameID}/${req.params.playerID}`);
+  }
+
+
+  console.log(games);
+  return res.redirect('/');
 }
 
 /**
