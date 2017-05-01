@@ -13,7 +13,14 @@ const broadcast = require('./broadcast');
  * Structure:
  * {
  *   [id]: {
- *     players: Object,
+ *     players: {
+ *       [id]: {
+ *         color: Array,
+ *         type: String,
+ *         score: Number,
+ *         name: String
+ *       }
+ *     },
  *     maxScore: Number,
  *     playing: Boolean,
  *     ended: Boolean
@@ -76,7 +83,7 @@ function getRoom(req, res) {
     return res.redirect('/');
   }
 
-  return res.render('room', {game: games[req.params.id]});
+  return res.render('room', {gameID: req.params.id, game: games[req.params.id]});
 }
 
 /**
@@ -88,4 +95,16 @@ function Game() {
   this.maxScore = 10;
   this.playing = false;
   this.ended = false;
+}
+
+/**
+ * Player object-creator
+ * @param {String} type nodemcu | web
+ * @param {String} name
+ */
+function Player(type, name = 'John Doe') {
+  this.color = [0, 0, 0];
+  this.type = type;
+  this.score = 0;
+  this.name = name;
 }
