@@ -1,9 +1,9 @@
 <%- include partials/head %>
 <%- include partials/logo %>
 
-<% if (Object.keys(rooms).length > 0) { %>
+<% if (Object.keys(games).length > 0) { %>
   <ul>
-    <% Object.keys(rooms).forEach(function (room) { %>
+    <% Object.keys(games).forEach(function (room) { %>
     <li><a href="<%= room.id %>"></a></li>
     <% }); %>
   </ul>
