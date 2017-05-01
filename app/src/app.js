@@ -189,9 +189,10 @@ const shortid = require('shortid');
           break;
         case 'END_GAME':
           btn.disabled = true;
-          // btn.removeEventListener('click', updateScore);
-
-          if (btnID !== data.winner.id) {
+          
+          if (btnID === data.winner.id) {
+            document.querySelector('.controller').classList.add('won');
+          } else {
             document.querySelector('.controller').classList.add('lost');
           }
           break;
