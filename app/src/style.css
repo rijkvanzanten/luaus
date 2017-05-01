@@ -114,12 +114,11 @@ body.ended #reset {
 
 @media (min-width: 40em) {
   body.started #logo {
-    top: -4rem;
-    margin-bottom: 6rem;
+    margin-bottom: 20rem;
   }
 
   body.started #logo h1 {
-    top: 11rem;
+    top: 16rem;
   }
 
   body.started #logo img {
