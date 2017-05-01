@@ -42,21 +42,34 @@ server.listen(port, function onListen() {
   console.log('Server started at port ' + port);
 });
 
+/**
+ * [GET] / handler
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
 function getHome(req, res) {
   res.render('index', { games });
 }
 
+/**
+ * [POST] / handler
+ * Creates new game in store and redirects user to new gameroom
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
 function createRoom(req, res) {
   const id = shortid.generate();
   games[id] = new Game();
   res.redirect('/game/' + id);
 }
 
+/**
+ * Game object-creator
+ * Sets defaults for new game
+ */
 function Game() {
-  return {
-    players: {},
-    maxScore: 10,
-    playing: false,
-    ended: false
-  }
+  this.players = {};
+  this.maxScore = 10;
+  this.playing = false;
+  this.ended = false;
 }
