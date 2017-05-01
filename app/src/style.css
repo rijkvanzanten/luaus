@@ -1,12 +1,19 @@
 @font-face {
-  font-family: 'pixel';
+  font-family: 'Pixel Heading';
   src: url('pixel.woff2') format('woff2'),
        url('pixel.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: 'Pixel';
+  src: url('pixelmix.woff2') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
 * {
+  box-sizing: border-box;
   font-size: inherit;
   font-family: inherit;
   cursor: inherit;
@@ -26,18 +33,20 @@ body {
   position: relative;
   height: 100%;
   margin: 0;
-  font-family: 'pixel', cursive;
+  font-family: 'Pixel', sans-serif;
   background-image: url('/pow-star.png');
   animation: animatedBackground 1s linear infinite;
 }
 
 h1 {
-  font-size: 5em;
+  font-family: 'Pixel Heading', cursive;
+  font-size: 2em;
   color: white;
   text-shadow: 0 0.1em 0 black;
 }
 
 body.controller {
+  justify-content: space-between;
   filter: brightness(200%);
   background-image: none;
   animation: none;
@@ -64,6 +73,19 @@ body.controller.lost {
   filter: brightness(500%) grayscale(100%);
 }
 
+body.started #logo {
+  top: 1.4rem;
+  margin-bottom: 2rem;
+}
+
+body.started #logo h1 {
+  top: 0;
+}
+
+body.started #logo img {
+  display: none;
+}
+
 body.started #setup, body.started #app-banner,
 body.ended #setup, body.ended #app-banner {
   display: none;
@@ -73,39 +95,53 @@ body.started #score-goal {
   display: block;
 }
 
-body.started #players img,
-body.ended #players img {
-  position: absolute;
-  top: 1em;
-  left: 1em;
-  width: 3em;
-}
-
 body.started #players span,
 body.ended #players span {
-  display: block;
+  opacity: 1;
 }
 
 body.ended #reset {
   display: block;
 }
 
-#message {
-  /* Needs styling */
+@media (min-width: 40em) {
+  body.started #logo {
+    top: -4rem;
+    margin-bottom: 6rem;
+  }
+
+  body.started #logo h1 {
+    top: 11rem;
+  }
+
+  body.started #logo img {
+    display: block;
+  }
+
+  body.started #players img,
+  body.ended #players img {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    width: 3em;
+  }
+
+  body.started #players span,
+  body.ended #players span {
+    display: block;
+  }
 }
 
 #app-banner {
-  position: fixed;
-  bottom: 0;
-  z-index: 1;
   width: 100%;
 }
 
-#app-banner a {
+#app-banner a, #message {
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 2em;
+  padding: 1em;
+  line-height: 1.6;
   text-align: center;
   color: #fff;
   background-color: #15d7d4;
@@ -119,16 +155,18 @@ body.ended #reset {
 
 #logo {
   position: relative;
-  top: 3rem;
-  margin: 0 auto;
-  padding-top: 16rem;
+  top: -4rem;
+  width: 11rem;
+  margin: 0 auto 6rem;
   animation: flow 1.4s ease-in-out infinite alternate;
 }
 
 #logo h1 {
-  font-size: 3.4em;
+  position: relative;
+  top: 11rem;
+  font-size: 2.4em;
   text-align: center;
-  letter-spacing: -1rem;
+  letter-spacing: -.8rem;
 }
 
 #logo img {
@@ -136,17 +174,17 @@ body.ended #reset {
   position: absolute;
   top: 6rem;
   z-index: -1;
-  width: 7rem;
+  width: 3rem;
   image-rendering: pixelated;
 }
 
 #logo img:first-of-type {
-  left: 0;
+  left: 2rem;
   animation: pulsateLeft 1.4s .3s infinite alternate;
 }
 
 #logo img:last-of-type {
-  right: 0;
+  right: 2rem;
   animation: pulsateRight 1.4s infinite alternate;
 }
 
@@ -180,46 +218,103 @@ body.ended #reset {
   color: #b40a96;
 }
 
+@media (min-width: 40em) {
+  #logo {
+    width: initial;
+    margin: 0 auto 10rem;
+  }
+
+  #logo h1 {
+    top: 16rem;
+    font-size: 3.4em;
+    letter-spacing: -1rem;
+  }
+
+  #logo img {
+    width: 7rem;
+  }
+
+  #logo img:first-of-type {
+    left: 0;
+  }
+
+  #logo img:last-of-type {
+    right: 0;
+  }
+}
+
 #setup {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 30rem;
+  margin-bottom: 1.6rem;
   padding: 2rem 0;
+  font-family: 'Pixel Heading', cursive;
   font-size: 3rem;
   text-align: center;
 }
 
-#min, #plus, input {
-  display: inline-block;
+#setup > * {
+  max-width: calc(100% / 3);
   transition: .3s ease;
 }
 
-#min:hover,
-#plus:hover {
-  transform: scale(1.2);
-}
-
-#min:active,
-#plus:active {
-  transform: scale(0.9);
-}
-
-input {
-  width: 10rem;
+#setup input {
+  margin: 0 1rem;
   text-align: center;
   pointer-events: none;
   border: 0;
   background-color: transparent;
 }
 
-button[type=submit] {
+#setup button[type=submit] {
   display: block;
-  margin: 2rem auto;
+  width: 75%;
+  max-width: initial;
+  margin-top: .4em;
+}
+
+@media (min-width: 40em) {
+  #setup #min:hover,
+  #setup #plus:hover {
+    transform: scale(1.2);
+  }
+
+  #setup #min:active,
+  #setup #plus:active {
+    transform: scale(0.9);
+  }
+
+  #setup button[type=submit]:hover {
+    transform: scaleX(1.4);
+  }
+
+  #setup button[type=submit]:active {
+    transform: scaleX(0.8);
+  }
 }
 
 #reset {
   display: none;
+  margin: 2em 0;
+  padding: .6em;
+  font-size: 1.4em;
 }
 
 #score-goal {
   display: none;
+  width: 100%;
+  padding: 1em;
+  color: #fff;
+  text-align: center;
+  background-color: #222;
+}
+
+#score-goal::before {
+  content: "First to: ";
 }
 
 #players {
@@ -230,7 +325,7 @@ button[type=submit] {
 
 #players ul {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -241,11 +336,13 @@ button[type=submit] {
 
 #players li {
   display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   position: relative;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0 1rem;
   filter: brightness(200%);
 }
 
@@ -254,11 +351,13 @@ button[type=submit] {
 }
 
 #players li.lost {
+  color: #ccc;
   filter: grayscale(100%);
 }
 
 #players img {
-  width: 5em;
+  height: 70%;
+  max-height: 2em;
   filter: brightness(50%);
   image-rendering: optimizeSpeed;
   image-rendering: -moz-crisp-edges;
@@ -274,32 +373,67 @@ button[type=submit] {
 }
 
 #players span {
-  display: none;
-  /* Needs styling */
+  opacity: 0;
+}
+
+@media (min-width: 40em) {
+  #players ul {
+    flex-direction: row;
+  }
+
+  #players li {
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    height: 100%;
+    min-height: initial;
+    padding: 0;
+  }
+
+  #players img {
+    width: 5em;
+    height: initial;
+  }
+
+  #players span {
+    display: none;
+    opacity: 1;
+  }
 }
 
 button {
-  margin: 0 4rem;
   appearance: none;
   -webkit-appearance: none;
-  background-color: transparent;
+  position: relative;
+  padding: .6rem;
+  color: #fff;
   border: none;
+  background-color: #b9444d;
+}
+
+button::before,
+button::after {
+  display: block;
+  position: absolute;
+  top: 50%;
+  width: .5rem;
+  height: calc(100% - 1rem);
+  text-align: center;
+  content: "";
+  background-color: inherit;
+  transform: translateY(-50%);
+}
+
+button::before {
+  left: -.5rem;
+}
+
+button::after {
+  right: -.5rem;
 }
 
 button:focus {
   outline: 0; /* just because */
-}
-
-button[type=submit] {
-  transition: .3s ease;
-}
-
-button[type=submit]:hover {
-  transform: scaleX(1.4);
-}
-
-button[type=submit]:active {
-  transform: scaleX(0.8);
 }
 
 div[data-clientid] {
@@ -319,11 +453,14 @@ div[data-clientid] {
 
 #bigredbutton {
   position: relative;
-  width: 50vw;
-  height: 50vw;
+  width: 70vw;
+  height: 70vw;
+  margin-bottom: 2em;
   appearance: none;
+  background-color: white;
   background-image: url('/button-controller.png');
   background-size: 200%;
+  background-position-y: 15%;
   background-repeat: no-repeat;
 }
 
@@ -339,33 +476,10 @@ div[data-clientid] {
   filter: brightness(20%) grayscale(100%);
 }
 
-@keyframes fadeout {
-  from {
-    opacity: .7;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes animatedBackground {
-  0% {
-    background-position: -400px 400px
-  }
-
-  100% {
-    background-position: 0 0
-  }
-}
-
-@keyframes wave {
-  from {
-    transform: translateY(0);
-    color: blue;
-  }
-  to {
-    transform: translateY(-35px);
+@media (orientation: landscape) {
+  #bigredbutton {
+    width: 70vh;
+    height: 70vh;
   }
 }
 
@@ -389,12 +503,42 @@ div[data-clientid] {
   }
 }
 
+@keyframes wave {
+  from {
+    transform: translateY(0);
+    color: blue;
+  }
+  to {
+    transform: translateY(-35px);
+  }
+}
+
 @keyframes flow {
   from {
-    transform: scale(.7) rotate(-10deg);
+    transform: scale(.7) rotate(-2.5deg);
   }
 
   to {
-    transform: scale(1) rotate(10deg);
+    transform: scale(1) rotate(2.5deg);
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: .7;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes animatedBackground {
+  0% {
+    background-position: -400px 400px
+  }
+
+  100% {
+    background-position: 0 0
   }
 }
