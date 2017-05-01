@@ -402,6 +402,7 @@ body.ended #reset {
   #players img {
     width: 5em;
     height: initial;
+    max-height: initial;
   }
 
   #players span {
