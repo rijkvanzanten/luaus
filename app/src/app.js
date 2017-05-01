@@ -178,7 +178,11 @@ const shortid = require('shortid');
 
       switch (data.action) {
         case 'START_GAME':
-          document.body.insertAdjacentHTML('afterbegin', `<section class="score-goal">${data.maxScore}</section>`);
+          if (document.querySelector('#score-goal')) {
+            document.querySelector('#score-goal').textContent = data.maxScore;
+          } else {
+            document.body.insertAdjacentHTML('afterbegin', `<section id="score-goal">${data.maxScore}</section>`);
+          }
 
           btn.disabled = false;
           document.body.classList.remove('lost');

@@ -99,6 +99,10 @@ body.controller > *:not(.back) {
   filter: brightness(50%);
 }
 
+body.controller #score-goal {
+  display: block;
+}
+
 body.controller .back {
   position: absolute;
   top: 0;
