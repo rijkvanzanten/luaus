@@ -1,3 +1,4 @@
+/* Font includes */
 @font-face {
   font-family: 'Pixel Heading';
   src: url('pixel.woff2') format('woff2'),
@@ -12,6 +13,7 @@
   font-style: normal;
 }
 
+/* General styling */
 * {
   box-sizing: border-box;
   font-size: inherit;
@@ -45,68 +47,42 @@ h1 {
   text-shadow: 0 0.1em 0 black;
 }
 
-body.controller {
-  justify-content: space-between;
-  filter: brightness(200%);
-  background-image: none;
-  animation: none;
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  padding: .6rem;
+  color: #fff;
+  border: none;
+  background-color: #b9444d;
 }
 
-body.controller > *:not(.back) {
-  filter: brightness(50%);
-}
-
-body.controller.won {
-  animation: win-back .75s linear infinite alternate;
-}
-
-body.controller.won .back {
-  display: none;
-}
-
-body.controller.lost {
-  filter: brightness(500%) grayscale(100%);
-}
-
-body.controller .back {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 100vw;
-  height: 100vh;
-}
-
-body.controller #score-goal {
+button::before,
+button::after {
   display: block;
-}
-
-body.controller form {
-  display: flex;
-  flex-direction: column;
   position: absolute;
   top: 50%;
-  padding: 2em;
+  width: .5rem;
+  height: calc(100% - 1rem);
+  text-align: center;
+  content: "";
+  background-color: inherit;
   transform: translateY(-50%);
 }
 
-body.controller form > * {
-  display: block;
-  margin: 1rem 0;
+button::before {
+  left: -.5rem;
 }
 
-body.controller label input {
-  margin-top: 1rem;
-  padding: .5em;
-  font-size: 1em;
-  border: 1px solid #222;
+button::after {
+  right: -.5rem;
 }
 
-body.controller button[type=submit] {
-  padding: .6em;
-  font-size: 1.4em;
+button:focus {
+  outline: 0; /* just because */
 }
 
+/* 'Game started' / 'Game ended' events styling */
 body.started #logo {
   top: 1.4rem;
   margin-bottom: 2rem;
@@ -165,6 +141,23 @@ body.ended #reset {
   }
 }
 
+/* Real-time cursors styling */
+div[data-clientid] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  overflow: visible;
+  pointer-events: none;
+  filter: grayscale(100%);
+  background-image: url('/pointer.png');
+  background-repeat: no-repeat;
+  transition: transform 150ms ease;
+  opacity: 1;
+}
+
+/* Feedback / messages styling */
 #app-banner {
   width: 100%;
 }
@@ -186,6 +179,7 @@ body.ended #reset {
   }
 }
 
+/* Logo styling */
 #logo {
   position: relative;
   top: -4rem;
@@ -276,6 +270,7 @@ body.ended #reset {
   }
 }
 
+/* Setup for max-score styling */
 #setup {
   display: flex;
   flex-direction: row;
@@ -330,6 +325,7 @@ body.ended #reset {
   }
 }
 
+/* Game buttons / features styling */
 #reset {
   display: none;
   margin: 2em 0;
@@ -350,6 +346,7 @@ body.ended #reset {
   content: "First to: ";
 }
 
+/* Joined players styling */
 #players {
   flex-grow: 1;
   position: relative;
@@ -402,10 +399,6 @@ body.ended #reset {
   -ms-interpolation-mode: nearest-neighbor;
 }
 
-#players h2 {
-  /* Needs styling */
-}
-
 #players span {
   opacity: 0;
 }
@@ -430,62 +423,80 @@ body.ended #reset {
     max-height: initial;
   }
 
+  #players h2 {
+    margin: 1.6em 0 0;
+  }
+
   #players span {
     display: none;
     opacity: 1;
   }
 }
 
-button {
-  appearance: none;
-  -webkit-appearance: none;
-  position: relative;
-  padding: .6rem;
-  color: #fff;
-  border: none;
-  background-color: #b9444d;
+/* Controller styling */
+body.controller {
+  justify-content: space-between;
+  filter: brightness(200%);
+  background-image: none;
+  animation: none;
 }
 
-button::before,
-button::after {
-  display: block;
-  position: absolute;
-  top: 50%;
-  width: .5rem;
-  height: calc(100% - 1rem);
-  text-align: center;
-  content: "";
-  background-color: inherit;
-  transform: translateY(-50%);
+body.controller > *:not(.back) {
+  filter: brightness(50%);
 }
 
-button::before {
-  left: -.5rem;
+body.controller.won {
+  animation: win-back .75s linear infinite alternate;
 }
 
-button::after {
-  right: -.5rem;
+body.controller.won .back {
+  display: none;
 }
 
-button:focus {
-  outline: 0; /* just because */
+body.controller.lost {
+  filter: brightness(500%) grayscale(100%);
 }
 
-div[data-clientid] {
+body.controller .back {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100px;
-  height: 100px;
-  overflow: visible;
-  pointer-events: none;
-  filter: grayscale(100%);
-  background-image: url('/pointer.png');
-  background-repeat: no-repeat;
-  transition: transform 150ms ease;
-  opacity: 1;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
 }
 
+body.controller #score-goal {
+  display: block;
+}
+
+body.controller form {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  padding: 2em;
+  transform: translateY(-50%);
+}
+
+body.controller form > * {
+  display: block;
+  margin: 1rem 0;
+}
+
+body.controller label input {
+  margin-top: 1rem;
+  padding: .5em;
+  font-size: 1em;
+  border: 1px solid #222;
+}
+
+body.controller button[type=submit] {
+  padding: .6em;
+  font-size: 1.4em;
+}
+
+/* Controller button styling */
 #bigredbutton {
   position: relative;
   width: 70vw;
@@ -518,6 +529,7 @@ div[data-clientid] {
   }
 }
 
+/* Animation declarations */
 @keyframes pulsateRight {
   from {
     transform: scale(1) rotate(0);
