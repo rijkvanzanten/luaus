@@ -1,0 +1,23 @@
+<%- include partials/head %>
+<%- include partials/logo %>
+
+<a href="/controller/<%= gameID %>">Want to play along?</a>
+
+<div id="players">
+  <% if (Object.keys(game.players).length > 0) { %>
+  <ul>
+    <% Object.keys(game.players).forEach(function(id, index) { %>
+      <li
+        style="<%= `background-color: rgb(${players[id].color[1]}, ${players[id].color[0]}, ${players[id].color[2]})` %>"
+        data-id="<%= id %>"
+        data-type="<%= players[id].type %>">
+       <img src="/<%= players[id].type %>.png" alt="Player uses <%= players[id].type %>">
+       <h2><%= players[id].name %></h2>
+       <span><%= players[id].score %></span>
+      </li>
+    <% }); %>
+  </ul>
+  <% } %>
+</div>
+
+<%- include partials/foot %>
