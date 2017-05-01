@@ -13,7 +13,7 @@ const broadcast = require('./broadcast');
  * Structure:
  * {
  *   [id]: {
- *     players: [],
+ *     players: Object,
  *     maxScore: Number,
  *     playing: Boolean,
  *     ended: Boolean
@@ -31,7 +31,8 @@ const app = express()
   .set('view engine', 'ejs')
   .set('views', path.join(__dirname, 'views'))
   .get('/', getHome)
-  .post('/', createRoom);
+  .post('/', createRoom)
+  .get('/:id', getRoom);
 
 const server = http.createServer(app);
 const webSocketServer = new WebSocket.Server({ server });
@@ -60,7 +61,22 @@ function getHome(req, res) {
 function createRoom(req, res) {
   const id = shortid.generate();
   games[id] = new Game();
-  res.redirect('/game/' + id);
+  res.redirect(id);
+}
+
+/**
+ * [GET] /:id handler
+ * Renders game room which matches ID in param
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function getRoom(req, res) {
+  // Return the user to the homepage when the room is invalid
+  if (!games[req.params.id]) {
+    return res.redirect('/');
+  }
+
+  return res.render('room', {game: games[req.params.id]});
 }
 
 /**
