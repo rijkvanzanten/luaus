@@ -56,8 +56,16 @@ body.controller > *:not(.back) {
   filter: brightness(50%);
 }
 
-body.controller #score-goal {
-  display: block;
+body.controller.won {
+  animation: win-back .75s linear infinite alternate;
+}
+
+body.controller.won .back {
+  display: none;
+}
+
+body.controller.lost {
+  filter: brightness(500%) grayscale(100%);
 }
 
 body.controller .back {
@@ -69,16 +77,34 @@ body.controller .back {
   height: 100vh;
 }
 
-body.controller.won {
-  animation: win-back .75s linear infinite alternate;
+body.controller #score-goal {
+  display: block;
 }
 
-body.controller.won .back {
-  display: none;
+body.controller form {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  padding: 2em;
+  transform: translateY(-50%);
 }
 
-body.controller.lost {
-  filter: brightness(500%) grayscale(100%);
+body.controller form > * {
+  display: block;
+  margin: 1rem 0;
+}
+
+body.controller label input {
+  margin-top: 1rem;
+  padding: .5em;
+  font-size: 1em;
+  border: 1px solid #222;
+}
+
+body.controller button[type=submit] {
+  padding: .6em;
+  font-size: 1.4em;
 }
 
 body.started #logo {
