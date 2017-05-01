@@ -3,8 +3,8 @@
 
 <% if (Object.keys(games).length > 0) { %>
   <ul>
-    <% Object.keys(games).forEach(function (room) { %>
-    <li><a href="<%= room.id %>"></a></li>
+    <% Object.keys(games).forEach(function (id) { %>
+    <li><a href="<%= id %>"><%= id %> <%= Object.keys(games[id].players).length %> / 12</a></li>
     <% }); %>
   </ul>
 <% } else { %>
@@ -15,4 +15,4 @@
   <button>Create Luau</button>
 </form>
 
-<script src="/app.js"></script>
+<%- include partials/foot %>
