@@ -92,11 +92,11 @@ body {
 body.controller {
   background-image: none;
   animation: none;
-  filter: brightness(500%);
+  filter: brightness(200%);
 }
 
 body.controller > *:not(.back) {
-  filter: brightness(20%);
+  filter: brightness(50%);
 }
 
 body.controller .back {
@@ -297,7 +297,7 @@ button[type=submit] {
   align-items: center;
   flex-direction: column;
   flex-grow: 1;
-  filter: brightness(500%);
+  filter: brightness(200%);
 }
 
 #players li.won {
@@ -310,7 +310,7 @@ button[type=submit] {
 
 #players img {
   width: 5em;
-  filter: brightness(20%);
+  filter: brightness(50%);
   image-rendering: optimizeSpeed;
   image-rendering: -moz-crisp-edges;
   image-rendering: -o-crisp-edges;
