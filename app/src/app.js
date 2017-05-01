@@ -185,11 +185,12 @@ const shortid = require('shortid');
           }
 
           btn.disabled = false;
+          document.body.classList.remove('won');
           document.body.classList.remove('lost');
           break;
         case 'END_GAME':
           btn.disabled = true;
-          
+
           if (btnID === data.winner.id) {
             document.querySelector('.controller').classList.add('won');
           } else {
