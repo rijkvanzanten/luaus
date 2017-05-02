@@ -6,9 +6,11 @@ module.exports = function (data) {
     h('a', {href: '/new-player/' + gameID}, 'Wanna play along?'),
     h('div', {id: 'players'}, [
       h('ul', Object.keys(game.players).map(playerID => {
-        const player = players[playerID];
+        const player = game.players[playerID];
         return h('li', {
-          style: `background-color: rgb(${player.color[1]}, ${player.color[0]}, ${player.color[2]});`,
+          style: {
+            backgroundColor: `rgb(${player.color[1]}, ${player.color[0]}, ${player.color[2]})`
+          },
           dataPlayerId: playerID
         })
       }))
