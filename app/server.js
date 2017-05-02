@@ -55,6 +55,8 @@ server.listen(port, function onListen() {
   console.log('Server started at port ' + port);
 });
 
+webSocketServer.on('connection', onSocketConnection);
+
 /**
  * [GET] / handler
  * @param  {Object} req Express request object
@@ -206,6 +208,28 @@ function endGame(gameID, playerID) {
       winner: playerID
     })
   );
+}
+
+/**
+ * Main socket handler
+ * Maps incoming socket messages to the corresponding functions
+ */
+function onSocketConnection(socket) {
+  socket.on('message', onSocketMessage);
+
+  function onSocketMessage(data) {
+    try {
+      message = JSON.parse(message);
+    } catch (err) {
+      console.log('Message not in JSON:', message);
+    }
+
+    switch (message.action) {
+      case 'UPDATE_SCORE':
+        updateScore(message.gameID, message.playerID);
+        break;
+    }
+  }
 }
 
 /**

@@ -17,7 +17,8 @@ if (document.querySelector('.index')) {
       JSON.stringify({
         device: 'phone',
         action: 'UPDATE_SCORE',
-        playerID: document.querySelector('input').value
+        gameID: document.querySelector('[name="gameID"]').value,
+        playerID: document.querySelector('[name="playerID"').value
       })
     );
 
