@@ -44,7 +44,7 @@ const app = express()
   .get('/new-player/:gameID', renderNewPlayerForm)
   .post('/new-player/:gameID', addNewPlayerToGame)
   .get('/:gameID/:playerID', getController)
-  .post('/:gameID/:playerID', updateScore);
+  .post('/:gameID/:playerID', postUpdateScore);
 
 const server = http.createServer(app);
 const webSocketServer = new WebSocket.Server({ server });
@@ -91,7 +91,10 @@ function renderSingleRoom(req, res) {
   return res.send(
     wrapper(
       toString(
-        render('room', {gameID: req.params.gameID, game: games[req.params.gameID]})
+        render('room', {
+          gameID: req.params.gameID,
+          game: games[req.params.gameID]
+        })
       )
     )
   );
@@ -104,13 +107,7 @@ function renderSingleRoom(req, res) {
  * @param  {Object} res Express response object
  */
 function renderNewPlayerForm(req, res) {
-  return res.send(
-    wrapper(
-      toString(
-        render('newPlayer', req.params.gameID)
-      )
-    )
-  );
+  return res.send(wrapper(toString(render('newPlayer', req.params.gameID))));
 }
 
 /**
@@ -131,7 +128,10 @@ function addNewPlayerToGame(req, res) {
  * @param  {Object} res Express response object
  */
 function getController(req, res) {
-  if (games[req.params.gameID] && games[req.params.gameID].players[req.params.playerID]) {
+  if (
+    games[req.params.gameID] &&
+    games[req.params.gameID].players[req.params.playerID]
+  ) {
     return res.send(
       wrapper(
         toString(
@@ -153,13 +153,59 @@ function getController(req, res) {
  * @param  {Object} req Express request object
  * @param  {Object} res Express response object
  */
-function updateScore(req, res) {
-  if (games[req.params.gameID] && games[req.params.gameID].players[req.params.playerID]) {
-    games[req.params.gameID].players[req.params.playerID].score++;
+function postUpdateScore(req, res) {
+  // If game && player exists
+  if (
+    games[req.params.gameID] &&
+    games[req.params.gameID].players[req.params.playerID]
+  ) {
+    updateScore(req.params.gameID, req.params.playerID);
     return res.redirect(`/${req.params.gameID}/${req.params.playerID}`);
   }
 
   return res.redirect('/');
+}
+
+/**
+ * Increase the player score by 1
+ * End game if max score has been reached
+ * Broadcast updatescore over socket
+ * @param  {String} gameID   ID of the game in which the player resides
+ * @param  {String} playerID ID of the player who scored
+ */
+function updateScore(gameID, playerID) {
+  if (games[gameID] && games[gameID].ended === false && games[gameID].playing === true) {
+    games[gameID].players[playerID].score++;
+
+    if (games[gameID].players[playerID] === games[gameID].maxScore) {
+      endGame(gameID, playerID);
+    } else {
+      wss.broadcast(
+        JSON.stringify({
+          action: 'UPDATE_SCORE',
+          playerID
+        })
+      );
+    }
+  }
+}
+
+/**
+ * End the game session
+ * Broadcast end_game signal
+ * @param  {String} gameID   ID of the game to end
+ * @param  {String} playerID ID of the player who own
+ */
+function endGame(gameID, playerID) {
+  games[gameID].ended = true;
+  games[gameID].playing = false;
+
+  wss.broadcast(
+    JSON.stringify({
+      action: 'END_GAME',
+      winner: playerID
+    })
+  );
 }
 
 /**
