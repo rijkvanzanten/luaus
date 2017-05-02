@@ -5,6 +5,8 @@ module.exports = function (body) {
     <title>Minor WOT</title>
     <link rel="stylesheet" href="/style.css" />
     <script src="/app.js" defer></script>
-    ${body}
+    <div data-root>
+      ${body}
+    </div>
   `;
 }
