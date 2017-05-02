@@ -28,7 +28,7 @@ const broadcast = require('./broadcast');
  * }
  * @type {Object}
  */
-const games = {};
+let games = {};
 
 const port = process.env.PORT || 3000;
 
@@ -140,11 +140,9 @@ function getController(req, res) {
 function updateScore(req, res) {
   if (games[req.params.gameID] && games[req.params.gameID].players[req.params.playerID]) {
     games[req.params.gameID].players[req.params.playerID].score++;
-    res.redirect(`/${req.params.gameID}/${req.params.playerID}`);
+    return res.redirect(`/${req.params.gameID}/${req.params.playerID}`);
   }
 
-
-  console.log(games);
   return res.redirect('/');
 }
 
