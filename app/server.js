@@ -88,24 +88,33 @@ function renderSingleRoom(req, res) {
     return res.redirect('/');
   }
 
-  return res.render('room', {
-    gameID: req.params.gameID,
-    game: games[req.params.gameID]
-  });
+  return res.send(
+    wrapper(
+      toString(
+        render('room', {gameID: req.params.gameID, game: games[req.params.gameID]})
+      )
+    )
+  );
 }
 
 /**
- * [GET] /controller/:id
+ * [GET] /new-player/:id
  * renders a form which allows the user to create a new controller instance
  * @param  {Object} req Express request object
  * @param  {Object} res Express response object
  */
 function renderNewPlayerForm(req, res) {
-  res.render('new-player', { gameID: req.params.gameID });
+  return res.send(
+    wrapper(
+      toString(
+        render('newPlayer', req.params.gameID)
+      )
+    )
+  );
 }
 
 /**
- * [POST] /controller/:id
+ * [POST] /new-player/:id
  * Adds new user to game with corresponding ID and redirects to buttonview
  * @param  {Object} req Express request object
  * @param  {Object} res Express response object
@@ -123,11 +132,17 @@ function addNewPlayerToGame(req, res) {
  */
 function getController(req, res) {
   if (games[req.params.gameID] && games[req.params.gameID].players[req.params.playerID]) {
-    return res.render('controller', {
-      name: games[req.params.gameID].players[req.params.playerID].name,
-      gameID: req.params.gameID,
-      playerID: req.params.playerID
-    });
+    return res.send(
+      wrapper(
+        toString(
+          render('controller', {
+            name: games[req.params.gameID].players[req.params.playerID].name,
+            gameID: req.params.gameID,
+            playerID: req.params.playerID
+          })
+        )
+      )
+    );
   }
 
   return res.redirect('/');

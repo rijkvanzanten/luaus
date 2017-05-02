@@ -12,9 +12,9 @@ module.exports = function (games) {
 };
 
 function gameList(games) {
-  return h('ul', games.map(game => 
+  return h('ul', Object.keys(games).map(gameID => 
     h('li',
-      h('a', {href: '/' + game.id})
+      h('a', {href: '/' + gameID})
     )
   ));
 }
