@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const WebSocket = require('ws');
 const shortid = require('shortid');
+const toString = require('vdom-to-html');
+const render = require('./render');
+const wrapper = require('./views/wrapper');
 const broadcast = require('./broadcast');
 
 /**
@@ -58,7 +61,7 @@ server.listen(port, function onListen() {
  * @param  {Object} res Express response object
  */
 function renderHome(req, res) {
-  res.render('index', { games });
+  res.send(wrapper(toString(render('index', games))));
 }
 
 /**
