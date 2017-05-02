@@ -40,11 +40,12 @@
     "body-parser": "^1.17.1",
     "convert-range": "^1.0.0",
     "dotenv": "^4.0.0",
-    "ejs": "^2.5.6",
     "express": "^4.15.2",
     "shortid": "^2.2.8",
     "throttle-debounce": "^1.0.1",
     "twitter": "^1.7.0",
+    "vdom-to-html": "^2.3.1",
+    "virtual-dom": "^2.1.1",
     "ws": "^2.2.3"
   },
   "devDependencies": {
