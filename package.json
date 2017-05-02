@@ -38,12 +38,14 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.1",
+    "bufferutil": "^3.0.0",
     "convert-range": "^1.0.0",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
     "shortid": "^2.2.8",
     "throttle-debounce": "^1.0.1",
     "twitter": "^1.7.0",
+    "utf-8-validate": "^3.0.1",
     "vdom-to-html": "^2.3.1",
     "virtual-dom": "^2.1.1",
     "ws": "^2.2.3"
@@ -55,6 +57,8 @@
     "bundle-collapser": "^1.2.1",
     "csso-cli": "^1.0.0",
     "esmangle": "^1.0.1",
+    "husky": "^0.13.3",
+    "lint-staged": "^3.4.1",
     "nodemon": "^1.11.0",
     "postcss": "^5.2.17",
     "postcss-cli": "^3.1.1",
