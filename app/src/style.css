@@ -360,6 +360,10 @@ div[data-clientid] {
   justify-content: space-between;
 }
 
+[data-root] > div.room a {
+  margin-top: 2em;
+}
+
 #players {
   flex-basis: 10em;
   position: relative;
