@@ -40,7 +40,7 @@ if (document.querySelector('.index')) {
 function replaceView(view) {
   initialData = JSON.parse(initialData);
 
-  let tree = render(view, ...initialData);
+  let tree = render(view, initialData);
   let rootNode = createElement(tree);
 
   document.body.replaceChild(rootNode, document.querySelector('[data-root]'));
