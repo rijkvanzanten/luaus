@@ -244,7 +244,7 @@ function updateScore(gameID, playerID) {
 
     debug(`Update score player ${playerID} to ${games[gameID].players[playerID].score}`);
 
-    if (games[gameID].players[playerID] === games[gameID].maxScore) {
+    if (games[gameID].players[playerID].score === games[gameID].maxScore) {
       debug(`Game ${gameID} ends`);
       endGame(gameID, playerID);
     } else {
@@ -253,7 +253,8 @@ function updateScore(gameID, playerID) {
         JSON.stringify({
           action: 'UPDATE_SCORE',
           playerID,
-          gameID
+          gameID,
+          score: games[gameID].players[playerID].score
         })
       );
     }
