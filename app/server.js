@@ -75,8 +75,8 @@ function renderHome(req, res) {
   debug('[GET] / Render homepage');
   res.send(
     wrapper(
-      toString(render('index', games)),
-      games
+      toString(render('index', Object.keys(games))),
+      Object.keys(games)
     ) 
   );
 }

@@ -1,9 +1,9 @@
 const h = require('virtual-dom/h');
 
-module.exports = function (games) {
+module.exports = function (gameIDs) {
   return h('div', {className: 'index'}, [
-    Object.keys(games).length > 0 ? 
-      gameList(games) : 
+    gameIDs.length > 0 ? 
+      gameList(gameIDs) : 
       h('p', 'No Luaus found'),
       h('form', {action: '/', method: 'post'},
         h('button', 'Create Luau')
@@ -11,8 +11,8 @@ module.exports = function (games) {
   ]);
 };
 
-function gameList(games) {
-  return h('ul', Object.keys(games).map(gameID => 
+function gameList(gameIDs) {
+  return h('ul', gameIDs.map(gameID => 
     h('li',
       h('a', {href: '/' + gameID})
     )
