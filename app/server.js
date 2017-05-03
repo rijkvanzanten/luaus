@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const WebSocket = require('ws');
 const shortid = require('shortid');
+const debug = require('debug')('luaus');
 const toString = require('vdom-to-html');
 const render = require('./render');
 const wrapper = require('./views/wrapper');
@@ -63,6 +64,7 @@ webSocketServer.on('connection', onSocketConnection);
  * @param  {Object} res Express response object
  */
 function renderHome(req, res) {
+  debug('[GET] / Render homepage');
   res.send(wrapper(toString(render('index', games))));
 }
 
@@ -73,6 +75,7 @@ function renderHome(req, res) {
  * @param  {Object} res Express response object
  */
 function createRoom(req, res) {
+  debug('[POST] / Create gameroom & redirect');
   const gameID = shortid.generate();
   games[gameID] = new Game();
   res.redirect(gameID);
@@ -87,9 +90,11 @@ function createRoom(req, res) {
 function renderSingleRoom(req, res) {
   // Return the user to the homepage when the room doesn't exist
   if (!games[req.params.gameID]) {
+    debug(`[GET] /${req.params.gameID} Redirect. Game doens't exist`);
     return res.redirect('/');
   }
 
+  debug(`[GET] /${req.params.gameID} Render gameroom`);
   return res.send(
     wrapper(
       toString(
@@ -109,6 +114,7 @@ function renderSingleRoom(req, res) {
  * @param  {Object} res Express response object
  */
 function renderNewPlayerForm(req, res) {
+  debug(`[GET] /new-player/${req.params.gameID} Render new player form`);
   return res.send(wrapper(toString(render('newPlayer', req.params.gameID))));
 }
 
@@ -119,6 +125,7 @@ function renderNewPlayerForm(req, res) {
  * @param  {Object} res Express response object
  */
 function addNewPlayerToGame(req, res) {
+  debug(`[POST] /new-player/${req.params.gameID} Add player to game`);
   const playerID = shortid.generate();
   games[req.params.gameID].players[playerID] = new Player('web', req.body.name);
   res.redirect(`/${req.params.gameID}/${playerID}`);
@@ -134,6 +141,7 @@ function getController(req, res) {
     games[req.params.gameID] &&
     games[req.params.gameID].players[req.params.playerID]
   ) {
+    debug(`[GET] /${req.params.gameID}/${req.params.playerID} Controller`);
     return res.send(
       wrapper(
         toString(
@@ -146,7 +154,7 @@ function getController(req, res) {
       )
     );
   }
-
+  debug(`[GET] /${req.params.gameID}/${req.params.playerID} Game/player doesn't exists`);
   return res.redirect('/');
 }
 
@@ -161,10 +169,12 @@ function postUpdateScore(req, res) {
     games[req.params.gameID] &&
     games[req.params.gameID].players[req.params.playerID]
   ) {
+    debug(`[POST] /${req.params.gameID}/${req.params.playerID} Update players score`);
     updateScore(req.params.gameID, req.params.playerID);
     return res.redirect(`/${req.params.gameID}/${req.params.playerID}`);
   }
 
+  debug(`[POST] /${req.params.gameID}/${req.params.playerID} Game/player doesn't exists`);
   return res.redirect('/');
 }
 
@@ -179,9 +189,13 @@ function updateScore(gameID, playerID) {
   if (games[gameID] && games[gameID].ended === false && games[gameID].playing === true) {
     games[gameID].players[playerID].score++;
 
+    debug(`Update score player ${playerID} to ${games[gameID].players[playerID].score}`);
+
     if (games[gameID].players[playerID] === games[gameID].maxScore) {
+      debug(`Game ${gameID} ends`);
       endGame(gameID, playerID);
     } else {
+      debug(`[WS] Send UPDATE_SCORE ${playerID}`);
       wss.broadcast(
         JSON.stringify({
           action: 'UPDATE_SCORE',
@@ -189,6 +203,8 @@ function updateScore(gameID, playerID) {
         })
       );
     }
+  } else {
+    debug(`[WS] Game ${gameID} doesn't exist or has ended`);
   }
 }
 
@@ -202,6 +218,7 @@ function endGame(gameID, playerID) {
   games[gameID].ended = true;
   games[gameID].playing = false;
 
+  debug(`[WS] Send END_GAME ${playerID}`);
   wss.broadcast(
     JSON.stringify({
       action: 'END_GAME',
@@ -217,7 +234,7 @@ function endGame(gameID, playerID) {
 function onSocketConnection(socket) {
   socket.on('message', onSocketMessage);
 
-  function onSocketMessage(data) {
+  function onSocketMessage(message) {
     try {
       message = JSON.parse(message);
     } catch (err) {
@@ -226,6 +243,7 @@ function onSocketConnection(socket) {
 
     switch (message.action) {
       case 'UPDATE_SCORE':
+        debug(`[WS] Receive UPDATE_SCORE`);
         updateScore(message.gameID, message.playerID);
         break;
     }
