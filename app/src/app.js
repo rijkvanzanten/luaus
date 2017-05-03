@@ -11,7 +11,7 @@ let rootNode;
 /**
  * This is quite ugly. The eventlisteners on document wouldn't register when
  *   triggered from within a nested module. Still need to investigate why and
- *   fix the mess beneath
+ *   fix the mess beneath by splitting it up into modules (this kinda acts like a router)
  */
 if (document.querySelector('.index')) {
   replaceView('index');
