@@ -1,3 +1,7 @@
+const diff = require('virtual-dom/diff');
+const patch = require('virtual-dom/patch');
+const createElement = require('virtual-dom/create-element');
+const render = require('../render');
 const socket = new WebSocket('ws://' + location.hostname + ':' + location.port);
 
 socket.addEventListener('open', function () {
@@ -5,7 +9,7 @@ socket.addEventListener('open', function () {
 });
 
 if (document.querySelector('.index')) {
-  console.log('Homepage');
+  replaceView('index');
 } else if (document.querySelector('.controller')) {
   document.querySelector('form').addEventListener('submit', onButtonPress);
 
@@ -26,4 +30,13 @@ if (document.querySelector('.index')) {
   }
 } else if (document.querySelector('.new-player')) {
   console.log('New Player');
+}
+
+function replaceView(view) {
+  initialData = JSON.parse(initialData);
+
+  let tree = render(view, ...initialData);
+  let rootNode = createElement(tree);
+
+  document.body.replaceChild(rootNode, document.querySelector('[data-root]'));
 }
