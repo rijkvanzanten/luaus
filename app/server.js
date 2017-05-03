@@ -41,6 +41,7 @@ const app = express()
   .get('/', renderHome)
   .post('/', createRoom)
   .get('/:gameID', renderSingleRoom)
+  .post('/:gameID', postStartGame)
   .get('/new-player/:gameID', renderNewPlayerForm)
   .post('/new-player/:gameID', addNewPlayerToGame)
   .get('/:gameID/:playerID', getController)
@@ -120,6 +121,21 @@ function renderSingleRoom(req, res) {
       )
     )
   );
+}
+
+/**
+ * [POST] /:id
+ * Start the game
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function postStartGame(req, res) {
+  debug(`[POST] /${req.params.gameID}`);
+  // Return the user to the homepage when the room doesn't exist
+  if (games[req.params.gameID]) {
+    startGame(req.params.gameID);
+  }
+  res.redirect('/' + req.params.gameID);
 }
 
 /**
@@ -232,6 +248,22 @@ function updateScore(gameID, playerID) {
 }
 
 /**
+ * Start the game session
+ * @param  {String} gameID Game to start
+ */
+function startGame(gameID, maxScore = 10) {
+  games[gameID].playing = true;
+  games[gameID].maxScore = maxScore;
+
+  debug(`Game ${gameID} started`);
+  webSocketServer.broadcast(
+    JSON.stringify({
+      action: 'START_GAME',
+      gameID
+    })
+  );
+}
+/**
  * End the game session
  * Broadcast end_game signal
  * @param  {String} gameID   ID of the game to end
@@ -245,7 +277,8 @@ function endGame(gameID, playerID) {
   webSocketServer.broadcast(
     JSON.stringify({
       action: 'END_GAME',
-      winner: playerID
+      winner: playerID,
+      gameID
     })
   );
 }
