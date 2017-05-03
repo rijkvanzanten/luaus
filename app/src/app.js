@@ -86,7 +86,7 @@ if (document.querySelector('.index')) {
 function replaceView(view) {
   tree = render(view, data);
   rootNode = createElement(tree);
-  document.body.replaceChild(rootNode, document.querySelector('[data-root] > div'));
+  document.querySelector('[data-root]').replaceChild(rootNode, document.querySelector('[data-root] > div'));
 }
 
 /**
