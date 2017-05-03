@@ -11,7 +11,7 @@
     "build-css": "postcss app/src/*.css --use postcss-cssnext | csso -o app/public/style.css",
     "build": "npm run build-js & npm run build-css",
     "dev-server": "DEBUG=luaus nodemon app/server.js",
-    "dev-client": "nodemon -e css,js --watch src/*.* --exec \"npm run build\"",
+    "dev-client": "nodemon -e css,js --watch src/*.* --watch views/*.* --exec \"npm run build\"",
     "precommit": "lint-staged"
   },
   "lint-staged": {
