@@ -6,6 +6,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Pixel';
   src: url('pixelmix.woff2') format('woff');
@@ -91,103 +92,6 @@ button:focus {
   outline: 0; /* just because */
 }
 
-/* 'Game started' / 'Game ended' events styling */
-body.started #logo {
-  top: 1.4rem;
-  margin-bottom: 2rem;
-}
-
-body.started #logo h1 {
-  top: 0;
-}
-
-body.started #logo img {
-  display: none;
-}
-
-body.started #setup, body.started #app-banner,
-body.ended #setup, body.ended #app-banner {
-  display: none;
-}
-
-body.started #score-goal {
-  display: block;
-}
-
-body.started #players span,
-body.ended #players span {
-  opacity: 1;
-}
-
-body.ended #reset {
-  display: block;
-}
-
-@media (min-width: 40em) {
-  body.started #logo {
-    margin-bottom: 20rem;
-  }
-
-  body.started #logo h1 {
-    top: 16rem;
-  }
-
-  body.started #logo img {
-    display: block;
-  }
-
-  body.started #players img,
-  body.ended #players img {
-    position: absolute;
-    top: 1em;
-    left: 1em;
-    width: 3em;
-  }
-
-  body.started #players span,
-  body.ended #players span {
-    display: block;
-  }
-}
-
-/* Real-time cursors styling */
-div[data-clientid] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100px;
-  height: 100px;
-  overflow: visible;
-  pointer-events: none;
-  filter: grayscale(100%);
-  background-image: url('/pointer.png');
-  background-repeat: no-repeat;
-  transition: transform 150ms ease;
-  opacity: 1;
-}
-
-/* Feedback / messages styling */
-#app-banner {
-  width: 100%;
-}
-
-#app-banner a, #message {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: 1em;
-  line-height: 1.6;
-  text-align: center;
-  color: #fff;
-  background-color: #15d7d4;
-}
-
-@media (min-width: 40em) {
-  #app-banner {
-    display: none;
-  }
-}
-
 /* Logo styling */
 #logo {
   position: relative;
@@ -254,11 +158,8 @@ div[data-clientid] {
   color: #b40a96;
 }
 
-@media (min-width: 40em) {
-  #logo {
-    margin: 0 auto 10rem;
-  }
 
+@media (min-width: 40em) {
   #logo h1 {
     top: 16rem;
     font-size: 3.4em;
@@ -312,47 +213,6 @@ div[data-clientid] {
   width: 75%;
   max-width: initial;
   margin-top: .4em;
-}
-
-@media (min-width: 40em) {
-  #setup #min:hover,
-  #setup #plus:hover {
-    transform: scale(1.2);
-  }
-
-  #setup #min:active,
-  #setup #plus:active {
-    transform: scale(0.9);
-  }
-
-  #setup button[type=submit]:hover {
-    transform: scaleX(1.4);
-  }
-
-  #setup button[type=submit]:active {
-    transform: scaleX(0.8);
-  }
-}
-
-/* Game buttons / features styling */
-#reset {
-  display: none;
-  margin: 2em 0;
-  padding: .6em;
-  font-size: 1.4em;
-}
-
-#score-goal {
-  display: none;
-  width: 100%;
-  padding: 1em;
-  color: #fff;
-  text-align: center;
-  background-color: #222;
-}
-
-#score-goal::before {
-  content: "First to: ";
 }
 
 /* Joined players styling */
