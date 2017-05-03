@@ -4,9 +4,21 @@ const createElement = require('virtual-dom/create-element');
 const render = require('../render');
 const socket = new WebSocket('ws://' + location.hostname + ':' + location.port);
 
-socket.addEventListener('open', function () {
-  console.log('socket opened');
-});
+let data = JSON.parse(initialData);
+let tree;
+let rootNode;
+
+socket.addEventListener('message', onSocketMessage);
+
+function onSocketMessage(message) {
+  const messageData = JSON.parse(message.data);
+
+  switch (messageData.action) {
+    case 'NEW_GAME':
+      data.push(messageData.gameID);
+      return update('index', data);
+  }
+}
 
 /**
  * This is quite ugly. The eventlisteners on document wouldn't register when
@@ -14,7 +26,7 @@ socket.addEventListener('open', function () {
  *   fix the mess beneath
  */
 if (document.querySelector('.index')) {
-  replaceView('index');
+  const tree = replaceView('index');
 } else if (document.querySelector('.controller')) {
   document.querySelector('form').addEventListener('submit', onButtonPress);
 
@@ -38,10 +50,15 @@ if (document.querySelector('.index')) {
 }
 
 function replaceView(view) {
-  initialData = JSON.parse(initialData);
-
-  let tree = render(view, initialData);
-  let rootNode = createElement(tree);
+  tree = render(view, data);
+  rootNode = createElement(tree);
 
   document.body.replaceChild(rootNode, document.querySelector('[data-root]'));
+}
+
+function update(view) {
+  const newTree = render(view, data);
+  const patches = diff(tree, newTree);
+  rootNode = patch(rootNode, patches);
+  tree = newTree;
 }
