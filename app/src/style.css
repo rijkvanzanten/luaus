@@ -1,72 +1,21 @@
-@keyframes animatedBackground {
-  0% {
-    background-position: -400px 400px
-  }
-
-  100% {
-    background-position: 0 0
-  }
-}
-
-@keyframes fadeout {
-  from {
-    opacity: .7;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
+/* Font includes */
 @font-face {
-  font-family: 'pixel';
+  font-family: 'Pixel Heading';
   src: url('pixel.woff2') format('woff2'),
        url('pixel.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
-
-@keyframes wave {
-  from {
-    transform: translateY(0);
-    color: blue;
-  }
-  to {
-    transform: translateY(-35px);
-  }
+@font-face {
+  font-family: 'Pixel';
+  src: url('pixelmix.woff2') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
-@keyframes pulsateRight {
-  from {
-    transform: scale(1) rotate(0);
-  }
-
-  to {
-    transform: scale(1.2) rotate(10deg);
-  }
-}
-
-@keyframes pulsateLeft {
-  from {
-    transform: scale(1) rotate(0);
-  }
-
-  to {
-    transform: scale(1.2) rotate(-10deg);
-  }
-}
-
-@keyframes flow {
-  from {
-    transform: scale(.7) rotate(-10deg);
-  }
-
-  to {
-    transform: scale(1) rotate(10deg);
-  }
-}
-
+/* General styling */
 * {
+  box-sizing: border-box;
   font-size: inherit;
   font-family: inherit;
   cursor: inherit;
@@ -79,41 +28,72 @@ html {
 }
 
 body {
-  position: relative;
-  font-family: 'pixel', cursive;
-  background-image: url('/pow-star.png');
-  animation: animatedBackground 1s linear infinite;
-  margin: 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   height: 100%;
+  margin: 0;
+  font-family: 'Pixel', sans-serif;
+  background-image: url('/pow-star.png');
+  animation: animatedBackground 1s linear infinite;
 }
 
-body.controller {
-  background-image: none;
-  animation: none;
-  filter: brightness(200%);
+h1 {
+  font-family: 'Pixel Heading', cursive;
+  font-size: 2em;
+  color: white;
+  text-shadow: 0 0.1em 0 black;
 }
 
-body.controller > *:not(.back) {
-  filter: brightness(50%);
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  padding: .6rem;
+  color: #fff;
+  border: none;
+  background-color: #b9444d;
 }
 
-body.controller #score-goal {
+button::before,
+button::after {
   display: block;
-}
-
-body.controller .back {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
+  top: 50%;
+  width: .5rem;
+  height: calc(100% - 1rem);
+  text-align: center;
+  content: "";
+  background-color: inherit;
+  transform: translateY(-50%);
 }
 
-body.controller.lost {
-  filter: brightness(500%) grayscale(100%);
+button::before {
+  left: -.5rem;
+}
+
+button::after {
+  right: -.5rem;
+}
+
+button:focus {
+  outline: 0; /* just because */
+}
+
+/* 'Game started' / 'Game ended' events styling */
+body.started #logo {
+  top: 1.4rem;
+  margin-bottom: 2rem;
+}
+
+body.started #logo h1 {
+  top: 0;
+}
+
+body.started #logo img {
+  display: none;
 }
 
 body.started #setup, body.started #app-banner,
@@ -125,39 +105,69 @@ body.started #score-goal {
   display: block;
 }
 
-body.started #players img,
-body.ended #players img {
-  position: absolute;
-  top: 1em;
-  width: 3em;
-  left: 1em;
-}
-
 body.started #players span,
 body.ended #players span {
-  display: block;
+  opacity: 1;
 }
 
 body.ended #reset {
   display: block;
 }
 
-#message {
-  /* Needs styling */
+@media (min-width: 40em) {
+  body.started #logo {
+    margin-bottom: 20rem;
+  }
+
+  body.started #logo h1 {
+    top: 16rem;
+  }
+
+  body.started #logo img {
+    display: block;
+  }
+
+  body.started #players img,
+  body.ended #players img {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    width: 3em;
+  }
+
+  body.started #players span,
+  body.ended #players span {
+    display: block;
+  }
 }
 
+/* Real-time cursors styling */
+div[data-clientid] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  overflow: visible;
+  pointer-events: none;
+  filter: grayscale(100%);
+  background-image: url('/pointer.png');
+  background-repeat: no-repeat;
+  transition: transform 150ms ease;
+  opacity: 1;
+}
+
+/* Feedback / messages styling */
 #app-banner {
-  position: fixed;
-  bottom: 0;
-  z-index: 1;
   width: 100%;
 }
 
-#app-banner a {
+#app-banner a, #message {
   display: flex;
   justify-content: center;
-  padding: 2em;
   width: 100%;
+  padding: 1em;
+  line-height: 1.6;
   text-align: center;
   color: #fff;
   background-color: #15d7d4;
@@ -169,44 +179,45 @@ body.ended #reset {
   }
 }
 
+/* Logo styling */
 #logo {
-  padding-top: 250px;
-  margin: 0 auto;
   position: relative;
+  top: -4rem;
+  width: 11rem;
+  margin: 0 auto 6rem;
   animation: flow 1.4s ease-in-out infinite alternate;
 }
 
 #logo h1 {
-  letter-spacing: -16px;
+  position: relative;
+  top: 11rem;
+  font-size: 2.4em;
   text-align: center;
-  font-size: 76px;
+  letter-spacing: -.8rem;
 }
 
 #logo img {
   display: block;
   position: absolute;
-  top: 50px;
-  width: 160px;
-  image-rendering: pixelated;
+  top: 6rem;
   z-index: -1;
+  width: 3rem;
+  image-rendering: pixelated;
 }
 
 #logo img:first-of-type {
-  left: 0;
+  left: 2rem;
   animation: pulsateLeft 1.4s .3s infinite alternate;
 }
 
 #logo img:last-of-type {
-  right: 0;
+  right: 2rem;
   animation: pulsateRight 1.4s infinite alternate;
 }
 
 #logo span {
   display: inline-block;
-  animation-duration: 0.3s;
-  animation-name: wave;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
+  animation: wave .3s infinite alternate;
 }
 
 #logo span:nth-child(1) {
@@ -234,60 +245,119 @@ body.ended #reset {
   color: #b40a96;
 }
 
-#setup {
-  font-size: 3rem;
-  text-align: center;
-  padding: 2rem 0;
+@media (min-width: 40em) {
+  #logo {
+    width: initial;
+    margin: 0 auto 10rem;
+  }
+
+  #logo h1 {
+    top: 16rem;
+    font-size: 3.4em;
+    letter-spacing: -1rem;
+  }
+
+  #logo img {
+    width: 7rem;
+  }
+
+  #logo img:first-of-type {
+    left: 0;
+  }
+
+  #logo img:last-of-type {
+    right: 0;
+  }
 }
 
-#min, #plus, input {
-  display: inline-block;
+/* Setup for max-score styling */
+#setup {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 30rem;
+  margin-bottom: 1.6rem;
+  padding: 2rem 0;
+  font-family: 'Pixel Heading', cursive;
+  font-size: 3rem;
+  text-align: center;
+}
+
+#setup > * {
+  max-width: calc(100% / 3);
   transition: .3s ease;
 }
 
-#min:hover,
-#plus:hover {
-  transform: scale(1.2);
-}
-
-#min:active,
-#plus:active {
-  transform: scale(0.9);
-}
-
-input {
-  background-color: transparent;
-  border: 0;
-  width: 10rem;
+#setup input {
+  margin: 0 1rem;
   text-align: center;
   pointer-events: none;
+  border: 0;
+  background-color: transparent;
 }
 
-button[type=submit] {
+#setup button[type=submit] {
   display: block;
-  margin: 2rem auto;
+  width: 75%;
+  max-width: initial;
+  margin-top: .4em;
 }
 
+@media (min-width: 40em) {
+  #setup #min:hover,
+  #setup #plus:hover {
+    transform: scale(1.2);
+  }
+
+  #setup #min:active,
+  #setup #plus:active {
+    transform: scale(0.9);
+  }
+
+  #setup button[type=submit]:hover {
+    transform: scaleX(1.4);
+  }
+
+  #setup button[type=submit]:active {
+    transform: scaleX(0.8);
+  }
+}
+
+/* Game buttons / features styling */
 #reset {
   display: none;
+  margin: 2em 0;
+  padding: .6em;
+  font-size: 1.4em;
 }
 
 #score-goal {
   display: none;
+  width: 100%;
+  padding: 1em;
+  color: #fff;
+  text-align: center;
+  background-color: #222;
 }
 
+#score-goal::before {
+  content: "First to: ";
+}
+
+/* Joined players styling */
 #players {
-  /*background-color: blue;*/
+  flex-grow: 1;
   position: relative;
   width: 100%;
-  flex-grow: 1;
 }
 
 #players ul {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   bottom: 0;
-  display: flex;
-  flex-wrap: wrap;
   width: 100%;
   height: 100%;
   margin: 0;
@@ -295,25 +365,30 @@ button[type=submit] {
 }
 
 #players li {
-  position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  flex-direction: column;
-  flex-grow: 1;
+  position: relative;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0 1rem;
   filter: brightness(200%);
 }
 
 #players li.won {
-  /* Needs styling */
+  filter: none;
+  animation: win-back .75s linear infinite alternate;
 }
 
 #players li.lost {
+  color: #ccc;
   filter: grayscale(100%);
 }
 
 #players img {
-  width: 5em;
+  height: 70%;
+  max-height: 2em;
   filter: brightness(50%);
   image-rendering: optimizeSpeed;
   image-rendering: -moz-crisp-edges;
@@ -324,75 +399,114 @@ button[type=submit] {
   -ms-interpolation-mode: nearest-neighbor;
 }
 
-#players h2 {
-  /* Needs styling */
-}
-
 #players span {
+  opacity: 0;
+}
+
+@media (min-width: 40em) {
+  #players ul {
+    flex-direction: row;
+  }
+
+  #players li {
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    height: 100%;
+    min-height: initial;
+    padding: 0;
+  }
+
+  #players img {
+    width: 5em;
+    height: initial;
+    max-height: initial;
+  }
+
+  #players h2 {
+    margin: 1.6em 0 .8em;
+  }
+
+  #players span {
+    display: none;
+    opacity: 1;
+  }
+}
+
+/* Controller styling */
+body.controller {
+  justify-content: space-between;
+  filter: brightness(200%);
+  background-image: none;
+  animation: none;
+}
+
+body.controller > *:not(.back) {
+  filter: brightness(50%);
+}
+
+body.controller.won {
+  animation: win-back .75s linear infinite alternate;
+}
+
+body.controller.won .back {
   display: none;
-  /* Needs styling */
 }
 
-button {
-  appearance: none;
-  -webkit-appearance: none;
-  background-color: transparent;
-  border: none;
-  margin: 0 4rem;
+body.controller.lost {
+  filter: brightness(500%) grayscale(100%);
 }
 
-button:focus {
-  outline: 0; /* just because */
-}
-
-button[type=submit] {
-  transition: .3s ease;
-}
-
-button[type=submit]:hover {
-  transform: scaleX(1.4);
-}
-
-button[type=submit]:active {
-  transform: scaleX(0.8);
-}
-
-div[data-clientid] {
+body.controller .back {
   position: absolute;
   top: 0;
   left: 0;
-  transition: transform 150ms ease;
-  background-image: url('/pointer.png');
-  background-repeat: no-repeat;
-  width: 100px;
-  height: 100px;
-  pointer-events: none;
-  overflow: visible;
-  filter: grayscale(100%);
-  opacity: 1;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
 }
 
-body {
+body.controller #score-goal {
+  display: block;
+}
+
+body.controller form {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  font-family: 'pixel', cursive;
+  position: absolute;
+  top: 50%;
+  padding: 2em;
+  transform: translateY(-50%);
 }
 
-h1 {
-  color: white;
-  font-size: 5em;
-  text-shadow: 0 0.1em 0 black;
+body.controller form > * {
+  display: block;
+  margin: 1rem 0;
 }
 
+body.controller label input {
+  margin-top: 1rem;
+  padding: .5em;
+  font-size: 1em;
+  border: 1px solid #222;
+}
+
+body.controller button[type=submit] {
+  padding: .6em;
+  font-size: 1.4em;
+}
+
+/* Controller button styling */
 #bigredbutton {
-  appearance: none;
-  width: 50vw;
-  height: 50vw;
   position: relative;
+  width: 70vw;
+  height: 70vw;
+  margin-bottom: 2em;
+  appearance: none;
+  background-color: white;
   background-image: url('/button-controller.png');
   background-size: 200%;
+  background-position-y: 15%;
   background-repeat: no-repeat;
 }
 
@@ -406,4 +520,87 @@ h1 {
 
 #bigredbutton:disabled {
   filter: brightness(20%) grayscale(100%);
+}
+
+@media (orientation: landscape) {
+  #bigredbutton {
+    width: 70vh;
+    height: 70vh;
+  }
+}
+
+/* Animation declarations */
+@keyframes pulsateRight {
+  from {
+    transform: scale(1) rotate(0);
+  }
+
+  to {
+    transform: scale(1.2) rotate(10deg);
+  }
+}
+
+@keyframes pulsateLeft {
+  from {
+    transform: scale(1) rotate(0);
+  }
+
+  to {
+    transform: scale(1.2) rotate(-10deg);
+  }
+}
+
+@keyframes wave {
+  from {
+    transform: translateY(0);
+    color: blue;
+  }
+
+  to {
+    transform: translateY(-35px);
+  }
+}
+
+@keyframes flow {
+  from {
+    transform: scale(.7) rotate(-2.5deg);
+  }
+
+  to {
+    transform: scale(1) rotate(2.5deg);
+  }
+}
+
+@keyframes win-back {
+  0% {
+    background-color: #f7b8f8;
+  }
+
+  50% {
+    background-color: #b9f8b8;
+  }
+
+  100% {
+    background-color: #b8f8f7;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: .7;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes animatedBackground {
+  0% {
+    background-position: -400px 400px
+  }
+
+  100% {
+    background-position: 0 0
+  }
 }
