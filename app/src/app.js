@@ -67,12 +67,17 @@ if (document.querySelector('.index')) {
     const messageData = JSON.parse(message.data);
     if (messageData.action === 'NEW_PLAYER' && messageData.gameID === data.gameID) {
       data.game.players[messageData.playerID] = messageData.player;
-      return update('room', data);
+      return update('room');
     }
 
     if (messageData.action === 'UPDATE_SCORE' && messageData.gameID === data.gameID) {
       data.game.players[messageData.playerID].score = messageData.score;
-      return update('room', data);
+      return update('room');
+    }
+
+    if (messageData.action === 'START_GAME' && messageData.gameID === data.gameID) {
+      data.game.playing = true;
+      return update('room');
     }
 
     if (messageData.action === 'END_GAME' && messageData.gameID === data.gameID) {
@@ -89,8 +94,6 @@ function replaceView(view) {
   tree = render(view, data);
   rootNode = createElement(tree);
   document.body.replaceChild(rootNode, document.querySelector('[data-root]'));
-
-  console.log(tree, rootNode);
 }
 
 /**
