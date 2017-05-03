@@ -65,23 +65,22 @@ if (document.querySelector('.index')) {
 
   function onSocketMessage(message) {
     const messageData = JSON.parse(message.data);
-    if (messageData.action === 'NEW_PLAYER' && messageData.gameID === data.gameID) {
-      data.game.players[messageData.playerID] = messageData.player;
-      return update('room');
-    }
 
-    if (messageData.action === 'UPDATE_SCORE' && messageData.gameID === data.gameID) {
-      data.game.players[messageData.playerID].score = messageData.score;
-      return update('room');
-    }
-
-    if (messageData.action === 'START_GAME' && messageData.gameID === data.gameID) {
-      data.game.playing = true;
-      return update('room');
-    }
-
-    if (messageData.action === 'END_GAME' && messageData.gameID === data.gameID) {
-      alert('GAME ENDED');
+    if (messageData.gameID === data.gameID) {
+      switch (messageData.action) {
+        case 'NEW_PLAYER':
+          data.game.players[messageData.playerID] = messageData.player;
+          return update('room');
+        case 'UPDATE_SCORE':
+          data.game.players[messageData.playerID].score = messageData.score;
+          return update('room');
+        case 'START_GAME':
+          data.game.playing = true;
+          return update('room');
+        case 'END_GAME':
+          alert('GAME ENDED');
+          break;
+      }
     }
   }
 }
