@@ -66,6 +66,21 @@ server.listen(port, function onListen() {
 
 webSocketServer.on('connection', onSocketConnection);
 
+const colors = [
+  [75, 0, 50], // Lagoon
+  [25, 150, 0], // Inferno
+  [100, 200, 0], // Topaz
+  [150, 125, 0], // Electric
+  [0, 150, 175], // Amethyst
+  [175, 0, 25], // Forest
+  [0, 175, 75], // Pink
+  [200, 75, 75], // Mint
+  [50, 50, 200], // Steel
+  [50, 200, 50], // Peach
+  [0, 0, 175], // Sapphire
+  [175, 0, 0] // Emerald
+];
+
 /**
  * [GET] / handler
  * @param  {Object} req Express request object
@@ -170,7 +185,7 @@ function renderNewPlayerForm(req, res) {
 function addNewPlayerToGame(req, res) {
   debug(`[POST] /new-player/${req.params.gameID} Add player to game`);
   const playerID = shortid.generate();
-  games[req.params.gameID].players[playerID] = new Player('web', req.body.name);
+  games[req.params.gameID].players[playerID] = new Player('web', req.params.gameID, req.body.name);
   debug(`[WS] Send NEW_PLAYER ${req.params.gameID} ${playerID}`);
   webSocketServer.broadcast(
     JSON.stringify({
@@ -338,8 +353,8 @@ function Game() {
  * @param {String} type nodemcu | web
  * @param {String} name
  */
-function Player(type, name = 'John Doe') {
-  this.color = [0, 0, 0];
+function Player(type, gameID, name = 'John Doe') {
+  this.color = colors[Object.keys(games[gameID].players).length % colors.length];
   this.type = type;
   this.score = 0;
   this.name = name;
