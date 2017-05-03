@@ -300,8 +300,10 @@ div[data-clientid] {
 #setup input {
   margin: 0 1rem;
   text-align: center;
-  pointer-events: none;
+  /* pointer-events: none; */
   border: 0;
+  padding-bottom: .2em;
+  border-bottom: .2em solid black;
   background-color: transparent;
 }
 
