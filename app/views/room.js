@@ -15,8 +15,11 @@ module.exports = function (data) {
           style: {
             backgroundColor: `rgb(${player.color[1]}, ${player.color[0]}, ${player.color[2]})`
           },
-          dataPlayerId: playerID
-        }, 'Score: ' + player.score)
+        }, [
+          h('h3', player.name),
+          h('img', {src: player.type === 'nodemcu' ? '/nodemcu.png' : '/phone.png'}),
+          h('span', String(player.score))
+        ])
       }))
     ])
   ]);
