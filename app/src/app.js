@@ -50,14 +50,7 @@ if (document.querySelector('.index')) {
     const messageData = JSON.parse(message.data);
   }
 } else if (document.querySelector('.new-player')) {
-  socket.addEventListener('message', onSocketMessage);
-
-  function onSocketMessage(message) {
-    const messageData = JSON.parse(message.data);
-    if (messageData.action === 'END_GAME' && messageData.gameID === data.gameID) {
-      alert('GAME ENDED');
-    }
-  }
+  // Do something new-player form specific
 } else if (document.querySelector('.room')) {
   replaceView('room');
     
@@ -78,7 +71,8 @@ if (document.querySelector('.index')) {
           data.game.playing = true;
           return update('room');
         case 'END_GAME':
-          alert('GAME ENDED');
+          data.game.playing = false;
+          data.game.ended = true;
           break;
       }
     }

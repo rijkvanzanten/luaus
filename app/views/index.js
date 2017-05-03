@@ -1,7 +1,9 @@
 const h = require('virtual-dom/h');
+const logo = require('./logo');
 
 module.exports = function (gameIDs) {
   return h('div', {className: 'index'}, [
+    logo(),
     gameIDs.length > 0 ? 
       gameList(gameIDs) : 
       h('p', 'No Luaus found'),
