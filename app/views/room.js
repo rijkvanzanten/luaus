@@ -7,7 +7,7 @@ module.exports = function (data) {
       h('input', {type: 'number', name: 'max-score', min: '1', value: game.maxScore}),
       h('button', {type: 'submit'}, 'Start')
     ]),
-    h('a', {href: '/new-player/' + gameID}, 'Wanna play along?'),
+    game.playing ? null : h('a', {href: '/new-player/' + gameID}, 'Wanna play along?'),
     h('div', {id: 'players'}, [
       h('ul', Object.keys(game.players).map(playerID => {
         const player = game.players[playerID];
