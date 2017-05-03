@@ -50,7 +50,14 @@ if (document.querySelector('.index')) {
     const messageData = JSON.parse(message.data);
   }
 } else if (document.querySelector('.new-player')) {
-  console.log('New Player');
+  socket.addEventListener('message', onSocketMessage);
+
+  function onSocketMessage(message) {
+    const messageData = JSON.parse(message.data);
+    if (messageData.action === 'END_GAME' && messageData.gameID === data.gameID) {
+      alert('GAME ENDED');
+    }
+  }
 } else if (document.querySelector('.room')) {
   replaceView('room');
     
@@ -62,13 +69,22 @@ if (document.querySelector('.index')) {
       data.game.players[messageData.playerID] = messageData.player;
       return update('room', data);
     }
+
     if (messageData.action === 'UPDATE_SCORE' && messageData.gameID === data.gameID) {
-      data.game.players[messageData.playerID].score++;
+      data.game.players[messageData.playerID].score = messageData.score;
       return update('room', data);
+    }
+
+    if (messageData.action === 'END_GAME' && messageData.gameID === data.gameID) {
+      alert('GAME ENDED');
     }
   }
 }
 
+/**
+ * Replace the server-rendered code with a client-side rendered rootNode
+ * @param  {String} view View to render
+ */
 function replaceView(view) {
   tree = render(view, data);
   rootNode = createElement(tree);
@@ -77,6 +93,10 @@ function replaceView(view) {
   console.log(tree, rootNode);
 }
 
+/**
+ * Update current view with new data
+ * @param  {String} view View to re-render
+ */
 function update(view) {
   const newTree = render(view, data);
   const patches = diff(tree, newTree);
