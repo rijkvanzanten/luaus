@@ -8,6 +8,11 @@ socket.addEventListener('open', function () {
   console.log('socket opened');
 });
 
+/**
+ * This is quite ugly. The eventlisteners on document wouldn't register when
+ *   triggered from within a nested module. Still need to investigate why and
+ *   fix the mess beneath
+ */
 if (document.querySelector('.index')) {
   replaceView('index');
 } else if (document.querySelector('.controller')) {
