@@ -3,7 +3,7 @@ const h = require('virtual-dom/h');
 module.exports = function (data) {
   const {gameID, game} = data;
   return h('div', {className: 'room'}, [
-    game.playing ? null : h('form', {method: 'post', action: `/${gameID}`}, [
+    game.playing ? h('meta', {httpEquiv: 'refresh', content: '1'}) : h('form', {method: 'post', action: `/${gameID}`}, [
       h('button', {type: 'button', id: 'min'}, '-'),
       h('input', {type: 'number', name: 'max-score', min: '1', value: game.maxScore}),
       h('button', {type: 'button', id: 'max'}, '+'),
