@@ -8,25 +8,13 @@ let data = JSON.parse(initialData);
 let tree;
 let rootNode;
 
-socket.addEventListener('message', onSocketMessage);
-
-function onSocketMessage(message) {
-  const messageData = JSON.parse(message.data);
-
-  switch (messageData.action) {
-    case 'NEW_GAME':
-      data.push(messageData.gameID);
-      return update('index', data);
-  }
-}
-
 /**
  * This is quite ugly. The eventlisteners on document wouldn't register when
  *   triggered from within a nested module. Still need to investigate why and
  *   fix the mess beneath
  */
 if (document.querySelector('.index')) {
-  const tree = replaceView('index');
+  replaceView('index');
 } else if (document.querySelector('.controller')) {
   document.querySelector('form').addEventListener('submit', onButtonPress);
 
@@ -47,13 +35,35 @@ if (document.querySelector('.index')) {
   }
 } else if (document.querySelector('.new-player')) {
   console.log('New Player');
+} else if (document.querySelector('.room')) {
+  replaceView('room');
+}
+socket.addEventListener('message', onSocketMessage);
+
+function onSocketMessage(message) {
+  const messageData = JSON.parse(message.data);
+
+  console.log(message);
+
+  switch (messageData.action) {
+    case 'NEW_GAME':
+      data.push(messageData.gameID);
+      return update('index', data);
+    case 'NEW_PLAYER':
+      if (messageData.gameID === data.gameID) {
+        data.game.players[messageData.playerID] = messageData.player;
+        return update('room', data);
+      }
+      break;
+  }
 }
 
 function replaceView(view) {
   tree = render(view, data);
   rootNode = createElement(tree);
-
   document.body.replaceChild(rootNode, document.querySelector('[data-root]'));
+
+  console.log(tree, rootNode);
 }
 
 function update(view) {
