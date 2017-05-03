@@ -8,7 +8,6 @@ const debug = require('debug')('luaus');
 const toString = require('vdom-to-html');
 const render = require('./render');
 const wrapper = require('./views/wrapper');
-const broadcast = require('./broadcast');
 
 /**
  * Main store of all game rooms
