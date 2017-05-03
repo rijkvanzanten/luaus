@@ -312,6 +312,8 @@ function endGame(gameID, playerID) {
       gameID
     })
   );
+
+  delete games[gameID];
 }
 
 /**
