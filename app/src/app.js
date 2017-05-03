@@ -75,7 +75,7 @@ if (document.querySelector('.index')) {
           data.game.playing = false;
           data.game.ended = true;
           data.game.winner = messageData.winner;
-          data.game.players[messageData.winner] = game.maxScore;
+          data.game.players[messageData.winner].score = data.game.maxScore;
           break;
       }
       return update('room');
