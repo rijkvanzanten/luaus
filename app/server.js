@@ -73,7 +73,12 @@ webSocketServer.on('connection', onSocketConnection);
  */
 function renderHome(req, res) {
   debug('[GET] / Render homepage');
-  res.send(wrapper(toString(render('index', games))));
+  res.send(
+    wrapper(
+      toString(render('index', games)),
+      games
+    ) 
+  );
 }
 
 /**
@@ -111,14 +116,16 @@ function renderSingleRoom(req, res) {
   }
 
   debug(`[GET] /${req.params.gameID} Render gameroom`);
+  const data = {
+    gameID: req.params.gameID,
+    game: games[req.params.gameID]
+  };
+
   return res.send(
     wrapper(
-      toString(
-        render('room', {
-          gameID: req.params.gameID,
-          game: games[req.params.gameID]
-        })
-      )
+      toString(render('room', data)),
+      data,
+      true // true = refresh page
     )
   );
 }
@@ -146,7 +153,12 @@ function postStartGame(req, res) {
  */
 function renderNewPlayerForm(req, res) {
   debug(`[GET] /new-player/${req.params.gameID} Render new player form`);
-  return res.send(wrapper(toString(render('newPlayer', req.params.gameID))));
+  return res.send(
+    wrapper(
+      toString(render('newPlayer', {gameID: req.params.gameID})),
+      {gameID: req.params.gameID}
+    )
+  );
 }
 
 /**
@@ -181,15 +193,16 @@ function getController(req, res) {
     games[req.params.gameID].players[req.params.playerID]
   ) {
     debug(`[GET] /${req.params.gameID}/${req.params.playerID} Controller`);
+    const data = {
+      name: games[req.params.gameID].players[req.params.playerID].name,
+      gameID: req.params.gameID,
+      playerID: req.params.playerID
+    };
+
     return res.send(
       wrapper(
-        toString(
-          render('controller', {
-            name: games[req.params.gameID].players[req.params.playerID].name,
-            gameID: req.params.gameID,
-            playerID: req.params.playerID
-          })
-        )
+        toString(render('controller', data)),
+        data
       )
     );
   }
