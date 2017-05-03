@@ -176,7 +176,8 @@ function addNewPlayerToGame(req, res) {
     JSON.stringify({
       action: 'NEW_PLAYER',
       gameID: req.params.gameID,
-      playerID
+      playerID,
+      player: games[req.params.gameID].players[playerID] 
     })
   );
   res.redirect(`/${req.params.gameID}/${playerID}`);
