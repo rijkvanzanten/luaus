@@ -50,7 +50,15 @@ const app = express()
 const server = http.createServer(app);
 const webSocketServer = new WebSocket.Server({ server });
 
-webSocketServer.broadcast = broadcast;
+webSocketServer.broadcast = function broadcast(data) {
+  webSocketServer.clients.forEach(sendData);
+
+  function sendData(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  }
+}
 
 server.listen(port, function onListen() {
   console.log('Server started at port ' + port);
@@ -78,6 +86,14 @@ function createRoom(req, res) {
   debug('[POST] / Create gameroom & redirect');
   const gameID = shortid.generate();
   games[gameID] = new Game();
+
+  debug(`[WS] Send NEW_GAME ${gameID}`);
+  webSocketServer.broadcast(
+    JSON.stringify({
+      action: 'NEW_GAME',
+      gameID
+    })
+  );
   res.redirect(gameID);
 }
 
@@ -196,7 +212,7 @@ function updateScore(gameID, playerID) {
       endGame(gameID, playerID);
     } else {
       debug(`[WS] Send UPDATE_SCORE ${playerID}`);
-      wss.broadcast(
+      webSocketServer.broadcast(
         JSON.stringify({
           action: 'UPDATE_SCORE',
           playerID
@@ -219,7 +235,7 @@ function endGame(gameID, playerID) {
   games[gameID].playing = false;
 
   debug(`[WS] Send END_GAME ${playerID}`);
-  wss.broadcast(
+  webSocketServer.broadcast(
     JSON.stringify({
       action: 'END_GAME',
       winner: playerID
