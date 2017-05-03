@@ -365,7 +365,7 @@ div[data-clientid] {
 }
 
 #players {
-  flex-basis: 10em;
+  flex-basis: 13em;
   position: relative;
   width: 100%;
 }
@@ -445,7 +445,6 @@ div[data-clientid] {
   }
 
   #players span {
-    display: none;
     opacity: 1;
   }
 }
