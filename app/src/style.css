@@ -51,6 +51,11 @@ h1 {
   text-shadow: 0 0.1em 0 black;
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+}
+
 button {
   appearance: none;
   -webkit-appearance: none;

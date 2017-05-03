@@ -16,7 +16,7 @@ module.exports = function (gameIDs) {
 function gameList(gameIDs) {
   return h('ul', gameIDs.map(gameID => 
     h('li',
-      h('a', {href: '/' + gameID})
+      h('a', {href: '/' + gameID}, gameID)
     )
   ));
 }
