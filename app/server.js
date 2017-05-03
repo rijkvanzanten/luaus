@@ -252,7 +252,8 @@ function updateScore(gameID, playerID) {
       webSocketServer.broadcast(
         JSON.stringify({
           action: 'UPDATE_SCORE',
-          playerID
+          playerID,
+          gameID
         })
       );
     }

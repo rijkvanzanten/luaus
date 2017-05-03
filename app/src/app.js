@@ -15,7 +15,17 @@ let rootNode;
  */
 if (document.querySelector('.index')) {
   replaceView('index');
+
+  socket.addEventListener('message', onSocketMessage);
+
+  function onSocketMessage(message) {
+    const messageData = JSON.parse(message.data);
+
+    data.push(messageData.gameID);
+    return update('index', data);
+  }
 } else if (document.querySelector('.controller')) {
+  replaceView('controller');
   document.querySelector('form').addEventListener('submit', onButtonPress);
 
   /**
@@ -33,28 +43,29 @@ if (document.querySelector('.index')) {
 
     event.preventDefault();
   }
+
+  socket.addEventListener('message', onSocketMessage);
+
+  function onSocketMessage(message) {
+    const messageData = JSON.parse(message.data);
+  }
 } else if (document.querySelector('.new-player')) {
   console.log('New Player');
 } else if (document.querySelector('.room')) {
   replaceView('room');
-}
-socket.addEventListener('message', onSocketMessage);
+    
+  socket.addEventListener('message', onSocketMessage);
 
-function onSocketMessage(message) {
-  const messageData = JSON.parse(message.data);
-
-  console.log(message);
-
-  switch (messageData.action) {
-    case 'NEW_GAME':
-      data.push(messageData.gameID);
-      return update('index', data);
-    case 'NEW_PLAYER':
-      if (messageData.gameID === data.gameID) {
-        data.game.players[messageData.playerID] = messageData.player;
-        return update('room', data);
-      }
-      break;
+  function onSocketMessage(message) {
+    const messageData = JSON.parse(message.data);
+    if (messageData.action === 'NEW_PLAYER' && messageData.gameID === data.gameID) {
+      data.game.players[messageData.playerID] = messageData.player;
+      return update('room', data);
+    }
+    if (messageData.action === 'UPDATE_SCORE' && messageData.gameID === data.gameID) {
+      data.game.players[messageData.playerID].score++;
+      return update('room', data);
+    }
   }
 }
 
