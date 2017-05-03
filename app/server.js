@@ -143,6 +143,14 @@ function addNewPlayerToGame(req, res) {
   debug(`[POST] /new-player/${req.params.gameID} Add player to game`);
   const playerID = shortid.generate();
   games[req.params.gameID].players[playerID] = new Player('web', req.body.name);
+  debug(`[WS] Send NEW_PLAYER ${req.params.gameID} ${playerID}`);
+  webSocketServer.broadcast(
+    JSON.stringify({
+      action: 'NEW_PLAYER',
+      gameID: req.params.gameID,
+      playerID
+    })
+  );
   res.redirect(`/${req.params.gameID}/${playerID}`);
 }
 
