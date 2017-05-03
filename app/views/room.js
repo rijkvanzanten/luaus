@@ -3,8 +3,8 @@ const h = require('virtual-dom/h');
 module.exports = function (data) {
   const {gameID, game} = data;
   return h('div', {className: 'room'}, [
-    game.playing ? null : h('a', {href: '/new-player/' + gameID}, 'Wanna play along?'),
-    game.playing ? null : h('form', {id: 'setup', method: 'post', action: `/${gameID}`}, [
+    game.playing || game.ended ? null : h('a', {href: '/new-player/' + gameID}, 'Wanna play along?'),
+    game.playing || game.ended ? null : h('form', {id: 'setup', method: 'post', action: `/${gameID}`}, [
       h('input', {type: 'number', name: 'max-score', min: '1', value: game.maxScore}),
       h('button', {type: 'submit'}, 'Start')
     ]),
