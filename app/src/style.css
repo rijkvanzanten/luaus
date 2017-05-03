@@ -356,8 +356,12 @@ div[data-clientid] {
 }
 
 /* Joined players styling */
+[data-root] > div.room {
+  justify-content: space-between;
+}
+
 #players {
-  flex-grow: 1;
+  flex-basis: 10em;
   position: relative;
   width: 100%;
 }
