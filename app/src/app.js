@@ -59,22 +59,26 @@ if (document.querySelector('.index')) {
   function onSocketMessage(message) {
     const messageData = JSON.parse(message.data);
 
+    // Edit data based on socket action
     if (messageData.gameID === data.gameID) {
       switch (messageData.action) {
         case 'NEW_PLAYER':
           data.game.players[messageData.playerID] = messageData.player;
-          return update('room');
+          break;
         case 'UPDATE_SCORE':
           data.game.players[messageData.playerID].score = messageData.score;
-          return update('room');
+          break;
         case 'START_GAME':
           data.game.playing = true;
-          return update('room');
+          break;
         case 'END_GAME':
           data.game.playing = false;
           data.game.ended = true;
+          data.game.winner = messageData.winner;
+          data.game.players[messageData.winner] = game.maxScore;
           break;
       }
+      return update('room');
     }
   }
 }
