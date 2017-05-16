@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const WebSocket = require('ws');
+const socketIO = require('socket.io');
 const shortid = require('shortid');
 const debug = require('debug')('luaus');
 const toString = require('vdom-to-html');
@@ -48,10 +49,16 @@ const app = express()
   .post('/:gameID/:playerID', postUpdateScore);
 
 const server = http.createServer(app);
-const webSocketServer = new WebSocket.Server({ server });
 
-webSocketServer.broadcast = function broadcast(data) {
-  webSocketServer.clients.forEach(sendData);
+const io = socketIO(server);
+
+const nodeMCUServer = new WebSocket.Server({ server, path: '/nodemcu' });
+
+/**
+ * Broadcasts data to all connected NodeMCUs
+ */
+nodeMCUServer.broadcast = function broadcast(data) {
+  nodeMCUServer.clients.forEach(sendData);
 
   function sendData(client) {
     if (client.readyState === WebSocket.OPEN) {
@@ -60,11 +67,13 @@ webSocketServer.broadcast = function broadcast(data) {
   }
 }
 
+nodeMCUServer.on('connection', onNodeMCUConnection);
+
+io.on('connection', onClientConnection);
+
 server.listen(port, function onListen() {
   console.log('Server started at port ' + port);
 });
-
-webSocketServer.on('connection', onSocketConnection);
 
 const colors = [
   [75, 0, 50], // Lagoon
@@ -81,6 +90,45 @@ const colors = [
   [175, 0, 0] // Emerald
 ];
 
+/**
+ * Main socket handler for NodeMCUs
+ * Maps incoming socket messages to the corresponding functions
+ */
+function onNodeMCUConnection(socket) {
+  socket.on('message', onSocketMessage);
+
+  function onSocketMessage(message) {
+    try {
+      message = JSON.parse(message);
+    } catch (err) {
+      console.log('Message not in JSON:', message);
+    }
+
+    switch (message.action) {
+      case 'UPDATE_SCORE':
+        debug(`[WS] Receive UPDATE_SCORE`);
+        updateScore(message.gameID, message.playerID);
+        break;
+    }
+  }
+}
+
+/**
+ * Main socket handler for web-clients
+ * Maps incoming socket messages to the corresponding functions
+ */
+function onClientConnection(socket) {
+  socket.on('message', onSocketMessage);
+
+  function onSocketMessage(message) {
+    switch (message.action) {
+      case 'UPDATE_SCORE':
+        debug(`[WS] Receive UPDATE_SCORE`);
+        updateScore(message.gameID, message.playerID);
+        break;
+    }
+  }
+}
 /**
  * [GET] / handler
  * @param  {Object} req Express request object
@@ -108,7 +156,7 @@ function createRoom(req, res) {
   games[gameID] = new Game();
 
   debug(`[WS] Send NEW_GAME ${gameID}`);
-  webSocketServer.broadcast(
+  nodeMCUServer.broadcast(
     JSON.stringify({
       action: 'NEW_GAME',
       gameID
@@ -187,7 +235,7 @@ function addNewPlayerToGame(req, res) {
   const playerID = shortid.generate();
   games[req.params.gameID].players[playerID] = new Player('web', req.params.gameID, req.body.name);
   debug(`[WS] Send NEW_PLAYER ${req.params.gameID} ${playerID}`);
-  webSocketServer.broadcast(
+  nodeMCUServer.broadcast(
     JSON.stringify({
       action: 'NEW_PLAYER',
       gameID: req.params.gameID,
@@ -264,7 +312,7 @@ function updateScore(gameID, playerID) {
       endGame(gameID, playerID);
     } else {
       debug(`[WS] Send UPDATE_SCORE ${playerID}`);
-      webSocketServer.broadcast(
+      nodeMCUServer.broadcast(
         JSON.stringify({
           action: 'UPDATE_SCORE',
           playerID,
@@ -274,7 +322,7 @@ function updateScore(gameID, playerID) {
       );
     }
   } else {
-    debug(`[WS] Game ${gameID} doesn't exist or has ended`);
+    debug(`[WS] Game ${gameID} hasn't started, doesn't exist or has ended`);
   }
 }
 
@@ -287,7 +335,7 @@ function startGame(gameID, maxScore = 10) {
   games[gameID].maxScore = maxScore;
 
   debug(`Game ${gameID} started`);
-  webSocketServer.broadcast(
+  nodeMCUServer.broadcast(
     JSON.stringify({
       action: 'START_GAME',
       gameID
@@ -305,7 +353,7 @@ function endGame(gameID, playerID) {
   games[gameID].playing = false;
 
   debug(`[WS] Send END_GAME ${playerID}`);
-  webSocketServer.broadcast(
+  nodeMCUServer.broadcast(
     JSON.stringify({
       action: 'END_GAME',
       winner: playerID,
@@ -316,28 +364,6 @@ function endGame(gameID, playerID) {
   delete games[gameID];
 }
 
-/**
- * Main socket handler
- * Maps incoming socket messages to the corresponding functions
- */
-function onSocketConnection(socket) {
-  socket.on('message', onSocketMessage);
-
-  function onSocketMessage(message) {
-    try {
-      message = JSON.parse(message);
-    } catch (err) {
-      console.log('Message not in JSON:', message);
-    }
-
-    switch (message.action) {
-      case 'UPDATE_SCORE':
-        debug(`[WS] Receive UPDATE_SCORE`);
-        updateScore(message.gameID, message.playerID);
-        break;
-    }
-  }
-}
 
 /**
  * Game object-creator

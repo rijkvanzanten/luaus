@@ -2,7 +2,8 @@ const diff = require('virtual-dom/diff');
 const patch = require('virtual-dom/patch');
 const createElement = require('virtual-dom/create-element');
 const render = require('../render');
-const socket = new WebSocket('ws://' + location.hostname + ':' + location.port);
+
+const socket = io('http://localhost:3000/');
 
 let data = JSON.parse(initialData);
 let tree;
@@ -16,12 +17,10 @@ let rootNode;
 if (document.querySelector('.index')) {
   replaceView('index');
 
-  socket.addEventListener('message', onSocketMessage);
+  socket.on('message', onSocketMessage);
 
   function onSocketMessage(message) {
-    const messageData = JSON.parse(message.data);
-
-    data.push(messageData.gameID);
+    data.push(message.gameID);
     return update('index', data);
   }
 } else if (document.querySelector('.controller')) {
@@ -32,19 +31,17 @@ if (document.querySelector('.index')) {
    * Send an update score request to the server
    */
   function onButtonPress(event) {
-    socket.send(
-      JSON.stringify({
-        device: 'phone',
-        action: 'UPDATE_SCORE',
-        gameID: document.querySelector('[name="gameID"]').value,
-        playerID: document.querySelector('[name="playerID"').value
-      })
-    );
+    socket.emit('message', {
+	device: 'phone',
+	action: 'UPDATE_SCORE',
+	gameID: document.querySelector('[name="gameID"]').value,
+	playerID: document.querySelector('[name="playerID"').value
+    });
 
     event.preventDefault();
   }
 
-  socket.addEventListener('message', onSocketMessage);
+  socket.on('message', onSocketMessage);
 
   function onSocketMessage(message) {
     const messageData = JSON.parse(message.data);

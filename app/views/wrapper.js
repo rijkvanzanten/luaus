@@ -8,6 +8,7 @@ module.exports = function (body, data, refresh = false) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Minor WOT</title>
     <link rel="stylesheet" href="/style.css" />
+    <script src="/socket.io/socket.io.js"></script>
     <script src="/app.js" defer></script>
     ${refreshEl}
     <div data-root>
