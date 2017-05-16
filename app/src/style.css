@@ -41,6 +41,9 @@ body {
   position: relative;
   height: 100%;
   font-family: 'Pixel', sans-serif;
+}
+
+[data-root] > div:not(.controller) {
   background-image: url('/pow-star.png');
   animation: animatedBackground 1s linear infinite;
 }
@@ -247,7 +250,7 @@ button:focus {
   width: 100%;
   min-height: 3rem;
   padding: 0 1rem;
-  filter: brightness(200%);
+  /* filter: brightness(200%); */
 }
 
 #players li.won {

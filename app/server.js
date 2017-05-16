@@ -75,6 +75,7 @@ server.listen(port, function onListen() {
   console.log('Server started at port ' + port);
 });
 
+// Colors are in G, R, B
 const colors = [
   [75, 0, 50], // Lagoon
   [25, 150, 0], // Inferno
