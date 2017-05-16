@@ -17,12 +17,10 @@ let rootNode;
 if (document.querySelector('.index')) {
   replaceView('index');
 
-  socket.on('message', onSocketMessage);
-
-  function onSocketMessage(message) {
-    data.push(message.gameID);
-    return update('index', data);
-  }
+  socket.on('NEW_GAME', messageData => {
+    data.push(messageData.gameID);
+    update('index', data);
+  });
 } else if (document.querySelector('.controller')) {
   replaceView('controller');
   document.querySelector('form').addEventListener('submit', onButtonPress);

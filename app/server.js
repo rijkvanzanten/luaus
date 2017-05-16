@@ -156,12 +156,9 @@ function createRoom(req, res) {
   games[gameID] = new Game();
 
   debug(`[WS] Send NEW_GAME ${gameID}`);
-  nodeMCUServer.broadcast(
-    JSON.stringify({
-      action: 'NEW_GAME',
-      gameID
-    })
-  );
+
+  io.emit('NEW_GAME', {gameID});
+
   res.redirect(gameID);
 }
 
