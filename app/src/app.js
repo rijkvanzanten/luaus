@@ -32,10 +32,10 @@ if (document.querySelector('.index')) {
    */
   function onButtonPress(event) {
     socket.emit('message', {
-	device: 'phone',
-	action: 'UPDATE_SCORE',
-	gameID: document.querySelector('[name="gameID"]').value,
-	playerID: document.querySelector('[name="playerID"').value
+      device: 'phone',
+      action: 'UPDATE_SCORE',
+      gameID: document.querySelector('[name="gameID"]').value,
+      playerID: document.querySelector('[name="playerID"').value
     });
 
     event.preventDefault();
@@ -50,34 +50,29 @@ if (document.querySelector('.index')) {
   // Do something new-player form specific
 } else if (document.querySelector('.room')) {
   replaceView('room');
-    
-  socket.addEventListener('message', onSocketMessage);
 
-  function onSocketMessage(message) {
-    const messageData = JSON.parse(message.data);
+  socket.on('NEW_PLAYER', messageData => {
+    data.game.players[messageData.playerID] = messageData.player;
+    return update('room');
+  });
 
-    // Edit data based on socket action
-    if (messageData.gameID === data.gameID) {
-      switch (messageData.action) {
-        case 'NEW_PLAYER':
-          data.game.players[messageData.playerID] = messageData.player;
-          break;
-        case 'UPDATE_SCORE':
-          data.game.players[messageData.playerID].score = messageData.score;
-          break;
-        case 'START_GAME':
-          data.game.playing = true;
-          break;
-        case 'END_GAME':
-          data.game.playing = false;
-          data.game.ended = true;
-          data.game.winner = messageData.winner;
-          data.game.players[messageData.winner].score = data.game.maxScore;
-          break;
-      }
-      return update('room');
-    }
-  }
+  socket.on('UPDATE_SCORE', messageData => {
+    data.game.players[messageData.playerID].score = messageData.score;
+    return update('room');
+  });
+
+  socket.on('START_GAME', () => {
+    data.game.playing = true;
+    return update('room');
+  });
+
+  socket.on('END_GAME', messageData => {
+    data.game.playing = false;
+    data.game.ended = true;
+    data.game.winner = messageData.winner;
+    data.game.players[messageData.winner].score = data.game.maxScore;
+    return update('room');
+  });
 }
 
 /**

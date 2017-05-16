@@ -140,7 +140,7 @@ function renderHome(req, res) {
     wrapper(
       toString(render('index', Object.keys(games))),
       Object.keys(games)
-    ) 
+    )
   );
 }
 
@@ -235,14 +235,8 @@ function addNewPlayerToGame(req, res) {
   const playerID = shortid.generate();
   games[req.params.gameID].players[playerID] = new Player('web', req.params.gameID, req.body.name);
   debug(`[WS] Send NEW_PLAYER ${req.params.gameID} ${playerID}`);
-  nodeMCUServer.broadcast(
-    JSON.stringify({
-      action: 'NEW_PLAYER',
-      gameID: req.params.gameID,
-      playerID,
-      player: games[req.params.gameID].players[playerID] 
-    })
-  );
+
+  io.emit('NEW_PLAYER', {gameID: req.params.gameID, playerID, player: games[req.params.gameID].players[playerID]});
   res.redirect(`/${req.params.gameID}/${playerID}`);
 }
 
@@ -312,14 +306,8 @@ function updateScore(gameID, playerID) {
       endGame(gameID, playerID);
     } else {
       debug(`[WS] Send UPDATE_SCORE ${playerID}`);
-      nodeMCUServer.broadcast(
-        JSON.stringify({
-          action: 'UPDATE_SCORE',
-          playerID,
-          gameID,
-          score: games[gameID].players[playerID].score
-        })
-      );
+
+      io.emit('UPDATE_SCORE', {playerID, gameID, score: games[gameID].players[playerID].score});
     }
   } else {
     debug(`[WS] Game ${gameID} hasn't started, doesn't exist or has ended`);
@@ -335,6 +323,9 @@ function startGame(gameID, maxScore = 10) {
   games[gameID].maxScore = maxScore;
 
   debug(`Game ${gameID} started`);
+
+  io.emit('START_GAME', {gameID});
+
   nodeMCUServer.broadcast(
     JSON.stringify({
       action: 'START_GAME',
@@ -342,6 +333,7 @@ function startGame(gameID, maxScore = 10) {
     })
   );
 }
+
 /**
  * End the game session
  * Broadcast end_game signal
@@ -353,6 +345,12 @@ function endGame(gameID, playerID) {
   games[gameID].playing = false;
 
   debug(`[WS] Send END_GAME ${playerID}`);
+
+  io.emit('END_GAME', {
+    winnder: playerID,
+    gameID
+  });
+
   nodeMCUServer.broadcast(
     JSON.stringify({
       action: 'END_GAME',
