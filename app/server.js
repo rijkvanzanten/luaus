@@ -118,16 +118,10 @@ function onNodeMCUConnection(socket) {
  * Maps incoming socket messages to the corresponding functions
  */
 function onClientConnection(socket) {
-  socket.on('message', onSocketMessage);
-
-  function onSocketMessage(message) {
-    switch (message.action) {
-      case 'UPDATE_SCORE':
-        debug(`[WS] Receive UPDATE_SCORE`);
-        updateScore(message.gameID, message.playerID);
-        break;
-    }
-  }
+  socket.on('UPDATE_SCORE', messageData => {
+    debug(`[WS] Receive UPDATE_SCORE`);
+    updateScore(messageData.gameID, messageData.playerID);
+  });
 }
 /**
  * [GET] / handler
@@ -251,7 +245,8 @@ function getController(req, res) {
     const data = {
       name: games[req.params.gameID].players[req.params.playerID].name,
       gameID: req.params.gameID,
-      playerID: req.params.playerID
+      playerID: req.params.playerID,
+      game: games[req.params.gameID]
     };
 
     return res.send(
@@ -344,7 +339,7 @@ function endGame(gameID, playerID) {
   debug(`[WS] Send END_GAME ${playerID}`);
 
   io.emit('END_GAME', {
-    winnder: playerID,
+    winner: playerID,
     gameID
   });
 

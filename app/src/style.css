@@ -75,7 +75,7 @@ button::after {
   width: .5rem;
   height: calc(100% - 1rem);
   text-align: center;
-  content: "";
+  content: '';
   background-color: inherit;
   transform: translateY(-50%);
 }
@@ -97,22 +97,21 @@ button:focus {
   position: relative;
   top: -4rem;
   width: 19rem;
-  margin-bottom: 6rem;
   animation: flow 1.4s ease-in-out infinite alternate;
 }
 
 #logo h1 {
   position: relative;
-  top: 11rem;
   font-size: 2.4em;
   text-align: center;
   letter-spacing: 1rem;
+  margin: 0;
 }
 
 #logo img {
   display: block;
   position: absolute;
-  top: 6rem;
+  top: -12rem;
   z-index: -1;
   width: 3rem;
   image-rendering: pixelated;
@@ -158,10 +157,8 @@ button:focus {
   color: #b40a96;
 }
 
-
 @media (min-width: 40em) {
   #logo h1 {
-    top: 16rem;
     font-size: 3.4em;
   }
 

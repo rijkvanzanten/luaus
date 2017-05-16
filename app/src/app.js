@@ -25,29 +25,34 @@ if (document.querySelector('.index')) {
   replaceView('controller');
   document.querySelector('form').addEventListener('submit', onButtonPress);
 
+  socket.on('END_GAME', messageData => {
+    data.game.ended = true;
+    data.game.winner = messageData.winner;
+    data.game.players[messageData.winner].score = data.game.maxScore;
+    return update('controller', data);
+  });
+
   /**
    * Send an update score request to the server
    */
   function onButtonPress(event) {
-    socket.emit('message', {
-      device: 'phone',
-      action: 'UPDATE_SCORE',
+    socket.emit('UPDATE_SCORE', {
       gameID: document.querySelector('[name="gameID"]').value,
       playerID: document.querySelector('[name="playerID"').value
     });
 
     event.preventDefault();
   }
-
-  socket.on('message', onSocketMessage);
-
-  function onSocketMessage(message) {
-    const messageData = JSON.parse(message.data);
-  }
 } else if (document.querySelector('.new-player')) {
   // Do something new-player form specific
 } else if (document.querySelector('.room')) {
   replaceView('room');
+
+  if (document.querySelector('input[type="number"]')) {
+    document.querySelector('input[type="number"]').addEventListener('input', () => {
+      socket.emit('SET_MAX_SCORE', {score: document.querySelector('input[type="number"]').value})
+    });
+  }
 
   socket.on('NEW_PLAYER', messageData => {
     data.game.players[messageData.playerID] = messageData.player;
@@ -59,13 +64,17 @@ if (document.querySelector('.index')) {
     return update('room');
   });
 
+  socket.on('SET_MAX_SCORE', messageData => {
+    data.game.maxScore = messageData.maxScore;
+    return update('room');
+  });
+
   socket.on('START_GAME', () => {
     data.game.playing = true;
     return update('room');
   });
 
   socket.on('END_GAME', messageData => {
-    data.game.playing = false;
     data.game.ended = true;
     data.game.winner = messageData.winner;
     data.game.players[messageData.winner].score = data.game.maxScore;

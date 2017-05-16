@@ -1,8 +1,10 @@
 const h = require('virtual-dom/h');
+const bgMusic = require('./audio');
 
 module.exports = function (data) {
   const {gameID, game} = data;
   return h('div', {className: 'room'}, [
+    bgMusic(),
     game.playing || game.ended ? null : h('a', {href: '/new-player/' + gameID}, 'Wanna play along?'),
     game.playing || game.ended ? null : h('form', {id: 'setup', method: 'post', action: `/${gameID}`}, [
       h('input', {type: 'number', name: 'max-score', min: '1', value: game.maxScore}),
@@ -15,7 +17,10 @@ module.exports = function (data) {
           style: {
             backgroundColor: `rgb(${player.color[1]}, ${player.color[0]}, ${player.color[2]})`
           },
-          className: game.ended ? game.winner === playerID ? 'won' : 'lost' : ''
+          className: game.ended ? game.winner === playerID ? 'won' : 'lost' : '',
+          attributes: {
+            'data-id': playerID
+          }
         }, [
           h('h3', player.name),
           h('img', {src: player.type === 'nodemcu' ? '/nodemcu.png' : '/phone.png'}),
