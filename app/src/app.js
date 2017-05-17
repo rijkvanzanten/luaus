@@ -26,6 +26,7 @@ if (document.querySelector('.index')) {
     data[messageData.gameID].players[messageData.playerID] = messageData.player;
     return update('index', data);
   });
+
 } else if (document.querySelector('.controller')) {
   replaceView('controller');
   document.querySelector('form').addEventListener('submit', onButtonPress);
@@ -62,7 +63,9 @@ if (document.querySelector('.index')) {
   }
 
   socket.on('NEW_PLAYER', messageData => {
-    data.game.players[messageData.playerID] = messageData.player;
+    if (messageData.gameID === data.gameID) {
+      data.game.players[messageData.playerID] = messageData.player;
+    }
     return update('room');
   });
 
@@ -92,6 +95,16 @@ if (document.querySelector('.index')) {
     data.game.ended = true;
     data.game.winner = messageData.winner;
     data.game.players[messageData.winner].score = data.game.maxScore;
+    return update('room');
+  });
+
+  socket.on('NEW_WAITING_MCU', messageData => {
+    data.waitingNodeMCUs.push(messageData);
+    return update('room');
+  });
+
+  socket.on('REMOVE_WAITING_MCU', messageData => {
+    data.waitingNodeMCUs = data.waitingNodeMCUs.filter(val => val !== messageData);
     return update('room');
   });
 }

@@ -128,6 +128,8 @@ function onNodeMCUConnection(socket) {
 
         if (waitingNodeMCUs.indexOf(message.id) === -1 && !inGame) {
           waitingNodeMCUs.push(message.id);
+
+          io.emit('NEW_WAITING_MCU', message.id);
         }
 
         break;
@@ -401,6 +403,7 @@ function endGame(gameID, playerID) {
   Object.keys(games[gameID].players).forEach(playerID => {
     if (games[gameID].players[playerID].type === 'nodemcu') {
       waitingNodeMCUs.push(playerID);
+      io.emit('NEW_WAITING_MCU', playerID);
     }
   });
 
@@ -423,6 +426,8 @@ function MCUJoinGame(req, res) {
   }));
 
   io.emit('NEW_PLAYER', {gameID: gameID, mcuID, player: games[gameID].players[mcuID]});
+
+  io.emit('REMOVE_WAITING_MCU', mcuID);
 
   res.redirect(`/${gameID}`);
 }
