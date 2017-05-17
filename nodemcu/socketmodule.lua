@@ -25,7 +25,7 @@ module.initSocket = function ()
     ws = nil
   end)
 
-  print('[WebSocket] Connecting to ws at ws://' .. config.address .. ':' .. config.port .. '...')
+  print('[WebSocket] Connecting to ws at ws://' .. config.address .. ':' .. config.port .. '/nodemcu')
   ws:connect('ws://' .. config.address .. ':' .. config.port .. '/nodemcu')
 
   return ws

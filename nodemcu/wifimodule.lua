@@ -11,7 +11,7 @@ function wifimodule.connect(network, callback)
   wifi.sta.eventMonReg(wifi.STA_FAIL, function() print('[Wi-Fi] Failed to connect') end)
   wifi.sta.eventMonReg(wifi.STA_GOTIP, function()
     print('[Wi-Fi] Received valid IP')
-    local conn = net.createConnection(net.TCP, false)
+    local conn = net.createConnection(net.TCP, 0)
     ip, nm, gateway = wifi.sta.getip()
 
     local redirHost = gateway .. ':8002'
