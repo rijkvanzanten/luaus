@@ -42,10 +42,6 @@ if (document.querySelector('.index')) {
    */
   function onButtonPress(event) {
     event.preventDefault();
-    const audio = document.getElementById('pointsound');
-    audio.pause();
-    audio.currentTime = 0;
-    audio.play();
 
     socket.emit('UPDATE_SCORE', {
       gameID: document.querySelector('[name="gameID"]').value,
@@ -71,6 +67,11 @@ if (document.querySelector('.index')) {
   });
 
   socket.on('UPDATE_SCORE', messageData => {
+    const audio = document.getElementById('pointsound');
+    audio.pause();
+    audio.currentTime = 0;
+    audio.play();
+
     data.game.players[messageData.playerID].score = messageData.score;
     return update('room');
   });

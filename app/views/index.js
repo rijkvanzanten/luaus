@@ -1,11 +1,10 @@
 const h = require('virtual-dom/h');
 const logo = require('./logo');
-const bgMusic = require('./audio');
 
 module.exports = function (games) {
   const gameIDs = Object.keys(games);
   return h('div', {className: 'index'}, [
-    bgMusic(),
+    h('audio', {src: '/8bit-love-machine.mp3', autoplay: true, loop: true}),
     logo(),
     gameIDs.length > 0 ?
       gameList(games) :

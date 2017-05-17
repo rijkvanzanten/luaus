@@ -33,6 +33,7 @@ const wrapper = require('./views/wrapper');
  * @type {Object}
  */
 let games = {};
+const waitingNodeMCUs = [];
 
 const port = process.env.PORT || 3000;
 
