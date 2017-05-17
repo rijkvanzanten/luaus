@@ -15,6 +15,7 @@ module.exports = function (data) {
         backgroundColor: `rgb(${game.players[playerID].color[1]}, ${game.players[playerID].color[0]}, ${game.players[playerID].color[2]})`
       }
     }),
+    h('audio', {src: '/score-point.mp3', id: 'pointsound'}),
     h('form', {method: 'post', action: `/${gameID}/${playerID}`}, [
       h('button', {id: 'bigredbutton'}),
       h('input', {type: 'hidden', name: 'gameID', value: gameID}),

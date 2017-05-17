@@ -3,7 +3,7 @@ const patch = require('virtual-dom/patch');
 const createElement = require('virtual-dom/create-element');
 const render = require('../render');
 
-const socket = io('http://localhost:3000/');
+const socket = io();
 
 let data = JSON.parse(initialData);
 let tree;
@@ -41,12 +41,18 @@ if (document.querySelector('.index')) {
    * Send an update score request to the server
    */
   function onButtonPress(event) {
+    event.preventDefault();
+    const audio = document.getElementById('pointsound');
+    audio.pause();
+    audio.currentTime = 0;
+    audio.play();
+
     socket.emit('UPDATE_SCORE', {
       gameID: document.querySelector('[name="gameID"]').value,
-      playerID: document.querySelector('[name="playerID"').value
+      playerID: document.querySelector('[name="playerID"]').value
     });
 
-    event.preventDefault();
+    return false; // iOS Safari
   }
 } else if (document.querySelector('.new-player')) {
   // Do something new-player form specific
