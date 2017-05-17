@@ -3,12 +3,13 @@ const bgMusic = require('./audio');
 
 module.exports = function (data) {
   const {gameID, game} = data;
+  console.log(game.players);
   return h('div', {className: 'room'}, [
     bgMusic(),
     game.playing || game.ended ? null : h('a', {href: '/new-player/' + gameID}, 'Wanna play along?'),
     game.playing || game.ended ? null : h('form', {id: 'setup', method: 'post', action: `/${gameID}`}, [
       h('input', {type: 'number', name: 'max-score', min: '1', value: game.maxScore}),
-      h('button', {type: 'submit'}, 'Start')
+      h('button', {type: 'submit', disabled: Object.keys(game.players).length === 0}, 'Start')
     ]),
     h('div', {id: 'players'}, [
       h('ul', Object.keys(game.players).map(playerID => {

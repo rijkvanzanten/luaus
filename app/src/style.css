@@ -70,6 +70,10 @@ button {
   background-color: #b9444d;
 }
 
+button[disabled] {
+    filter: grayscale(100%);
+}
+
 button::before,
 button::after {
   display: block;
@@ -250,7 +254,7 @@ button:focus {
   width: 100%;
   min-height: 3rem;
   padding: 0 1rem;
-  /* filter: brightness(200%); */
+  filter: brightness(200%);
 }
 
 #players li.won {
@@ -310,30 +314,30 @@ button:focus {
 }
 
 /* Controller styling */
-body.controller {
+.controller {
   justify-content: space-between;
   filter: brightness(200%);
   background-image: none;
   animation: none;
 }
 
-body.controller > *:not(.back) {
+.controller > *:not(.back) {
   filter: brightness(50%);
 }
 
-body.controller.won {
+.controller.won {
   animation: win-back .75s linear infinite alternate;
 }
 
-body.controller.won .back {
+.controller.won .back {
   display: none;
 }
 
-body.controller.lost {
+.controller.lost {
   filter: brightness(500%) grayscale(100%);
 }
 
-body.controller .back {
+.controller .back {
   position: absolute;
   top: 0;
   left: 0;
@@ -342,11 +346,11 @@ body.controller .back {
   height: 100vh;
 }
 
-body.controller #score-goal {
+.controller #score-goal {
   display: block;
 }
 
-body.controller form {
+.controller form {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -355,19 +359,19 @@ body.controller form {
   transform: translateY(-50%);
 }
 
-body.controller form > * {
+.controller form > * {
   display: block;
   margin: 1rem 0;
 }
 
-body.controller label input {
+.controller label input {
   margin-top: 1rem;
   padding: .5em;
   font-size: 1em;
   border: 1px solid #222;
 }
 
-body.controller button[type=submit] {
+.controller button[type=submit] {
   padding: .6em;
   font-size: 1.4em;
 }
