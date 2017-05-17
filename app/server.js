@@ -107,6 +107,10 @@ function onNodeMCUConnection(socket) {
     }
 
     switch (message.action) {
+      case 'JOIN_GAME':
+        debug(`[WS] Receive JOIN_GAME ${message.id}`);
+        waitingNodeMCUs.push(message.id);
+        break;
       case 'UPDATE_SCORE':
         debug(`[WS] Receive UPDATE_SCORE`);
         updateScore(message.gameID, message.playerID);
@@ -180,10 +184,15 @@ function renderSingleRoom(req, res) {
   }
 
   debug(`[GET] /${req.params.gameID} Render gameroom`);
+
+  console.log(waitingNodeMCUs);
   const data = {
     gameID: req.params.gameID,
-    game: games[req.params.gameID]
+    game: games[req.params.gameID],
+    waitingNodeMCUs
   };
+
+  console.log(data);
 
   return res.send(
     wrapper(

@@ -9,7 +9,6 @@ module.initSocket = function ()
     print('[WebSocket] Connected!')
 
     ok, json = pcall(cjson.encode, {
-      device = 'nodemcu',
       action = 'JOIN_GAME',
       id = node.chipid()
     })

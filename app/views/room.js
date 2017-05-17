@@ -2,7 +2,7 @@ const h = require('virtual-dom/h');
 
 module.exports = function (data) {
   const {gameID, game} = data;
-  console.log(game.players);
+
   return h('div', {className: 'room'}, [
     h('audio', {src: game.ended ? '/game-win.mp3' : '/8bit-love-machine.mp3', autoplay: true, loop: true}),
     h('audio', {src: '/score-point.mp3', id: 'pointsound'}),
@@ -28,6 +28,14 @@ module.exports = function (data) {
           h('span', String(player.score))
         ])
       }))
-    ])
+    ]),
+    h('ul', {id: 'idle-mcus'}, data.waitingNodeMCUs.map(nodeMCUID => {
+      return h('li', {
+          attributes: {
+            'data-id': nodeMCUID
+          }
+        }
+      ), h('a', {href: `/join-mcu/${gameID}/${nodeMCUID}`}, `Add gamebox ${nodeMCUID}`)
+    }))
   ]);
 };
