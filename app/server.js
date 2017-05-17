@@ -110,9 +110,26 @@ function onNodeMCUConnection(socket) {
     switch (message.action) {
       case 'JOIN_GAME':
         debug(`[WS] Receive JOIN_GAME ${message.id}`);
-        if (waitingNodeMCUs.indexOf(message.id) === -1) {
+        let inGame = false;
+
+        // Check if nodemcu is in a game already. If so, send it's color
+        Object.keys(games).forEach(id => {
+          Object.keys(games[id].players).forEach(playerID => {
+            if (Number(playerID) === message.id) {
+              inGame = true;
+              nodeMCUServer.broadcast(JSON.stringify({
+                action: 'CHANGE_COLOR',
+                id: playerID,
+                color: games[id].players[playerID].color
+              }));
+            }
+          });
+        });
+
+        if (waitingNodeMCUs.indexOf(message.id) === -1 && !inGame) {
           waitingNodeMCUs.push(message.id);
         }
+
         break;
       case 'UPDATE_SCORE':
         debug(`[WS] Receive UPDATE_SCORE`);
@@ -380,6 +397,12 @@ function MCUJoinGame(req, res) {
 
   // Remove id from waiting nodeMCUs
   waitingNodeMCUs = waitingNodeMCUs.filter(val => val !== Number(mcuID));
+
+  nodeMCUServer.broadcast(JSON.stringify({
+    action: 'CHANGE_COLOR',
+    id: mcuID,
+    color: games[gameID].players[mcuID].color
+  }));
 
   io.emit('NEW_PLAYER', {gameID: gameID, mcuID, player: games[gameID].players[mcuID]});
 
