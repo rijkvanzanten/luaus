@@ -1,29 +1,82 @@
 const http = require('http');
 const path = require('path');
+const bodyParser = require('body-parser');
 const express = require('express');
 const WebSocket = require('ws');
-const bodyParser = require('body-parser');
-const Twitter = require('twitter');
+const socketIO = require('socket.io');
+const shortid = require('shortid');
+const debug = require('debug')('luaus');
+const toString = require('vdom-to-html');
+const render = require('./render');
+const wrapper = require('./views/wrapper');
 
-require('dotenv').config();
+/**
+ * Main store of all game rooms
+ * Is used as in-memory database
+ *
+ * Structure:
+ * {
+ *   [id]: {
+ *     players: {
+ *       [id]: {
+ *         color: Array,
+ *         type: String,
+ *         score: Number,
+ *         name: String
+ *       }
+ *     },
+ *     maxScore: Number,
+ *     playing: Boolean,
+ *     ended: Boolean
+ *   }
+ * }
+ * @type {Object}
+ */
+let games = {};
+const waitingNodeMCUs = [];
 
 const port = process.env.PORT || 3000;
 
-const client = new Twitter({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  access_token_key: process.env.TWITTER_CONSUMER_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.TWITTER_CONSUMER_ACCESS_TOKEN_SECRET
+const app = express()
+  .use(bodyParser.urlencoded({ extended: false }))
+  .use(express.static(path.join(__dirname, 'public')))
+  .get('/', renderHome)
+  .post('/', createRoom)
+  .get('/:gameID', renderSingleRoom)
+  .post('/:gameID', postStartGame)
+  .get('/new-player/:gameID', renderNewPlayerForm)
+  .post('/new-player/:gameID', addNewPlayerToGame)
+  .get('/:gameID/:playerID', getController)
+  .post('/:gameID/:playerID', postUpdateScore);
+
+const server = http.createServer(app);
+
+const io = socketIO(server);
+
+const nodeMCUServer = new WebSocket.Server({ server, path: '/nodemcu' });
+
+/**
+ * Broadcasts data to all connected NodeMCUs
+ */
+nodeMCUServer.broadcast = function broadcast(data) {
+  nodeMCUServer.clients.forEach(sendData);
+
+  function sendData(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  }
+}
+
+nodeMCUServer.on('connection', onNodeMCUConnection);
+
+io.on('connection', onClientConnection);
+
+server.listen(port, function onListen() {
+  console.log('Server started at port ' + port);
 });
 
-const game = {
-  players: {},
-  maxScore: 10,
-  playing: false,
-  ended: false
-};
-
-// Colors are in g, r, b
+// Colors are in G, R, B
 const colors = [
   [75, 0, 50], // Lagoon
   [25, 150, 0], // Inferno
@@ -39,108 +92,11 @@ const colors = [
   [175, 0, 0] // Emerald
 ];
 
-const app = express()
-  .use(bodyParser.urlencoded({ extended: false }))
-  .use(express.static(path.join(__dirname, 'public')))
-  .set('view engine', 'ejs')
-  .set('views', path.join(__dirname, 'views'))
-  .get('/', getApp)
-  .get('/controller', getController)
-  .get('/reset', resetGame)
-  .post('/controller', postController);
-
-const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-
-wss.broadcast = broadcast;
-
-wss.on('connection', onSocketConnection);
-
-server.listen(port, onListen);
-
-function getApp(req, res) {
-  res.render('index', {
-    maxScore: game.maxScore,
-    players: game.players,
-    playing: game.playing,
-    ended: game.ended,
-    message: ''
-  });
-}
-
-function getController(req, res) {
-  res.render('controller', { player: false });
-}
-
-function resetGame(req, res) {
-  Object.keys(game.players).forEach(function(key, index) {
-    game.players[key].score = 0;
-  });
-
-  res.render('index', {
-    maxScore: game.maxScore,
-    players: game.players,
-    playing: false,
-    ended: false,
-    message: ''
-  });
-
-  // Reset color on NodeMCUs
-  wss.broadcast(JSON.stringify({ action: 'RESET_GAME' }));
-}
-
-function postController(req, res) {
-  let color;
-  if (!game.playing) {
-    if (game.players[req.body.name]) {
-      color = game.players[req.body.name].color;
-    } else {
-      color = colors[Object.keys(game.players).length % colors.length];
-      game.players[req.body.name] = {
-        id: req.body.name,
-        type: 'phone',
-        color,
-        score: 0
-      };
-    }
-
-    wss.broadcast(
-      JSON.stringify({
-        device: 'phone',
-        action: 'NEW_PLAYER',
-        player: game.players[req.body.name]
-      })
-    );
-
-    res.render('controller', {
-      player: game.players[req.body.name],
-      name: req.body.name
-    });
-  } else {
-    res.render('index', {
-      maxScore: game.maxScore,
-      players: game.players,
-      playing: game.playing,
-      message: 'Game already started, you are now spectating'
-    });
-  }
-}
-
-function onListen() {
-  console.log('Server started at port ' + port);
-}
-
-function broadcast(data) {
-  wss.clients.forEach(sendData);
-
-  function sendData(client) {
-    if (client.readyState === WebSocket.OPEN) {
-      client.send(data);
-    }
-  }
-}
-
-function onSocketConnection(socket) {
+/**
+ * Main socket handler for NodeMCUs
+ * Maps incoming socket messages to the corresponding functions
+ */
+function onNodeMCUConnection(socket) {
   socket.on('message', onSocketMessage);
 
   function onSocketMessage(message) {
@@ -150,164 +106,283 @@ function onSocketConnection(socket) {
       console.log('Message not in JSON:', message);
     }
 
-    switch (message.device) {
-      case 'nodemcu':
-        return nodemcuMessage(socket, message);
-      case 'phone':
-        return phoneMessage(socket, message);
-      case 'scoreboard':
-        return scoreboardMessage(socket, message);
-      default:
-        console.log('Device not recognized: ', message.device);
+    switch (message.action) {
+      case 'UPDATE_SCORE':
+        debug(`[WS] Receive UPDATE_SCORE`);
+        updateScore(message.gameID, message.playerID);
+        break;
     }
   }
 }
 
-function nodemcuMessage(socket, message) {
-  switch (message.action) {
-    case 'JOIN_GAME':
-      console.log(message);
-      if (!game.playing) {
-        let color;
-
-        if (game.players[message.id]) {
-          color = game.players[message.id].color;
-        } else {
-          color = colors[Object.keys(game.players).length % colors.length];
-          game.players[message.id] = {
-            id: message.id,
-            type: 'nodemcu',
-            color,
-            score: 0
-          };
-
-          console.log(game.players)
-
-          wss.broadcast(
-            JSON.stringify({
-              action: 'NEW_PLAYER',
-              player: game.players[message.id]
-            })
-          );
-        }
-
-        return socket.send(
-          JSON.stringify({
-            action: 'CHANGE_COLOR',
-            color
-          })
-        );
-      } else {
-        return socket.send(
-          JSON.stringify({
-            action: 'SPECTATE'
-          })
-        );
-      }
-      break;
-    case 'UPDATE_SCORE':
-      if (game.playing) {
-        const player = game.players[message.id];
-        console.log(message);
-
-        player.score = player.score + 1;
-
-        wss.broadcast(
-          JSON.stringify({
-            action: 'UPDATE_SCORE',
-            id: message.id
-          })
-        );
-
-        if (player.score === game.maxScore) {
-          game.playing = false;
-          game.ended = true;
-
-          wss.broadcast(
-            JSON.stringify({
-              action: 'END_GAME',
-              winner: player
-            })
-          );
-        }
-      }
-      break;
-    default:
-      return false;
-  }
-}
-
-function phoneMessage(socket, message) {
-  switch (message.action) {
-    case 'UPDATE_SCORE':
-      if (game.playing) {
-        const player = game.players[message.id];
-        console.log(message);
-
-        player.score = player.score + 1;
-
-        wss.broadcast(
-          JSON.stringify({
-            action: 'UPDATE_SCORE',
-            id: message.id
-          })
-        );
-
-        if (player.score === game.maxScore) {
-          game.playing = false;
-          game.ended = true;
-
-          wss.broadcast(
-            JSON.stringify({
-              action: 'END_GAME',
-              winner: player
-            })
-          )
-        }
-      }
-      break;
-    default:
-      return false;
-  }
-}
-
-function scoreboardMessage(socket, message) {
-  switch (message.action) {
-    case 'SET_MAX_SCORE':
-      console.log(message);
-
-      game.maxScore = message.maxScore;
-      wss.broadcast(JSON.stringify({
-        action: 'SET_MAX_SCORE',
-        maxScore: game.maxScore
-      }));
-
-      break;
-    case 'MOVE_MOUSE':
-      wss.broadcast(JSON.stringify(message));
-      break;
-    case 'START_GAME':
-      if (Object.keys(game.players).length > 1) {
-        console.log(message);
-
-        game.playing = true;
-
-        wss.broadcast(
-          JSON.stringify({
-            action: 'START_GAME',
-            maxScore: game.maxScore,
-            players: game.players
-          })
-        );
-      }
-      break;
-    default:
-      return false;
-  }
-}
-
-function tweet(message) {
-  client.post('statuses/update', {status: message},  function(error, tweet, response) {
-    if(error) console.log(message);
+/**
+ * Main socket handler for web-clients
+ * Maps incoming socket messages to the corresponding functions
+ */
+function onClientConnection(socket) {
+  socket.on('UPDATE_SCORE', messageData => {
+    debug(`[WS] Receive UPDATE_SCORE`);
+    updateScore(messageData.gameID, messageData.playerID);
   });
+
+  socket.on('SET_MAX_SCORE', messageData => {
+    debug(`[WS] Receive SET_MAX_SCORE ${messageData.gameID} ${messageData.score}`);
+    games[messageData.gameID].maxScore = Number(messageData.score);
+
+    console.log(games[messageData.gameID]);
+    io.emit('SET_MAX_SCORE', messageData);
+  });
+}
+/**
+ * [GET] / handler
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function renderHome(req, res) {
+  debug('[GET] / Render homepage');
+  res.send(
+    wrapper(
+      toString(render('index', games)),
+      games
+    )
+  );
+}
+
+/**
+ * [POST] / handler
+ * Creates new game in store and redirects user to new gameroom
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function createRoom(req, res) {
+  debug('[POST] / Create gameroom & redirect');
+  const gameID = shortid.generate();
+  games[gameID] = new Game();
+
+  debug(`[WS] Send NEW_GAME ${gameID}`);
+
+  io.emit('NEW_GAME', {gameID, game: games[gameID]});
+
+  res.redirect(gameID);
+}
+
+/**
+ * [GET] /:id handler
+ * Renders game room which matches ID in param
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function renderSingleRoom(req, res) {
+  // Return the user to the homepage when the room doesn't exist
+  if (!games[req.params.gameID]) {
+    debug(`[GET] /${req.params.gameID} Redirect. Game doens't exist`);
+    return res.redirect('/');
+  }
+
+  debug(`[GET] /${req.params.gameID} Render gameroom`);
+  const data = {
+    gameID: req.params.gameID,
+    game: games[req.params.gameID]
+  };
+
+  return res.send(
+    wrapper(
+      toString(render('room', data)),
+      data,
+      true // true = refresh page
+    )
+  );
+}
+
+/**
+ * [POST] /:id
+ * Start the game
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function postStartGame(req, res) {
+  debug(`[POST] /${req.params.gameID}`);
+  // Return the user to the homepage when the room doesn't exist
+  if (games[req.params.gameID]) {
+    startGame(req.params.gameID);
+  }
+  res.redirect('/' + req.params.gameID);
+}
+
+/**
+ * [GET] /new-player/:id
+ * renders a form which allows the user to create a new controller instance
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function renderNewPlayerForm(req, res) {
+  debug(`[GET] /new-player/${req.params.gameID} Render new player form`);
+  return res.send(
+    wrapper(
+      toString(render('newPlayer', {gameID: req.params.gameID})),
+      {gameID: req.params.gameID}
+    )
+  );
+}
+
+/**
+ * [POST] /new-player/:id
+ * Adds new user to game with corresponding ID and redirects to buttonview
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function addNewPlayerToGame(req, res) {
+  debug(`[POST] /new-player/${req.params.gameID} Add player to game`);
+  const playerID = shortid.generate();
+  games[req.params.gameID].players[playerID] = new Player('web', req.params.gameID, req.body.name);
+  debug(`[WS] Send NEW_PLAYER ${req.params.gameID} ${playerID}`);
+
+  io.emit('NEW_PLAYER', {gameID: req.params.gameID, playerID, player: games[req.params.gameID].players[playerID]});
+  res.redirect(`/${req.params.gameID}/${playerID}`);
+}
+
+/**
+ * [GET] /:gameID/:playerID
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function getController(req, res) {
+  if (
+    games[req.params.gameID] &&
+    games[req.params.gameID].players[req.params.playerID]
+  ) {
+    debug(`[GET] /${req.params.gameID}/${req.params.playerID} Controller`);
+    const data = {
+      name: games[req.params.gameID].players[req.params.playerID].name,
+      gameID: req.params.gameID,
+      playerID: req.params.playerID,
+      game: games[req.params.gameID]
+    };
+
+    return res.send(
+      wrapper(
+        toString(render('controller', data)),
+        data
+      )
+    );
+  }
+  debug(`[GET] /${req.params.gameID}/${req.params.playerID} Game/player doesn't exists`);
+  return res.redirect('/');
+}
+
+/**
+ * [POST] /:gameID/:playerID
+ * @param  {Object} req Express request object
+ * @param  {Object} res Express response object
+ */
+function postUpdateScore(req, res) {
+  // If game && player exists
+  if (
+    games[req.params.gameID] &&
+    games[req.params.gameID].players[req.params.playerID]
+  ) {
+    debug(`[POST] /${req.params.gameID}/${req.params.playerID} Update players score`);
+    updateScore(req.params.gameID, req.params.playerID);
+    return res.redirect(`/${req.params.gameID}/${req.params.playerID}`);
+  }
+
+  debug(`[POST] /${req.params.gameID}/${req.params.playerID} Game/player doesn't exists`);
+  return res.redirect('/');
+}
+
+/**
+ * Increase the player score by 1
+ * End game if max score has been reached
+ * Broadcast updatescore over socket
+ * @param  {String} gameID   ID of the game in which the player resides
+ * @param  {String} playerID ID of the player who scored
+ */
+function updateScore(gameID, playerID) {
+  if (games[gameID] && games[gameID].ended === false && games[gameID].playing === true) {
+    games[gameID].players[playerID].score++;
+
+    debug(`Update score player ${playerID} to ${games[gameID].players[playerID].score}`);
+
+    if (games[gameID].players[playerID].score === games[gameID].maxScore) {
+      debug(`Game ${gameID} ends`);
+      endGame(gameID, playerID);
+    } else {
+      debug(`[WS] Send UPDATE_SCORE ${playerID}`);
+
+      io.emit('UPDATE_SCORE', {playerID, gameID, score: games[gameID].players[playerID].score});
+    }
+  } else {
+    debug(`[WS] Game ${gameID} hasn't started, doesn't exist or has ended`);
+  }
+}
+
+/**
+ * Start the game session
+ * @param  {String} gameID Game to start
+ */
+function startGame(gameID) {
+  games[gameID].playing = true;
+
+  debug(`Game ${gameID} started`);
+
+  io.emit('START_GAME', {gameID});
+
+  nodeMCUServer.broadcast(
+    JSON.stringify({
+      action: 'START_GAME',
+      gameID
+    })
+  );
+}
+
+/**
+ * End the game session
+ * Broadcast end_game signal
+ * @param  {String} gameID   ID of the game to end
+ * @param  {String} playerID ID of the player who own
+ */
+function endGame(gameID, playerID) {
+  games[gameID].ended = true;
+  games[gameID].playing = false;
+
+  debug(`[WS] Send END_GAME ${playerID}`);
+
+  io.emit('END_GAME', {
+    winner: playerID,
+    gameID
+  });
+
+  nodeMCUServer.broadcast(
+    JSON.stringify({
+      action: 'END_GAME',
+      winner: playerID,
+      gameID
+    })
+  );
+
+  delete games[gameID];
+}
+
+
+/**
+ * Game object-creator
+ * Sets defaults for new game
+ */
+function Game() {
+  this.players = {};
+  this.maxScore = 10;
+  this.playing = false;
+  this.ended = false;
+}
+
+/**
+ * Player object-creator
+ * @param {String} type nodemcu | web
+ * @param {String} name
+ */
+function Player(type, gameID, name = 'John Doe') {
+  this.color = colors[Object.keys(games[gameID].players).length % colors.length];
+  this.type = type;
+  this.score = 0;
+  this.name = name;
 }

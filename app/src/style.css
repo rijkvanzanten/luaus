@@ -6,6 +6,7 @@
   font-weight: normal;
   font-style: normal;
 }
+
 @font-face {
   font-family: 'Pixel';
   src: url('pixelmix.woff2') format('woff');
@@ -28,14 +29,21 @@ html {
 }
 
 body {
+  margin: 0;
+  height: 100%;
+}
+
+[data-root] > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
   height: 100%;
-  margin: 0;
   font-family: 'Pixel', sans-serif;
+}
+
+[data-root] > div:not(.controller) {
   background-image: url('/pow-star.png');
   animation: animatedBackground 1s linear infinite;
 }
@@ -45,6 +53,11 @@ h1 {
   font-size: 2em;
   color: white;
   text-shadow: 0 0.1em 0 black;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
 }
 
 button {
@@ -57,6 +70,10 @@ button {
   background-color: #b9444d;
 }
 
+button[disabled] {
+  filter: grayscale(100%);
+}
+
 button::before,
 button::after {
   display: block;
@@ -65,7 +82,7 @@ button::after {
   width: .5rem;
   height: calc(100% - 1rem);
   text-align: center;
-  content: "";
+  content: '';
   background-color: inherit;
   transform: translateY(-50%);
 }
@@ -82,124 +99,26 @@ button:focus {
   outline: 0; /* just because */
 }
 
-/* 'Game started' / 'Game ended' events styling */
-body.started #logo {
-  top: 1.4rem;
-  margin-bottom: 2rem;
-}
-
-body.started #logo h1 {
-  top: 0;
-}
-
-body.started #logo img {
-  display: none;
-}
-
-body.started #setup, body.started #app-banner,
-body.ended #setup, body.ended #app-banner {
-  display: none;
-}
-
-body.started #score-goal {
-  display: block;
-}
-
-body.started #players span,
-body.ended #players span {
-  opacity: 1;
-}
-
-body.ended #reset {
-  display: block;
-}
-
-@media (min-width: 40em) {
-  body.started #logo {
-    margin-bottom: 20rem;
-  }
-
-  body.started #logo h1 {
-    top: 16rem;
-  }
-
-  body.started #logo img {
-    display: block;
-  }
-
-  body.started #players img,
-  body.ended #players img {
-    position: absolute;
-    top: 1em;
-    left: 1em;
-    width: 3em;
-  }
-
-  body.started #players span,
-  body.ended #players span {
-    display: block;
-  }
-}
-
-/* Real-time cursors styling */
-div[data-clientid] {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100px;
-  height: 100px;
-  overflow: visible;
-  pointer-events: none;
-  filter: grayscale(100%);
-  background-image: url('/pointer.png');
-  background-repeat: no-repeat;
-  transition: transform 150ms ease;
-  opacity: 1;
-}
-
-/* Feedback / messages styling */
-#app-banner {
-  width: 100%;
-}
-
-#app-banner a, #message {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: 1em;
-  line-height: 1.6;
-  text-align: center;
-  color: #fff;
-  background-color: #15d7d4;
-}
-
-@media (min-width: 40em) {
-  #app-banner {
-    display: none;
-  }
-}
-
 /* Logo styling */
 #logo {
   position: relative;
   top: -4rem;
-  width: 11rem;
-  margin: 0 auto 6rem;
+  width: 19rem;
   animation: flow 1.4s ease-in-out infinite alternate;
 }
 
 #logo h1 {
   position: relative;
-  top: 11rem;
   font-size: 2.4em;
   text-align: center;
-  letter-spacing: -.8rem;
+  letter-spacing: 1rem;
+  margin: 0;
 }
 
 #logo img {
   display: block;
   position: absolute;
-  top: 6rem;
+  top: -12rem;
   z-index: -1;
   width: 3rem;
   image-rendering: pixelated;
@@ -246,15 +165,8 @@ div[data-clientid] {
 }
 
 @media (min-width: 40em) {
-  #logo {
-    width: initial;
-    margin: 0 auto 10rem;
-  }
-
   #logo h1 {
-    top: 16rem;
     font-size: 3.4em;
-    letter-spacing: -1rem;
   }
 
   #logo img {
@@ -293,8 +205,10 @@ div[data-clientid] {
 #setup input {
   margin: 0 1rem;
   text-align: center;
-  pointer-events: none;
+  /* pointer-events: none; */
   border: 0;
+  padding-bottom: .2em;
+  border-bottom: .2em solid black;
   background-color: transparent;
 }
 
@@ -305,50 +219,17 @@ div[data-clientid] {
   margin-top: .4em;
 }
 
-@media (min-width: 40em) {
-  #setup #min:hover,
-  #setup #plus:hover {
-    transform: scale(1.2);
-  }
-
-  #setup #min:active,
-  #setup #plus:active {
-    transform: scale(0.9);
-  }
-
-  #setup button[type=submit]:hover {
-    transform: scaleX(1.4);
-  }
-
-  #setup button[type=submit]:active {
-    transform: scaleX(0.8);
-  }
-}
-
-/* Game buttons / features styling */
-#reset {
-  display: none;
-  margin: 2em 0;
-  padding: .6em;
-  font-size: 1.4em;
-}
-
-#score-goal {
-  display: none;
-  width: 100%;
-  padding: 1em;
-  color: #fff;
-  text-align: center;
-  background-color: #222;
-}
-
-#score-goal::before {
-  content: "First to: ";
-}
-
 /* Joined players styling */
+[data-root] > div.room {
+  justify-content: space-between;
+}
+
+[data-root] > div.room a {
+  margin-top: 2em;
+}
+
 #players {
-  flex-grow: 1;
+  flex-basis: 13em;
   position: relative;
   width: 100%;
 }
@@ -428,36 +309,36 @@ div[data-clientid] {
   }
 
   #players span {
-    display: none;
     opacity: 1;
   }
 }
 
 /* Controller styling */
-body.controller {
+.controller {
   justify-content: space-between;
   filter: brightness(200%);
   background-image: none;
   animation: none;
 }
 
-body.controller > *:not(.back) {
+.controller > *:not(.back) {
   filter: brightness(50%);
 }
 
-body.controller.won {
+.controller.won {
   animation: win-back .75s linear infinite alternate;
+  filter: none;
 }
 
-body.controller.won .back {
+.won .back {
   display: none;
 }
 
-body.controller.lost {
+.controller.lost {
   filter: brightness(500%) grayscale(100%);
 }
 
-body.controller .back {
+.controller .back {
   position: absolute;
   top: 0;
   left: 0;
@@ -466,11 +347,11 @@ body.controller .back {
   height: 100vh;
 }
 
-body.controller #score-goal {
+.controller #score-goal {
   display: block;
 }
 
-body.controller form {
+.controller form {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -479,19 +360,19 @@ body.controller form {
   transform: translateY(-50%);
 }
 
-body.controller form > * {
+.controller form > * {
   display: block;
   margin: 1rem 0;
 }
 
-body.controller label input {
+.controller label input {
   margin-top: 1rem;
   padding: .5em;
   font-size: 1em;
   border: 1px solid #222;
 }
 
-body.controller button[type=submit] {
+.controller button[type=submit] {
   padding: .6em;
   font-size: 1.4em;
 }
