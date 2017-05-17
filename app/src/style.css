@@ -71,7 +71,7 @@ button {
 }
 
 button[disabled] {
-    filter: grayscale(100%);
+  filter: grayscale(100%);
 }
 
 button::before,
@@ -327,9 +327,10 @@ button:focus {
 
 .controller.won {
   animation: win-back .75s linear infinite alternate;
+  filter: none;
 }
 
-.controller.won .back {
+.won .back {
   display: none;
 }
 
