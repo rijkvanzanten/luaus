@@ -50,7 +50,7 @@ function init()
       })
     elseif data.action == 'END_GAME' then
       -- Check if button belongs to winner
-      if data.winner.id == node.chipid() then
+      if data.winner == node.chipid() then
         ledLoop(50, {
           color
         })
@@ -86,7 +86,6 @@ function init()
       end)
 
       ok, json = pcall(cjson.encode, {
-        device = 'nodemcu',
         action = 'UPDATE_SCORE',
         id = node.chipid()
       })
