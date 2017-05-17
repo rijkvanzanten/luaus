@@ -386,7 +386,7 @@ function endGame(gameID, playerID) {
   debug(`[WS] Send END_GAME ${playerID}`);
 
   io.emit('END_GAME', {
-    winner: playerID,
+    winner: String(playerID),
     gameID
   });
 
