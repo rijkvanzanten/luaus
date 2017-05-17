@@ -21,6 +21,11 @@ if (document.querySelector('.index')) {
     data[messageData.gameID] = messageData.game;
     update('index', data);
   });
+
+  socket.on('NEW_PLAYER', messageData => {
+    data[messageData.gameID].players[messageData.playerID] = messageData.player;
+    return update('index', data);
+  });
 } else if (document.querySelector('.controller')) {
   replaceView('controller');
   document.querySelector('form').addEventListener('submit', onButtonPress);
@@ -48,7 +53,6 @@ if (document.querySelector('.index')) {
 } else if (document.querySelector('.room')) {
   replaceView('room');
 
-  console.log(data);
   if (document.querySelector('input[type="number"]')) {
     document.querySelector('input[type="number"]').addEventListener('input', () => {
       socket.emit('SET_MAX_SCORE', {score: document.querySelector('input[type="number"]').value, gameID: data.gameID});
