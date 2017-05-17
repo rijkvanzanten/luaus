@@ -26,7 +26,7 @@ module.initSocket = function ()
   end)
 
   print('[WebSocket] Connecting to ws at ws://' .. config.address .. ':' .. config.port .. '...')
-  ws:connect('ws://' .. config.address .. ':' .. config.port)
+  ws:connect('ws://' .. config.address .. ':' .. config.port .. '/nodemcu')
 
   return ws
 end
