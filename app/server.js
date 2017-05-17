@@ -33,7 +33,7 @@ const wrapper = require('./views/wrapper');
  * @type {Object}
  */
 let games = {};
-const waitingNodeMCUs = [];
+let waitingNodeMCUs = [];
 
 const port = process.env.PORT || 3000;
 
@@ -42,6 +42,7 @@ const app = express()
   .use(express.static(path.join(__dirname, 'public')))
   .get('/', renderHome)
   .post('/', createRoom)
+  .post('/join-mcu/', MCUJoinGame)
   .get('/:gameID', renderSingleRoom)
   .post('/:gameID', postStartGame)
   .get('/new-player/:gameID', renderNewPlayerForm)
@@ -109,7 +110,9 @@ function onNodeMCUConnection(socket) {
     switch (message.action) {
       case 'JOIN_GAME':
         debug(`[WS] Receive JOIN_GAME ${message.id}`);
-        waitingNodeMCUs.push(message.id);
+        if (waitingNodeMCUs.indexOf(message.id) === -1) {
+          waitingNodeMCUs.push(message.id);
+        }
         break;
       case 'UPDATE_SCORE':
         debug(`[WS] Receive UPDATE_SCORE`);
@@ -131,9 +134,9 @@ function onClientConnection(socket) {
 
   socket.on('SET_MAX_SCORE', messageData => {
     debug(`[WS] Receive SET_MAX_SCORE ${messageData.gameID} ${messageData.score}`);
+
     games[messageData.gameID].maxScore = Number(messageData.score);
 
-    console.log(games[messageData.gameID]);
     io.emit('SET_MAX_SCORE', messageData);
   });
 }
@@ -185,14 +188,11 @@ function renderSingleRoom(req, res) {
 
   debug(`[GET] /${req.params.gameID} Render gameroom`);
 
-  console.log(waitingNodeMCUs);
   const data = {
     gameID: req.params.gameID,
     game: games[req.params.gameID],
     waitingNodeMCUs
   };
-
-  console.log(data);
 
   return res.send(
     wrapper(
@@ -370,6 +370,20 @@ function endGame(gameID, playerID) {
   );
 
   delete games[gameID];
+}
+
+function MCUJoinGame(req, res) {
+  const {gameID, mcuID} = req.body;
+
+  games[gameID].players[mcuID] = new Player('nodemcu', gameID);
+  debug(`[WS] Send NEW_PLAYER ${gameID} ${mcuID}`);
+
+  // Remove id from waiting nodeMCUs
+  waitingNodeMCUs = waitingNodeMCUs.filter(val => val !== Number(mcuID));
+
+  io.emit('NEW_PLAYER', {gameID: gameID, mcuID, player: games[gameID].players[mcuID]});
+
+  res.redirect(`/${gameID}`);
 }
 
 

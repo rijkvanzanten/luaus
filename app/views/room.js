@@ -35,7 +35,11 @@ module.exports = function (data) {
             'data-id': nodeMCUID
           }
         }
-      ), h('a', {href: `/join-mcu/${gameID}/${nodeMCUID}`}, `Add gamebox ${nodeMCUID}`)
+      ), h('form', {action: `/join-mcu/`, method: 'POST'}, [
+        h('input', {type: 'hidden', value: nodeMCUID, name: 'mcuID'}),
+        h('input', {type: 'hidden', value: gameID, name: 'gameID'}),
+        h('button', {type: 'submit'}, `Add GameBox ${nodeMCUID} to game`)
+      ])
     }))
   ]);
 };
