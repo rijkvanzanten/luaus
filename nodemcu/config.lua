@@ -1,7 +1,7 @@
 local config = {}
 
 config.address = ''
-config.port = 
+config.port =
 config.ssid = ''
 config.password = ''
 
