@@ -133,8 +133,8 @@ function renderHome(req, res) {
   debug('[GET] / Render homepage');
   res.send(
     wrapper(
-      toString(render('index', Object.keys(games))),
-      Object.keys(games)
+      toString(render('index', games)),
+      games
     )
   );
 }
@@ -152,7 +152,7 @@ function createRoom(req, res) {
 
   debug(`[WS] Send NEW_GAME ${gameID}`);
 
-  io.emit('NEW_GAME', {gameID});
+  io.emit('NEW_GAME', {gameID, game: games[gameID]});
 
   res.redirect(gameID);
 }

@@ -2,12 +2,13 @@ const h = require('virtual-dom/h');
 const logo = require('./logo');
 const bgMusic = require('./audio');
 
-module.exports = function (gameIDs) {
+module.exports = function (games) {
+  const gameIDs = Object.keys(games);
   return h('div', {className: 'index'}, [
     bgMusic(),
     logo(),
     gameIDs.length > 0 ?
-      gameList(gameIDs) :
+      gameList(games) :
       h('p', 'No Luaus found'),
       h('form', {action: '/', method: 'post'},
         h('button', 'Create Luau')
@@ -15,10 +16,10 @@ module.exports = function (gameIDs) {
   ]);
 };
 
-function gameList(gameIDs) {
-  return h('ul', gameIDs.map(gameID =>
+function gameList(games) {
+  return h('ul', Object.keys(games).map(gameID =>
     h('li',
-      h('a', {href: '/' + gameID}, gameID)
+      h('a', {href: '/' + gameID}, `${gameID} ${Object.keys(games[gameID].players).length}`)
     )
   ));
 }

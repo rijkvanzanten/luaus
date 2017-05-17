@@ -18,7 +18,7 @@ if (document.querySelector('.index')) {
   replaceView('index');
 
   socket.on('NEW_GAME', messageData => {
-    data.push(messageData.gameID);
+    data[messageData.gameID] = messageData.game;
     update('index', data);
   });
 } else if (document.querySelector('.controller')) {
