@@ -123,6 +123,14 @@ function onClientConnection(socket) {
     debug(`[WS] Receive UPDATE_SCORE`);
     updateScore(messageData.gameID, messageData.playerID);
   });
+
+  socket.on('SET_MAX_SCORE', messageData => {
+    debug(`[WS] Receive SET_MAX_SCORE ${messageData.gameID} ${messageData.score}`);
+    games[messageData.gameID].maxScore = Number(messageData.score);
+
+    console.log(games[messageData.gameID]);
+    io.emit('SET_MAX_SCORE', messageData);
+  });
 }
 /**
  * [GET] / handler
@@ -311,9 +319,8 @@ function updateScore(gameID, playerID) {
  * Start the game session
  * @param  {String} gameID Game to start
  */
-function startGame(gameID, maxScore = 10) {
+function startGame(gameID) {
   games[gameID].playing = true;
-  games[gameID].maxScore = maxScore;
 
   debug(`Game ${gameID} started`);
 

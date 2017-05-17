@@ -48,9 +48,10 @@ if (document.querySelector('.index')) {
 } else if (document.querySelector('.room')) {
   replaceView('room');
 
+  console.log(data);
   if (document.querySelector('input[type="number"]')) {
     document.querySelector('input[type="number"]').addEventListener('input', () => {
-      socket.emit('SET_MAX_SCORE', {score: document.querySelector('input[type="number"]').value})
+      socket.emit('SET_MAX_SCORE', {score: document.querySelector('input[type="number"]').value, gameID: data.gameID});
     });
   }
 
@@ -65,7 +66,9 @@ if (document.querySelector('.index')) {
   });
 
   socket.on('SET_MAX_SCORE', messageData => {
-    data.game.maxScore = messageData.maxScore;
+    if (messageData.gameID === data.gameID) {
+      data.game.maxScore = messageData.score;
+    }
     return update('room');
   });
 
