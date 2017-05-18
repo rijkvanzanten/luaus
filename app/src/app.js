@@ -121,14 +121,18 @@ if (document.querySelector('.index')) {
   });
 
   socket.on('START_GAME', () => {
-    data.game.playing = true;
+    if (messageData.gameID === data.gameID) {
+      data.game.playing = true;
+    }
     return update('room');
   });
 
   socket.on('END_GAME', messageData => {
-    data.game.ended = true;
-    data.game.winner = messageData.winner;
-    data.game.players[messageData.winner].score = data.game.maxScore;
+    if (messageData.gameID === data.gameID) {
+      data.game.ended = true;
+      data.game.winner = messageData.winner;
+      data.game.players[messageData.winner].score = data.game.maxScore;
+    }
     return update('room');
   });
 
