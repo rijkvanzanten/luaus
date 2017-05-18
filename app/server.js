@@ -444,8 +444,14 @@ function MCUJoinGame(req, res) {
 }
 
 function leavePlayer(gameID, playerID) {
-  delete games[gameID].players[playerID];
-  io.emit('LEAVE_PLAYER', {gameID, playerID});
+  if (games[gameID] && games[gameID].players[playerID]) {
+    if (games[gameID].players[playerID].type === 'nodemcu') {
+      waitingNodeMCUs.push(playerID);
+      io.emit('NEW_WAITING_MCU', playerID);
+    }
+    delete games[gameID].players[playerID];
+    io.emit('LEAVE_PLAYER', {gameID, playerID});
+  }
 }
 
 /**
