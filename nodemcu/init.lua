@@ -86,6 +86,18 @@ function init()
     if (scaleValue ~= curValue) then
       curValue = scaledValue
       print(scaledValue)
+
+      ok, json = pcall(cjson.encode, {
+        device = 'nodemcu',
+        action = 'SET_MAX_SCORE',
+        score = scaledValue,
+        id = node.chipid()
+      })
+      if ok then
+        ws:send(json)
+      else
+        print('failed to encode JSON!')
+      end
     end
   end, 250)
 
