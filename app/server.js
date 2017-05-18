@@ -170,6 +170,12 @@ function onClientConnection(socket) {
 
     io.emit('SET_MAX_SCORE', messageData);
   });
+
+  socket.on('UPDATE_PLAYER_NAME', messageData => {
+    debug(`[WS] Receive UPDATE_PLAYER_NAME ${messageData.playerID} ${messageData.name}`);
+    games[messageData.gameID].players[messageData.playerID].name = messageData.name;
+    io.emit('UPDATE_PLAYER_NAME', messageData);
+  });
 }
 /**
  * [GET] / handler
@@ -425,7 +431,7 @@ function MCUJoinGame(req, res) {
     color: games[gameID].players[mcuID].color
   }));
 
-  io.emit('NEW_PLAYER', {gameID: gameID, mcuID, player: games[gameID].players[mcuID]});
+  io.emit('NEW_PLAYER', {gameID, playerID: mcuID, player: games[gameID].players[mcuID]});
 
   io.emit('REMOVE_WAITING_MCU', mcuID);
 
