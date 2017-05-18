@@ -142,7 +142,7 @@ if (document.querySelector('.index')) {
   });
 
   socket.on('REMOVE_WAITING_MCU', messageData => {
-    data.waitingNodeMCUs = data.waitingNodeMCUs.filter(val => val !== Number(messageData));
+    data.waitingNodeMCUs = data.waitingNodeMCUs.filter(val => val !== messageData);
     return update('room');
   });
 
