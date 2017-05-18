@@ -82,7 +82,7 @@ function init()
   local curValue = nil
   timer.setInterval(function()
     local potValue = adc.read(0)
-    local scaledValue = math.floor(50 -(50 * (potValue / 1024)))
+    local scaledValue = math.ceil(50 -(50 * (potValue / 1024)))
 
     if (scaledValue ~= curValue) then
       curValue = scaledValue
