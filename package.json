@@ -40,6 +40,7 @@
     "body-parser": "^1.17.1",
     "bufferutil": "^3.0.0",
     "convert-range": "^1.0.0",
+    "debounce": "^1.0.2",
     "debug": "^2.6.6",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",

@@ -1,6 +1,7 @@
 const diff = require('virtual-dom/diff');
 const patch = require('virtual-dom/patch');
 const createElement = require('virtual-dom/create-element');
+const debounce = require('debounce');
 const render = require('../render');
 
 const socket = io();
@@ -88,10 +89,12 @@ if (document.querySelector('.index')) {
   addEventListenersToLeaveButtons();
 
   if (document.querySelector('input[type="number"]')) {
-    document.querySelector('input[type="number"]').addEventListener('input', () => {
+    document.querySelector('input[type="number"]').addEventListener('input', debounce(emitMaxScore, 350));
+    function emitMaxScore() {
       socket.emit('SET_MAX_SCORE', {score: document.querySelector('input[type="number"]').value, gameID: data.gameID});
-    });
+    }
   }
+
 
   socket.on('NEW_PLAYER', messageData => {
     if (messageData.gameID === data.gameID) {
@@ -165,13 +168,13 @@ if (document.querySelector('.index')) {
 
     if (playerNameInputs) {
       playerNameInputs.forEach(input =>
-        input.addEventListener('input', () => {
+        input.addEventListener('input', debounce(() => {
           socket.emit('UPDATE_PLAYER_NAME', {
             gameID: data.gameID,
             playerID: input.getAttribute('data-id'),
             name: input.value
           });
-        })
+        }, 300))
       );
     }
   }
