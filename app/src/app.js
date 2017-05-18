@@ -43,6 +43,13 @@ if (document.querySelector('.index')) {
     return update('controller', data);
   });
 
+  socket.on('LEAVE_PLAYER', messageData => {
+    if (messageData.gameID === data.gameID && messageData.playerID === data.playerID) {
+      alert('You\'ve been kicked from this lobby');
+      window.location = '/';
+    }
+  });
+
   /**
    * Send an update score request to the server
    */
@@ -69,23 +76,9 @@ if (document.querySelector('.index')) {
 } else if (document.querySelector('.room')) {
   replaceView('room');
 
-  function addEventListenersToNameInputs() {
-    const playerNameInputs = document.querySelectorAll('input[name="playerName"]');
-
-    if (playerNameInputs) {
-      playerNameInputs.forEach(input =>
-        input.addEventListener('input', () => {
-          socket.emit('UPDATE_PLAYER_NAME', {
-            gameID: data.gameID,
-            playerID: input.getAttribute('data-id'),
-            name: input.value
-          });
-        })
-      );
-    }
-  }
-
   addEventListenersToNameInputs();
+
+  addEventListenersToLeaveButtons();
 
   if (document.querySelector('input[type="number"]')) {
     document.querySelector('input[type="number"]').addEventListener('input', () => {
@@ -99,6 +92,7 @@ if (document.querySelector('.index')) {
     }
 
     update('room');
+    addEventListenersToLeaveButtons();
     return addEventListenersToNameInputs();
   });
 
@@ -154,6 +148,39 @@ if (document.querySelector('.index')) {
       return update('room');
     }
   });
+
+  function addEventListenersToNameInputs() {
+    const playerNameInputs = document.querySelectorAll('input[name="playerName"]');
+
+    if (playerNameInputs) {
+      playerNameInputs.forEach(input =>
+        input.addEventListener('input', () => {
+          socket.emit('UPDATE_PLAYER_NAME', {
+            gameID: data.gameID,
+            playerID: input.getAttribute('data-id'),
+            name: input.value
+          });
+        })
+      );
+    }
+  }
+
+  function addEventListenersToLeaveButtons() {
+    const leaveButtons = document.querySelectorAll('.leave');
+
+    if (leaveButtons) {
+      leaveButtons.forEach(button =>
+        button.addEventListener('click', () => {
+          if (window.confirm('Do you really want to kick this player?')) {
+            socket.emit('LEAVE_PLAYER', {
+              gameID: data.gameID,
+              playerID: button.getAttribute('data-id')
+            });
+          }
+        })
+      )
+    }
+  }
 }
 
 /**
