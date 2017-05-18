@@ -165,7 +165,7 @@ function onNodeMCUConnection(socket) {
           });
         });
 
-        if (!games[gameID].playing) {
+        if (games[gameID] && !games[gameID].playing) {
           debug(`[WS] Receive SET_MAX_SCORE ${gameID} ${message.score}`);
           games[gameID].maxScore = Number(message.score);
 
