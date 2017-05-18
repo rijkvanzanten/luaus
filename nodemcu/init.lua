@@ -80,7 +80,9 @@ function init()
   -- Sets interval of 50ms, in order to read potentiometer value
   timer.setInterval(function()
     local potValue = adc.read(0)
-    print(potValue)
+    local scaledValue = math.floor(50 -(50 * (potValue / 1024)))
+
+    print(scaledValue)
   end, 250)
 
   -- When button has been pressed or released
