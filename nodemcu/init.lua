@@ -41,6 +41,7 @@ function init()
     local data = cjson.decode(msg)
 
     if data.action == 'CHANGE_COLOR' then
+      clearStrip()
       color = data.color
 
       setStrip(data.color)
