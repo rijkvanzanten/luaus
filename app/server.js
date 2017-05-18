@@ -33,7 +33,7 @@ const wrapper = require('./views/wrapper');
  * @type {Object}
  */
 let games = {};
-const waitingNodeMCUs = [];
+let waitingNodeMCUs = [];
 
 const port = process.env.PORT || 3000;
 
@@ -42,6 +42,7 @@ const app = express()
   .use(express.static(path.join(__dirname, 'public')))
   .get('/', renderHome)
   .post('/', createRoom)
+  .post('/join-mcu/', MCUJoinGame)
   .get('/:gameID', renderSingleRoom)
   .post('/:gameID', postStartGame)
   .get('/new-player/:gameID', renderNewPlayerForm)
@@ -107,9 +108,46 @@ function onNodeMCUConnection(socket) {
     }
 
     switch (message.action) {
+      case 'JOIN_GAME':
+        debug(`[WS] Receive JOIN_GAME ${message.id}`);
+        let inGame = false;
+
+        // Check if nodemcu is in a game already. If so, send it's color
+        Object.keys(games).forEach(id => {
+          Object.keys(games[id].players).forEach(playerID => {
+            if (Number(playerID) === message.id) {
+              inGame = true;
+              nodeMCUServer.broadcast(JSON.stringify({
+                action: 'CHANGE_COLOR',
+                id: playerID,
+                color: games[id].players[playerID].color
+              }));
+            }
+          });
+        });
+
+        if (waitingNodeMCUs.indexOf(message.id) === -1 && !inGame) {
+          waitingNodeMCUs.push(message.id);
+
+          io.emit('NEW_WAITING_MCU', message.id);
+        }
+
+        break;
       case 'UPDATE_SCORE':
-        debug(`[WS] Receive UPDATE_SCORE`);
-        updateScore(message.gameID, message.playerID);
+        debug(`[WS] Receive UPDATE_SCORE ${message.id}`);
+        let gameID;
+
+        Object.keys(games).forEach(id => {
+          Object.keys(games[id].players).forEach(playerID => {
+            if (Number(playerID) === message.id) {
+              gameID = id;
+            }
+          });
+        });
+
+        if (gameID) {
+          updateScore(gameID, message.id);
+        }
         break;
     }
   }
@@ -127,10 +165,21 @@ function onClientConnection(socket) {
 
   socket.on('SET_MAX_SCORE', messageData => {
     debug(`[WS] Receive SET_MAX_SCORE ${messageData.gameID} ${messageData.score}`);
+
     games[messageData.gameID].maxScore = Number(messageData.score);
 
-    console.log(games[messageData.gameID]);
     io.emit('SET_MAX_SCORE', messageData);
+  });
+
+  socket.on('UPDATE_PLAYER_NAME', messageData => {
+    debug(`[WS] Receive UPDATE_PLAYER_NAME ${messageData.playerID} ${messageData.name}`);
+    games[messageData.gameID].players[messageData.playerID].name = messageData.name;
+    io.emit('UPDATE_PLAYER_NAME', messageData);
+  });
+
+  socket.on('LEAVE_PLAYER', messageData => {
+    debug(`[WS] Receive LEAVE_PLAYER ${messageData.gameID} ${messageData.playerID}`);
+    leavePlayer(messageData.gameID, messageData.playerID);
   });
 }
 /**
@@ -180,9 +229,11 @@ function renderSingleRoom(req, res) {
   }
 
   debug(`[GET] /${req.params.gameID} Render gameroom`);
+
   const data = {
     gameID: req.params.gameID,
-    game: games[req.params.gameID]
+    game: games[req.params.gameID],
+    waitingNodeMCUs
   };
 
   return res.send(
@@ -348,21 +399,54 @@ function endGame(gameID, playerID) {
   debug(`[WS] Send END_GAME ${playerID}`);
 
   io.emit('END_GAME', {
-    winner: playerID,
+    winner: String(playerID),
     gameID
   });
 
   nodeMCUServer.broadcast(
     JSON.stringify({
       action: 'END_GAME',
-      winner: playerID,
-      gameID
+      winner: Number(playerID)
     })
   );
+
+  // Move all nodemcu players to waiting
+  Object.keys(games[gameID].players).forEach(playerID => {
+    if (games[gameID].players[playerID].type === 'nodemcu') {
+      waitingNodeMCUs.push(Number(playerID));
+      io.emit('NEW_WAITING_MCU', playerID);
+    }
+  });
 
   delete games[gameID];
 }
 
+function MCUJoinGame(req, res) {
+  const {gameID, mcuID} = req.body;
+
+  games[gameID].players[mcuID] = new Player('nodemcu', gameID);
+  debug(`[WS] Send NEW_PLAYER ${gameID} ${mcuID}`);
+
+  // Remove id from waiting nodeMCUs
+  waitingNodeMCUs = waitingNodeMCUs.filter(val => val !== Number(mcuID));
+
+  nodeMCUServer.broadcast(JSON.stringify({
+    action: 'CHANGE_COLOR',
+    id: mcuID,
+    color: games[gameID].players[mcuID].color
+  }));
+
+  io.emit('NEW_PLAYER', {gameID, playerID: mcuID, player: games[gameID].players[mcuID]});
+
+  io.emit('REMOVE_WAITING_MCU', mcuID);
+
+  res.redirect(`/${gameID}`);
+}
+
+function leavePlayer(gameID, playerID) {
+  delete games[gameID].players[playerID];
+  io.emit('LEAVE_PLAYER', {gameID, playerID});
+}
 
 /**
  * Game object-creator

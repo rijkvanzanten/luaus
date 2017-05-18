@@ -26,6 +26,12 @@ if (document.querySelector('.index')) {
     data[messageData.gameID].players[messageData.playerID] = messageData.player;
     return update('index', data);
   });
+
+  socket.on('LEAVE_PLAYER', messageData => {
+    delete data.game[messageData.gameID].players[messageData.playerID];
+    return update('index');
+  });
+
 } else if (document.querySelector('.controller')) {
   replaceView('controller');
   document.querySelector('form').addEventListener('submit', onButtonPress);
@@ -50,10 +56,36 @@ if (document.querySelector('.index')) {
 
     return false; // iOS Safari
   }
+
+  window.addEventListener('beforeunload', () => {
+    socket.emit('LEAVE_PLAYER', {
+      gameID: data.gameID,
+      playerID: data.playerID
+    });
+    return null;
+  });
 } else if (document.querySelector('.new-player')) {
   // Do something new-player form specific
 } else if (document.querySelector('.room')) {
   replaceView('room');
+
+  function addEventListenersToNameInputs() {
+    const playerNameInputs = document.querySelectorAll('input[name="playerName"]');
+
+    if (playerNameInputs) {
+      playerNameInputs.forEach(input =>
+        input.addEventListener('input', () => {
+          socket.emit('UPDATE_PLAYER_NAME', {
+            gameID: data.gameID,
+            playerID: input.getAttribute('data-id'),
+            name: input.value
+          });
+        })
+      );
+    }
+  }
+
+  addEventListenersToNameInputs();
 
   if (document.querySelector('input[type="number"]')) {
     document.querySelector('input[type="number"]').addEventListener('input', () => {
@@ -62,8 +94,12 @@ if (document.querySelector('.index')) {
   }
 
   socket.on('NEW_PLAYER', messageData => {
-    data.game.players[messageData.playerID] = messageData.player;
-    return update('room');
+    if (messageData.gameID === data.gameID) {
+      data.game.players[messageData.playerID] = messageData.player;
+    }
+
+    update('room');
+    return addEventListenersToNameInputs();
   });
 
   socket.on('UPDATE_SCORE', messageData => {
@@ -93,6 +129,30 @@ if (document.querySelector('.index')) {
     data.game.winner = messageData.winner;
     data.game.players[messageData.winner].score = data.game.maxScore;
     return update('room');
+  });
+
+  socket.on('NEW_WAITING_MCU', messageData => {
+    data.waitingNodeMCUs.push(messageData);
+    return update('room');
+  });
+
+  socket.on('REMOVE_WAITING_MCU', messageData => {
+    data.waitingNodeMCUs = data.waitingNodeMCUs.filter(val => val !== Number(messageData));
+    return update('room');
+  });
+
+  socket.on('UPDATE_PLAYER_NAME', messageData => {
+    if (messageData.gameID === data.gameID) {
+      data.game.players[messageData.playerID].name = messageData.name;
+      return update('room');
+    }
+  });
+
+  socket.on('LEAVE_PLAYER', messageData => {
+    if (messageData.gameID === data.gameID) {
+      delete data.game.players[messageData.playerID];
+      return update('room');
+    }
   });
 }
 

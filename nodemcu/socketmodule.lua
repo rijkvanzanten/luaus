@@ -9,7 +9,6 @@ module.initSocket = function ()
     print('[WebSocket] Connected!')
 
     ok, json = pcall(cjson.encode, {
-      device = 'nodemcu',
       action = 'JOIN_GAME',
       id = node.chipid()
     })
@@ -23,6 +22,10 @@ module.initSocket = function ()
   ws:on('close', function(_, status)
     print('[WebSocket] Connection closed.', status)
     ws = nil
+
+    -- reconnect
+    ws = websocket.createClient()
+    ws:connect('ws://' .. config.address .. ':' .. config.port .. '/nodemcu')
   end)
 
   print('[WebSocket] Connecting to ws at ws://' .. config.address .. ':' .. config.port .. '/nodemcu')
