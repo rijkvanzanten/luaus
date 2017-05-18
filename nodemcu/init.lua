@@ -59,7 +59,7 @@ function init()
       })
     elseif data.action == 'END_GAME' then
       -- Check if button belongs to winner
-      if data.winner == node.chipid() then
+      if tonumber(data.winner) == node.chipid() then
         ledLoop(50, {
           color
         })
