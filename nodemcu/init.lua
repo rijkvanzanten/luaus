@@ -1,6 +1,7 @@
 local wifimodule = require 'wifimodule'
 local socketmodule = require 'socketmodule'
 local servo = require 'servo'
+local servo = require 'timer'
 local config = require 'config'
 local color = nil
 
