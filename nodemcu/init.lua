@@ -111,11 +111,13 @@ function init()
 
       if color ~= nil then
         -- Temporary turns off lights on button press
-        clearStrip()
+        setStrip({
+          255, 255, 255
+        })
         ledTimer:start()
 
-        -- End feedback after 500ms
-        ledTimer:alarm(500, tmr.ALARM_SINGLE, function()
+        -- End feedback after 100ms
+        ledTimer:alarm(100, tmr.ALARM_SINGLE, function()
           setStrip(color)
           ledTimer:stop()
         end)
