@@ -18,12 +18,16 @@ module.exports = function (data) {
           style: {
             backgroundColor: `rgb(${player.color[1]}, ${player.color[0]}, ${player.color[2]})`
           },
-          className: game.ended ? game.winner === playerID ? 'won' : 'lost' : '',
-          attributes: {
-            'data-id': playerID
-          }
+          className: game.ended ? game.winner === playerID ? 'won' : 'lost' : ''
         }, [
-          h('h3', player.name),
+          h('input', {
+            type: 'text',
+            name: 'playerName',
+            value: player.name,
+            attributes: {
+              'data-id': playerID
+            }
+          }),
           h('img', {src: player.type === 'nodemcu' ? '/nodemcu.png' : '/phone.png'}),
           h('span', String(player.score))
         ])

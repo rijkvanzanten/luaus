@@ -56,6 +56,24 @@ if (document.querySelector('.index')) {
 } else if (document.querySelector('.room')) {
   replaceView('room');
 
+  function addEventListenersToNameInputs() {
+    const playerNameInputs = document.querySelectorAll('input[name="playerName"]');
+
+    if (playerNameInputs) {
+      playerNameInputs.forEach(input =>
+        input.addEventListener('input', () => {
+          socket.emit('UPDATE_PLAYER_NAME', {
+            gameID: data.gameID,
+            playerID: input.getAttribute('data-id'),
+            name: input.value
+          });
+        })
+      );
+    }
+  }
+
+  addEventListenersToNameInputs();
+
   if (document.querySelector('input[type="number"]')) {
     document.querySelector('input[type="number"]').addEventListener('input', () => {
       socket.emit('SET_MAX_SCORE', {score: document.querySelector('input[type="number"]').value, gameID: data.gameID});
@@ -66,7 +84,9 @@ if (document.querySelector('.index')) {
     if (messageData.gameID === data.gameID) {
       data.game.players[messageData.playerID] = messageData.player;
     }
-    return update('room');
+
+    update('room');
+    return addEventListenersToNameInputs();
   });
 
   socket.on('UPDATE_SCORE', messageData => {
@@ -104,8 +124,15 @@ if (document.querySelector('.index')) {
   });
 
   socket.on('REMOVE_WAITING_MCU', messageData => {
-    data.waitingNodeMCUs = data.waitingNodeMCUs.filter(val => val !== messageData);
+    data.waitingNodeMCUs = data.waitingNodeMCUs.filter(val => val !== Number(messageData));
     return update('room');
+  });
+
+  socket.on('UPDATE_PLAYER_NAME', messageData => {
+    if (messageData.gameID === data.gameID) {
+      data.game.players[messageData.playerID].name = messageData.name;
+      return update('room');
+    }
   });
 }
 
