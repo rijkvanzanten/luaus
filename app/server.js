@@ -176,6 +176,11 @@ function onClientConnection(socket) {
     games[messageData.gameID].players[messageData.playerID].name = messageData.name;
     io.emit('UPDATE_PLAYER_NAME', messageData);
   });
+
+  socket.on('LEAVE_PLAYER', messageData => {
+    debug(`[WS] Receive LEAVE_PLAYER ${messageData.gameID} ${messageData.playerID}`);
+    leavePlayer(messageData.gameID, messageData.playerID);
+  });
 }
 /**
  * [GET] / handler
@@ -438,6 +443,10 @@ function MCUJoinGame(req, res) {
   res.redirect(`/${gameID}`);
 }
 
+function leavePlayer(gameID, playerID) {
+  delete games[gameID].players[playerID];
+  io.emit('LEAVE_PLAYER', {gameID, playerID});
+}
 
 /**
  * Game object-creator

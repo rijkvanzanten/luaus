@@ -27,6 +27,11 @@ if (document.querySelector('.index')) {
     return update('index', data);
   });
 
+  socket.on('LEAVE_PLAYER', messageData => {
+    delete data.game[messageData.gameID].players[messageData.playerID];
+    return update('index');
+  });
+
 } else if (document.querySelector('.controller')) {
   replaceView('controller');
   document.querySelector('form').addEventListener('submit', onButtonPress);
@@ -51,6 +56,14 @@ if (document.querySelector('.index')) {
 
     return false; // iOS Safari
   }
+
+  window.addEventListener('beforeunload', () => {
+    socket.emit('LEAVE_PLAYER', {
+      gameID: data.gameID,
+      playerID: data.playerID
+    });
+    return null;
+  });
 } else if (document.querySelector('.new-player')) {
   // Do something new-player form specific
 } else if (document.querySelector('.room')) {
@@ -131,6 +144,13 @@ if (document.querySelector('.index')) {
   socket.on('UPDATE_PLAYER_NAME', messageData => {
     if (messageData.gameID === data.gameID) {
       data.game.players[messageData.playerID].name = messageData.name;
+      return update('room');
+    }
+  });
+
+  socket.on('LEAVE_PLAYER', messageData => {
+    if (messageData.gameID === data.gameID) {
+      delete data.game.players[messageData.playerID];
       return update('room');
     }
   });
