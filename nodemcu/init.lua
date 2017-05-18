@@ -11,7 +11,7 @@ local i, buffer = 0, ws2812.newBuffer(8, 3)
 local ledTimer = tmr.create()
 
 -- Initialize Servo
-servo.defineServo(3,0,1800)
+servo.defineServo(3, 0, 1800)
 servo.setServo(3, 1)
 
 -- Fill the LED_strip with a single color
