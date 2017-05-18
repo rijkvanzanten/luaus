@@ -107,6 +107,8 @@ function onNodeMCUConnection(socket) {
       console.log('Message not in JSON:', message);
     }
 
+    let gameID;
+
     switch (message.action) {
       case 'JOIN_GAME':
         debug(`[WS] Receive JOIN_GAME ${message.id}`);
@@ -135,7 +137,6 @@ function onNodeMCUConnection(socket) {
         break;
       case 'UPDATE_SCORE':
         debug(`[WS] Receive UPDATE_SCORE ${message.id}`);
-        let gameID;
 
         Object.keys(games).forEach(id => {
           Object.keys(games[id].players).forEach(playerID => {
@@ -148,6 +149,26 @@ function onNodeMCUConnection(socket) {
         if (gameID) {
           updateScore(gameID, message.id);
         }
+        break;
+      case 'SET_MAX_SCORE':
+        Object.keys(games).forEach(id => {
+          Object.keys(games[id].players).forEach(playerID => {
+            if (Number(playerID) === message.id) {
+              gameID = id;
+            }
+          });
+        });
+
+        if (!games[gameID].playing) {
+          debug(`[WS] Receive SET_MAX_SCORE ${gameID} ${message.score}`);
+          games[gameID].maxScore = Number(message.score);
+
+          io.emit('SET_MAX_SCORE', {
+            gameID: gameID,
+            score: message.score
+          });
+        }
+
         break;
     }
   }
