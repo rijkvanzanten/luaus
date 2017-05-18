@@ -1,7 +1,7 @@
 local wifimodule = require 'wifimodule'
 local socketmodule = require 'socketmodule'
 local servo = require 'servo'
-local servo = require 'timer'
+local timer = require 'timer'
 local config = require 'config'
 local color = nil
 
@@ -76,6 +76,12 @@ function init()
 
   -- clear LED-strip
   clearStrip()
+
+  -- Sets interval of 50ms, in order to read potentiometer value
+  timer.setInterval(function()
+    local potValue = adc.read(0)
+    print(potValue)
+  end, 250)
 
   -- When button has been pressed or released
   function onChange()
