@@ -402,7 +402,7 @@ function endGame(gameID, playerID) {
   // Move all nodemcu players to waiting
   Object.keys(games[gameID].players).forEach(playerID => {
     if (games[gameID].players[playerID].type === 'nodemcu') {
-      waitingNodeMCUs.push(playerID);
+      waitingNodeMCUs.push(Number(playerID));
       io.emit('NEW_WAITING_MCU', playerID);
     }
   });
