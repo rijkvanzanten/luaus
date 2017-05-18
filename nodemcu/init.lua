@@ -1,5 +1,6 @@
 local wifimodule = require 'wifimodule'
 local socketmodule = require 'socketmodule'
+local servo = require 'servo'
 local config = require 'config'
 local color = nil
 
@@ -7,6 +8,10 @@ local color = nil
 ws2812.init()
 local i, buffer = 0, ws2812.newBuffer(8, 3)
 local ledTimer = tmr.create()
+
+-- Initialize Servo
+servo.defineServo(3,0,1800)
+servo.setServo(3, 1)
 
 -- Fill the LED_strip with a single color
 function setStrip(colorArray)
@@ -42,7 +47,6 @@ function init()
 
     if data.action == 'CHANGE_COLOR' then
       color = data.color
-
       setStrip(data.color)
     elseif data.action == 'SPECTATE' then
       ledLoop(100, {
@@ -54,6 +58,8 @@ function init()
         ledLoop(50, {
           color
         })
+
+        servo.setServo(3, 90)
       else
         clearStrip()
       end
