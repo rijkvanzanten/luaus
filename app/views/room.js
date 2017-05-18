@@ -29,7 +29,7 @@ module.exports = function (data) {
         ])
       }))
     ]),
-    h('ul', {id: 'idle-mcus'}, data.waitingNodeMCUs.map(nodeMCUID => {
+    game.playing || game.ended ? null : ('ul', {id: 'idle-mcus'}, data.waitingNodeMCUs.map(nodeMCUID => {
       return h('li', {
           attributes: {
             'data-id': nodeMCUID
