@@ -40,13 +40,20 @@ if (document.querySelector('.index')) {
     data.game.ended = true;
     data.game.winner = messageData.winner;
     data.game.players[messageData.winner].score = data.game.maxScore;
-    return update('controller', data);
+    return update('controller');
   });
 
   socket.on('LEAVE_PLAYER', messageData => {
     if (messageData.gameID === data.gameID && messageData.playerID === data.playerID) {
       alert('You\'ve been kicked from this lobby');
       window.location = '/';
+    }
+  });
+
+  socket.on('START_GAME', messageData => {
+    if (messageData.gameID === data.gameID) {
+      data.game.playing = true;
+      return update('controller');
     }
   });
 

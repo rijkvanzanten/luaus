@@ -14,7 +14,7 @@ module.exports = function (data) {
       }
     }),
     h('form', {method: 'post', action: `/${gameID}/${playerID}`}, [
-      h('button', {id: 'bigredbutton'}),
+      h('button', {id: 'bigredbutton', disabled: !game.playing}),
       h('input', {type: 'hidden', name: 'gameID', value: gameID}),
       h('input', {type: 'hidden', name: 'playerID', value: playerID})
     ])
