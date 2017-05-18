@@ -78,11 +78,15 @@ function init()
   clearStrip()
 
   -- Sets interval of 50ms, in order to read potentiometer value
+  local curValue = nil
   timer.setInterval(function()
     local potValue = adc.read(0)
     local scaledValue = math.floor(50 -(50 * (potValue / 1024)))
 
-    print(scaledValue)
+    if (scaleValue ~= curValue) then
+      curValue = scaledValue
+      print(scaledValue)
+    end
   end, 250)
 
   -- When button has been pressed or released
