@@ -84,7 +84,7 @@ function init()
     local potValue = adc.read(0)
     local scaledValue = math.ceil(50 - (49 * (potValue / 1024)))
 
-    if (scaledValue ~= curValue) then
+    if scaledValue ~= curValue then
       curValue = scaledValue
       print(scaledValue)
 
@@ -106,18 +106,17 @@ function init()
     if gpio.read(button) < isPressed then
       print('Button pressed!')
 
-      -- -- Temporary turns off lights on button press
-      -- clearStrip()
-      -- ledTimer:start()
+      if color ~= nil then
+        -- Temporary turns off lights on button press
+        clearStrip()
+        ledTimer:start()
 
-      servo.setServo(3, 90)
-      --
-      -- -- End feedback after 500ms
-      ledTimer:alarm(500, tmr.ALARM_SINGLE, function()
-        servo.setServo(3, 1)
-        -- setStrip(color)
-        -- ledTimer:stop()
-      end)
+        -- End feedback after 500ms
+        ledTimer:alarm(500, tmr.ALARM_SINGLE, function()
+          setStrip(color)
+          ledTimer:stop()
+        end)
+      end
 
       ok, json = pcall(cjson.encode, {
         action = 'UPDATE_SCORE',
