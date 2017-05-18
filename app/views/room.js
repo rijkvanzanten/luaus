@@ -20,6 +20,8 @@ module.exports = function (data) {
           },
           className: game.ended ? game.winner === playerID ? 'won' : 'lost' : ''
         }, [
+          game.playing || game.ended ?
+          h('p', player.name) :
           h('input', {
             type: 'text',
             name: 'playerName',
