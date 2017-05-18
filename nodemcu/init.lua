@@ -50,6 +50,9 @@ function init()
       clearStrip()
       color = data.color
       setStrip(data.color)
+
+      -- Reset servo when a new game has begun
+      servo.setServo(3, 1)
     elseif data.action == 'SPECTATE' then
       ledLoop(100, {
         0, 255, 0
