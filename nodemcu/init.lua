@@ -81,14 +81,17 @@ function init()
     if gpio.read(button) < isPressed then
       print('Button pressed!')
 
-      -- Temporary turns off lights on button press
-      clearStrip()
-      ledTimer:start()
+      -- -- Temporary turns off lights on button press
+      -- clearStrip()
+      -- ledTimer:start()
 
-      -- End feedback after 500ms
+      servo.setServo(3, 90)
+      --
+      -- -- End feedback after 500ms
       ledTimer:alarm(500, tmr.ALARM_SINGLE, function()
-        setStrip(color)
-        ledTimer:stop()
+        servo.setServo(3, 1)
+        -- setStrip(color)
+        -- ledTimer:stop()
       end)
 
       ok, json = pcall(cjson.encode, {
