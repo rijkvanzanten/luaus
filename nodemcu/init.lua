@@ -84,7 +84,7 @@ function init()
     local potValue = adc.read(0)
     local scaledValue = math.floor(50 -(50 * (potValue / 1024)))
 
-    if (scaleValue ~= curValue) then
+    if (scaledValue ~= curValue) then
       curValue = scaledValue
       print(scaledValue)
 
