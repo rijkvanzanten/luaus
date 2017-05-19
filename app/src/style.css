@@ -413,7 +413,7 @@ button:focus {
 }
 
 /* Controller button styling */
-#bigredbutton {
+#controller-button {
   position: relative;
   width: 70vw;
   height: 70vw;
@@ -426,20 +426,20 @@ button:focus {
   background-repeat: no-repeat;
 }
 
-#bigredbutton:focus {
+#controller-button:focus {
   outline: 0;
 }
 
-#bigredbutton:active {
+#controller-button:active {
   background-position-x: 100%;
 }
 
-#bigredbutton:disabled {
+#controller-button:disabled {
   filter: brightness(20%) grayscale(100%);
 }
 
 @media (orientation: landscape) {
-  #bigredbutton {
+  #controller-button {
     width: 70vh;
     height: 70vh;
   }
