@@ -345,7 +345,6 @@ button:focus {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 100%;
   margin: 0;
   padding: 0;
 }
@@ -409,6 +408,7 @@ button:focus {
 @media (min-width: 40em) {
   #players ul {
     flex-direction: row;
+    height: 100%;
   }
 
   #players li {
@@ -435,6 +435,15 @@ button:focus {
   #players li button.leave {
     display: block;
   }
+}
+
+/* Room specific styling */
+#score-goal {
+  width: 100%;
+  padding: 1em;
+  text-align: center;
+  color: #fff;
+  background-color: #222;
 }
 
 /* Controller styling */
