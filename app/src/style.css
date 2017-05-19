@@ -299,6 +299,31 @@ button:focus {
   margin-top: .4em;
 }
 
+/* New player form styling */
+.new-player form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  max-width: 25rem;
+}
+
+.new-player form * {
+  display: block;
+}
+
+.new-player label {
+  text-align: center;
+}
+
+.new-player input[type="text"] {
+  margin: 1.2em 0;
+  padding: .5em;
+  font-size: 1em;
+  text-align: left;
+}
+
 /* Joined players styling */
 [data-root] > div.room {
   justify-content: space-between;
