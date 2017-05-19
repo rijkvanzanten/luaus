@@ -372,7 +372,21 @@ button:focus {
   filter: grayscale(100%);
 }
 
+#players input[type="text"] {
+  min-width: 5em;
+  padding: .5em;
+  border: none;
+  text-align: center;
+  background-color: rgba(255, 255, 255, .25);
+  transition: .1s ease-in-out;
+}
+
+#players input[type="text"]:focus {
+  width: 15em !important;
+}
+
 #players img {
+  order: -1;
   height: 70%;
   max-height: 2em;
   filter: brightness(50%);
@@ -385,8 +399,11 @@ button:focus {
   -ms-interpolation-mode: nearest-neighbor;
 }
 
-#players span {
-  opacity: 0;
+#players li button.leave {
+  display: none;
+  color: #222;
+  background-color: #fff;
+  filter: brightness(50%);
 }
 
 @media (min-width: 40em) {
@@ -404,17 +421,19 @@ button:focus {
   }
 
   #players img {
-    width: 5em;
+    order: 0;
+    width: 3em;
     height: initial;
     max-height: initial;
+    margin: 1rem 0;
   }
 
   #players h2 {
     margin: 1.6em 0 .8em;
   }
 
-  #players span {
-    opacity: 1;
+  #players li button.leave {
+    display: block;
   }
 }
 
