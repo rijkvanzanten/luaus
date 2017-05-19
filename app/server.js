@@ -7,6 +7,7 @@ const socketIO = require('socket.io');
 const shortid = require('shortid');
 const debug = require('debug')('luaus');
 const toString = require('vdom-to-html');
+const fetch = require('node-fetch');
 const render = require('./render');
 const wrapper = require('./views/wrapper');
 
@@ -28,6 +29,7 @@ const wrapper = require('./views/wrapper');
  *     maxScore: Number,
  *     playing: Boolean,
  *     ended: Boolean
+ *     name: String
  *   }
  * }
  * @type {Object}
@@ -223,6 +225,14 @@ function renderHome(req, res) {
 }
 
 /**
+ * Fetch a random name from namey
+ * @returns {Promise}
+ */
+async function fetchName() {
+  return (await (await fetch('http://namey.muffinlabs.com/name.json?frequency=rare&type=surname')).json())[0];
+}
+
+/**
  * [POST] / handler
  * Creates new game in store and redirects user to new gameroom
  * @param  {Object} req Express request object
@@ -231,15 +241,18 @@ function renderHome(req, res) {
 function createRoom(req, res) {
   debug('[POST] / Create gameroom & redirect');
   const gameID = shortid.generate();
-  games[gameID] = new Game();
 
-  debug(`[WS] Send NEW_GAME ${gameID}`);
+  fetchName()
+    .then(name => {
+      games[gameID] = new Game(name);
 
-  io.emit('NEW_GAME', {gameID, game: games[gameID]});
+      debug(`[WS] Send NEW_GAME ${gameID}`);
 
-  res.redirect(gameID);
+      io.emit('NEW_GAME', {gameID, game: games[gameID]});
+
+      res.redirect(gameID);
+    });
 }
-
 /**
  * [GET] /:id handler
  * Renders game room which matches ID in param
@@ -483,11 +496,12 @@ function leavePlayer(gameID, playerID) {
  * Game object-creator
  * Sets defaults for new game
  */
-function Game() {
+function Game(name = 'Game Doe') {
   this.players = {};
   this.maxScore = 10;
   this.playing = false;
   this.ended = false;
+  this.name = name;
 }
 
 /**
