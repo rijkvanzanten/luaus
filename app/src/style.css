@@ -43,6 +43,10 @@ body {
   font-family: 'Pixel', sans-serif;
 }
 
+[data-root] > div.index {
+  justify-content: space-between;
+}
+
 [data-root] > div:not(.controller) {
   background-image: url('/pow-star.png');
   animation: animatedBackground 1s linear infinite;
@@ -99,26 +103,50 @@ button:focus {
   outline: 0; /* just because */
 }
 
+/* Banner styling */
+#banner {
+  width: 100%;
+}
+
+#banner a {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 1em;
+  line-height: 1.6;
+  text-align: center;
+  color: #fff;
+  background-color: #15d7d4;
+}
+
+@media (min-width: 40em) {
+  #banner {
+    display: none;
+  }
+}
+
 /* Logo styling */
 #logo {
   position: relative;
   top: -4rem;
-  width: 19rem;
+  width: 11rem;
+  margin: 0 auto 6rem;
   animation: flow 1.4s ease-in-out infinite alternate;
 }
 
 #logo h1 {
   position: relative;
+  top: 11rem;
   font-size: 2.4em;
   text-align: center;
-  letter-spacing: 1rem;
-  margin: 0;
+  letter-spacing: .2rem;
 }
 
 #logo img {
   display: block;
   position: absolute;
-  top: -12rem;
+  top: 6rem;
   z-index: -1;
   width: 3rem;
   image-rendering: pixelated;
@@ -165,8 +193,15 @@ button:focus {
 }
 
 @media (min-width: 40em) {
+  #logo {
+    width: initial;
+    margin: 0 auto 10rem;
+  }
+
   #logo h1 {
+    top: 16rem;
     font-size: 3.4em;
+    letter-spacing: 1rem;
   }
 
   #logo img {
