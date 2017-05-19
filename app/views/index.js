@@ -8,7 +8,7 @@ module.exports = function (games) {
     logo(),
     gameIDs.length > 0 ?
       gameList(games) :
-      h('p', 'No Luaus found'),
+      h('p', {id: 'no-games'}, 'No Luaus found'),
       h('form', {action: '/', method: 'post'},
         h('button', 'Create Luau')
       )

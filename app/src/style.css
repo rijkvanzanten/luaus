@@ -218,6 +218,12 @@ button:focus {
   justify-content: space-between;
 }
 
+#no-games {
+  padding: 1em;
+  border: 2px solid #222;
+  background-color: rgba(255, 255, 255, .5);
+}
+
 #games-list {
   width: 95%;
   max-width: 25rem;
