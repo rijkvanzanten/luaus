@@ -23,7 +23,7 @@ module.exports = function (data) {
           game.playing || game.ended ?
           h('p', player.name) :
           h('input', {
-            style: `width: ${player.name.length + 1}em;`,
+            style: `width: ${player.name.length}em;`,
             type: 'text',
             name: 'playerName',
             value: player.name,
