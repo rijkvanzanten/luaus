@@ -434,7 +434,7 @@ function endGame(gameID, playerID) {
   games[gameID].ended = true;
   games[gameID].playing = false;
 
-  debug(`[WS] Send END_GAME ${playerID}`);
+  debug(`[WS] Send END_GAME ${gameID}`);
 
   io.emit('END_GAME', {
     winner: playerID,
