@@ -99,6 +99,29 @@ button:focus {
   outline: 0; /* just because */
 }
 
+/* Banner styling */
+#banner {
+  width: 100%;
+}
+
+#banner a {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 1em;
+  line-height: 1.6;
+  text-align: center;
+  color: #fff;
+  background-color: #15d7d4;
+}
+
+@media (min-width: 40em) {
+  #banner {
+    display: none;
+  }
+}
+
 /* Logo styling */
 #logo {
   position: relative;
