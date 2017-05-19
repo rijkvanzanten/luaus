@@ -305,6 +305,12 @@ function postStartGame(req, res) {
  * @param  {Object} res Express response object
  */
 function renderNewPlayerForm(req, res) {
+  // Return the user to the homepage when the room doesn't exist
+  if (!games[req.params.gameID]) {
+    debug(`[GET] /${req.params.gameID} Redirect. Game doesn't exist`);
+    return res.redirect('/');
+  }
+
   debug(`[GET] /new-player/${req.params.gameID} Render new player form`);
   return res.send(
     wrapper(
