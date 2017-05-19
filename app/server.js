@@ -489,6 +489,11 @@ function leavePlayer(gameID, playerID) {
     }
     delete games[gameID].players[playerID];
     io.emit('LEAVE_PLAYER', {gameID, playerID});
+
+    // Delete game if all players of active game left
+    if (games[gameID].playing && Object.keys(games[gameID].players).length === 0) {
+      delete games[gameID];
+    }
   }
 }
 
