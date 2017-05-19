@@ -16,9 +16,12 @@ module.exports = function (games) {
 };
 
 function gameList(games) {
-  return h('ul', Object.keys(games).map(gameID =>
+  return h('ul', {id: 'games-list'}, Object.keys(games).map(gameID =>
     h('li',
-      h('a', {href: '/' + gameID}, `${gameID} ${Object.keys(games[gameID].players).length}`)
+      h('a', {href: '/' + gameID}, [
+        `${gameID}`,
+        h('span', `${Object.keys(games[gameID].players).length}`)
+      ])
     )
   ));
 }
