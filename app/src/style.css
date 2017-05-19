@@ -259,7 +259,7 @@ button:focus {
 
 #games-list li a span {
   padding-left: 1em;
-  border-left: 2px solid #222;
+  border-left: 2px solid #999;
 }
 
 /* Setup for max-score styling */
@@ -419,31 +419,31 @@ button:focus {
 }
 
 /* Controller styling */
-.controller {
+[data-root] > div.controller {
   justify-content: space-between;
   filter: brightness(200%);
   background-image: none;
   animation: none;
 }
 
-.controller > *:not(.back) {
+[data-root] > div.controller > *:not(.back) {
   filter: brightness(50%);
 }
 
-.controller.won {
+[data-root] > div.controller.won {
   animation: win-back .75s linear infinite alternate;
   filter: none;
 }
 
-.won .back {
+[data-root] > div.won .back {
   display: none;
 }
 
-.controller.lost {
+[data-root] > div.controller.lost {
   filter: brightness(500%) grayscale(100%);
 }
 
-.controller .back {
+[data-root] > div.controller .back {
   position: absolute;
   top: 0;
   left: 0;
@@ -452,11 +452,16 @@ button:focus {
   height: 100vh;
 }
 
-.controller #score-goal {
+[data-root] > div.controller h1 {
+  line-height: 1.4;
+  text-align: center;
+}
+
+[data-root] > div.controller #score-goal {
   display: block;
 }
 
-.controller form {
+[data-root] > div.controller form {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -465,19 +470,19 @@ button:focus {
   transform: translateY(-50%);
 }
 
-.controller form > * {
+[data-root] > div.controller form > * {
   display: block;
   margin: 1rem 0;
 }
 
-.controller label input {
+[data-root] > div.controller label input {
   margin-top: 1rem;
   padding: .5em;
   font-size: 1em;
   border: 1px solid #222;
 }
 
-.controller button[type=submit] {
+[data-root] > div.controller button[type=submit] {
   padding: .6em;
   font-size: 1.4em;
 }
@@ -505,7 +510,7 @@ button:focus {
 }
 
 #controller-button:disabled {
-  filter: brightness(20%) grayscale(100%);
+  filter: grayscale(100%);
 }
 
 @media (orientation: landscape) {
