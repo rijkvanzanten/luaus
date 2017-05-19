@@ -32,7 +32,7 @@ module.exports = function (data) {
             }
           }),
           h('img', {src: player.type === 'nodemcu' ? '/nodemcu.png' : '/phone.png'}),
-          h('span', String(player.score)),
+          game.playing || game.ended ? h('span', String(player.score)) : null,          
           game.playing || game.ended ? null : h('button', {
             className: 'leave',
             attributes: {
