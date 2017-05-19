@@ -13,6 +13,7 @@ module.exports = function (data) {
       h('input', {type: 'number', name: 'max-score', min: '1', value: game.maxScore}),
       h('button', {type: 'submit', disabled: Object.keys(game.players).length < 2}, 'Start')
     ]),
+    game.playing || game.ended ? h('div', {id: 'score-goal'}, `First to: ${game.maxScore}`) : null,
     h('div', {id: 'players'}, [
       h('ul', Object.keys(game.players).map(playerID => {
         const player = game.players[playerID];
@@ -25,6 +26,7 @@ module.exports = function (data) {
           game.playing || game.ended ?
           h('p', player.name) :
           h('input', {
+            style: `width: ${player.name.length}em;`,
             type: 'text',
             name: 'playerName',
             value: player.name,
@@ -33,7 +35,7 @@ module.exports = function (data) {
             }
           }),
           h('img', {src: player.type === 'nodemcu' ? '/nodemcu.png' : '/phone.png'}),
-          h('span', String(player.score)),
+          game.playing || game.ended ? h('span', String(player.score)) : null,
           game.playing || game.ended ? null : h('button', {
             className: 'leave',
             attributes: {

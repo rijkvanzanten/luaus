@@ -262,7 +262,7 @@ function createRoom(req, res) {
 function renderSingleRoom(req, res) {
   // Return the user to the homepage when the room doesn't exist
   if (!games[req.params.gameID]) {
-    debug(`[GET] /${req.params.gameID} Redirect. Game doens't exist`);
+    debug(`[GET] /${req.params.gameID} Redirect. Game doesn't exist`);
     return res.redirect('/');
   }
 
