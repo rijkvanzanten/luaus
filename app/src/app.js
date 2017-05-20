@@ -34,7 +34,12 @@ if (document.querySelector('.index')) {
   });
 
   socket.on('LEAVE_PLAYER', messageData => {
-    delete data.game[messageData.gameID].players[messageData.playerID];
+    delete data[messageData.gameID].players[messageData.playerID];
+    return update('index');
+  });
+
+  socket.on('UPDATE_GAME_NAME', messageData => {
+    data[messageData.gameID].name = messageData.name;
     return update('index');
   });
 
@@ -181,6 +186,13 @@ if (document.querySelector('.index')) {
     }
   });
 
+  socket.on('UPDATE_GAME_NAME', messageData => {
+    if (messageData.gameID === data.gameID) {
+      data.game.name = messageData.name;
+      return update('room');
+    }
+  });
+
   socket.on('LEAVE_PLAYER', messageData => {
     if (messageData.gameID === data.gameID) {
       delete data.game.players[messageData.playerID];
@@ -197,6 +209,19 @@ if (document.querySelector('.index')) {
           socket.emit('UPDATE_PLAYER_NAME', {
             gameID: data.gameID,
             playerID: input.getAttribute('data-id'),
+            name: input.value
+          });
+        }, 300))
+      );
+    }
+
+    const gameNameInputs = document.querySelectorAll('input[name="gameName"]');
+
+    if (gameNameInputs) {
+      gameNameInputs.forEach(input =>
+        input.addEventListener('input', debounce(() => {
+          socket.emit('UPDATE_GAME_NAME', {
+            gameID: input.getAttribute('data-id'),
             name: input.value
           });
         }, 300))

@@ -212,6 +212,12 @@ function onClientConnection(socket) {
     debug(`[WS] Receive LEAVE_PLAYER ${messageData.gameID} ${messageData.playerID}`);
     leavePlayer(messageData.gameID, messageData.playerID);
   });
+
+  socket.on('UPDATE_GAME_NAME', messageData => {
+    debug(`[WS] Receive UPDATE_GAME_NAME ${messageData.gameID} ${messageData.name}`);
+    games[messageData.gameID].name = messageData.name;
+    io.emit('UPDATE_GAME_NAME', messageData);
+  });
 }
 /**
  * [GET] / handler
