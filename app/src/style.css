@@ -33,6 +33,10 @@ body {
   height: 100%;
 }
 
+input {
+  user-select: text;
+}
+
 [data-root] > div {
   display: flex;
   flex-direction: column;
@@ -341,6 +345,7 @@ button:focus {
 
 input[name=gameName] {
   margin-top: 5em;
+  border-radius: 0;
   background-color: transparent;
   border: none;
   text-align: center;
