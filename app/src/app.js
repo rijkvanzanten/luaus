@@ -33,6 +33,13 @@ if (document.querySelector('.index')) {
     return update('index');
   });
 
+  socket.on('START_GAME', messageData => {
+    console.log(data[messageData.gameID].playing)
+    data[messageData.gameID].playing === true;
+    console.log(data[messageData.gameID].playing)
+    return update('index', data);
+  });
+
 } else if (document.querySelector('.controller')) {
   replaceView('controller');
   document.querySelector('form').addEventListener('submit', onButtonPress);
@@ -94,7 +101,6 @@ if (document.querySelector('.index')) {
       socket.emit('SET_MAX_SCORE', {score: document.querySelector('input[type="number"]').value, gameID: data.gameID});
     }
   }
-
 
   socket.on('NEW_PLAYER', messageData => {
     if (messageData.gameID === data.gameID) {

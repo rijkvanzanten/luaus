@@ -99,26 +99,50 @@ button:focus {
   outline: 0; /* just because */
 }
 
+/* Banner styling */
+#banner {
+  width: 100%;
+}
+
+#banner a {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 1em;
+  line-height: 1.6;
+  text-align: center;
+  color: #fff;
+  background-color: #15d7d4;
+}
+
+@media (min-width: 40em) {
+  #banner {
+    display: none;
+  }
+}
+
 /* Logo styling */
 #logo {
   position: relative;
-  top: -4rem;
-  width: 19rem;
+  top: -3rem;
+  width: 11rem;
+  margin: 0 auto 6rem;
   animation: flow 1.4s ease-in-out infinite alternate;
 }
 
 #logo h1 {
   position: relative;
+  top: 11rem;
   font-size: 2.4em;
   text-align: center;
-  letter-spacing: 1rem;
-  margin: 0;
+  letter-spacing: .2rem;
 }
 
 #logo img {
   display: block;
   position: absolute;
-  top: -12rem;
+  top: 6rem;
   z-index: -1;
   width: 3rem;
   image-rendering: pixelated;
@@ -165,8 +189,15 @@ button:focus {
 }
 
 @media (min-width: 40em) {
+  #logo {
+    width: initial;
+    margin: 0 auto 10rem;
+  }
+
   #logo h1 {
+    top: 16rem;
     font-size: 3.4em;
+    letter-spacing: 1rem;
   }
 
   #logo img {
@@ -180,6 +211,61 @@ button:focus {
   #logo img:last-of-type {
     right: 0;
   }
+}
+
+/* Lobby styling */
+[data-root] > div.index {
+  justify-content: space-between;
+}
+
+#no-games {
+  padding: 1em;
+  border: 2px solid #222;
+  background-color: rgba(255, 255, 255, .5);
+}
+
+#games-list {
+  width: 95%;
+  max-width: 25rem;
+}
+
+#games-list h2 {
+  font-size: 1.2em;
+  font-weight: normal;
+  text-align: center;
+}
+
+#games-list ul {
+  width: 100%;
+  border: 2px solid #222;
+  background-color: rgba(255, 255, 255, .5);
+}
+
+#games-list li {
+  position: relative;
+  border-bottom: 2px solid #222;
+}
+
+#games-list li:last-of-type {
+  border-bottom: 0;
+}
+
+#games-list li.playing a {
+  background-color: rgba(0, 255, 0, .5);
+}
+
+#games-list li a {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1.4em;
+  text-decoration: none;
+  color: #222;
+}
+
+#games-list li a span {
+  padding-left: 1em;
+  border-left: 2px solid #999;
 }
 
 /* Setup for max-score styling */
@@ -219,6 +305,31 @@ button:focus {
   margin-top: .4em;
 }
 
+/* New player form styling */
+.new-player form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  max-width: 25rem;
+}
+
+.new-player form * {
+  display: block;
+}
+
+.new-player label {
+  text-align: center;
+}
+
+.new-player input[type="text"] {
+  margin: 1.2em 0;
+  padding: .5em;
+  font-size: 1em;
+  text-align: left;
+}
+
 /* Joined players styling */
 [data-root] > div.room {
   justify-content: space-between;
@@ -240,7 +351,6 @@ button:focus {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 100%;
   margin: 0;
   padding: 0;
 }
@@ -267,7 +377,21 @@ button:focus {
   filter: grayscale(100%);
 }
 
+#players input[type="text"] {
+  min-width: 5em;
+  padding: .5em;
+  border: none;
+  text-align: center;
+  background-color: rgba(255, 255, 255, .25);
+  transition: .1s ease-in-out;
+}
+
+#players input[type="text"]:focus {
+  width: 15em !important;
+}
+
 #players img {
+  order: -1;
   height: 70%;
   max-height: 2em;
   filter: brightness(50%);
@@ -280,13 +404,17 @@ button:focus {
   -ms-interpolation-mode: nearest-neighbor;
 }
 
-#players span {
-  opacity: 0;
+#players li button.leave {
+  display: none;
+  color: #222;
+  background-color: #fff;
+  filter: brightness(50%);
 }
 
 @media (min-width: 40em) {
   #players ul {
     flex-direction: row;
+    height: 100%;
   }
 
   #players li {
@@ -299,46 +427,57 @@ button:focus {
   }
 
   #players img {
-    width: 5em;
+    order: 0;
+    width: 3em;
     height: initial;
     max-height: initial;
+    margin: 1rem 0;
   }
 
   #players h2 {
     margin: 1.6em 0 .8em;
   }
 
-  #players span {
-    opacity: 1;
+  #players li button.leave {
+    display: block;
   }
 }
 
+/* Room specific styling */
+#score-goal {
+  width: 100%;
+  padding: 1em;
+  text-align: center;
+  color: #fff;
+  background-color: #222;
+}
+
 /* Controller styling */
-.controller {
+[data-root] > div.controller {
   justify-content: space-between;
   filter: brightness(200%);
   background-image: none;
   animation: none;
 }
 
-.controller > *:not(.back) {
+[data-root] > div.controller > *:not(.back) {
   filter: brightness(50%);
 }
 
-.controller.won {
+[data-root] > div.controller.won {
   animation: win-back .75s linear infinite alternate;
   filter: none;
 }
 
-.won .back {
+[data-root] > div.won .back {
   display: none;
 }
 
-.controller.lost {
+[data-root] > div.controller.lost {
   filter: brightness(500%) grayscale(100%);
 }
 
-.controller .back {
+[data-root] > div.controller .back {
   position: absolute;
   top: 0;
   left: 0;
@@ -347,11 +486,16 @@ button:focus {
   height: 100vh;
 }
 
-.controller #score-goal {
+[data-root] > div.controller h1 {
+  line-height: 1.4;
+  text-align: center;
+}
+
+[data-root] > div.controller #score-goal {
   display: block;
 }
 
-.controller form {
+[data-root] > div.controller form {
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -360,25 +504,25 @@ button:focus {
   transform: translateY(-50%);
 }
 
-.controller form > * {
+[data-root] > div.controller form > * {
   display: block;
   margin: 1rem 0;
 }
 
-.controller label input {
+[data-root] > div.controller label input {
   margin-top: 1rem;
   padding: .5em;
   font-size: 1em;
   border: 1px solid #222;
 }
 
-.controller button[type=submit] {
+[data-root] > div.controller button[type=submit] {
   padding: .6em;
   font-size: 1.4em;
 }
 
 /* Controller button styling */
-#bigredbutton {
+#controller-button {
   position: relative;
   width: 70vw;
   height: 70vw;
@@ -391,20 +535,20 @@ button:focus {
   background-repeat: no-repeat;
 }
 
-#bigredbutton:focus {
+#controller-button:focus {
   outline: 0;
 }
 
-#bigredbutton:active {
+#controller-button:active {
   background-position-x: 100%;
 }
 
-#bigredbutton:disabled {
-  filter: brightness(20%) grayscale(100%);
+#controller-button:disabled {
+  filter: grayscale(100%);
 }
 
 @media (orientation: landscape) {
-  #bigredbutton {
+  #controller-button {
     width: 70vh;
     height: 70vh;
   }

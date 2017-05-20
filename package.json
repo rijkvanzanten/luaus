@@ -44,6 +44,7 @@
     "debug": "^2.6.6",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
+    "is-reachable": "^2.3.2",
     "node-fetch": "^1.6.3",
     "shortid": "^2.2.8",
     "socket.io": "^2.0.1",

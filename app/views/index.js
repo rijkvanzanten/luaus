@@ -8,7 +8,7 @@ module.exports = function (games) {
     logo(),
     gameIDs.length > 0 ?
       gameList(games) :
-      h('p', 'No Luaus found'),
+      h('p', {id: 'no-games'}, 'No Luaus found'),
       h('form', {action: '/', method: 'post'},
         h('button', 'Create Luau')
       )
@@ -16,9 +16,15 @@ module.exports = function (games) {
 };
 
 function gameList(games) {
-  return h('ul', Object.keys(games).map(gameID =>
-    h('li',
-      h('a', {href: '/' + gameID}, `${games[gameID].name} ${Object.keys(games[gameID].players).length}`)
-    )
-  ));
+  return h('div', {id: 'games-list'}, [
+    h('h2', 'Games'),
+    h('ul', Object.keys(games).map(gameID =>
+      h('li', {className: Object.keys(games[gameID].playing) === true ? 'playing' : ''},
+        h('a', {href: '/' + gameID}, [
+          `${gameID}`,
+          h('span', `${Object.keys(games[gameID].players).length} ${Object.keys(games[gameID].players).length === 1 ? 'player' : 'players'}`)
+        ])
+      )
+    ))
+  ]);
 }
