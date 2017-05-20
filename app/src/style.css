@@ -339,6 +339,15 @@ button:focus {
   margin-top: 2em;
 }
 
+input[name=gameName] {
+  margin-top: 5em;
+  background-color: transparent;
+  border: none;
+  text-align: center;
+  border-bottom: 2px solid black;
+  padding-bottom: 1em;
+}
+
 #players {
   flex-basis: 13em;
   position: relative;
