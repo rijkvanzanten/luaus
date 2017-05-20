@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const WebSocket = require('ws');
+const isReachable = require('is-reachable');
 const socketIO = require('socket.io');
 const shortid = require('shortid');
 const debug = require('debug')('luaus');
@@ -229,7 +230,15 @@ function renderHome(req, res) {
  * @returns {Promise}
  */
 async function fetchName() {
-  return (await (await fetch('http://namey.muffinlabs.com/name.json?frequency=rare&type=surname')).json())[0];
+  const nameEndpoint = 'http://namey.muffinlabs.com/name.json?frequency=rare&type=surname';
+
+  const reachable = await isReachable(nameEndpoint);
+
+  if (reachable) {
+    return (await (await fetch(nameEndpoint)).json())[0];
+  }
+
+  return 'Game Doe';
 }
 
 /**
