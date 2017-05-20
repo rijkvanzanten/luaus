@@ -23,6 +23,11 @@ if (document.querySelector('.index')) {
     update('index', data);
   });
 
+  socket.on('REMOVE_GAME', messageData => {
+    delete data[messageData.gameID];
+    update('index');
+  });
+
   socket.on('NEW_PLAYER', messageData => {
     data[messageData.gameID].players[messageData.playerID] = messageData.player;
     return update('index', data);
@@ -54,6 +59,13 @@ if (document.querySelector('.index')) {
   socket.on('LEAVE_PLAYER', messageData => {
     if (messageData.gameID === data.gameID && messageData.playerID === data.playerID) {
       alert('You\'ve been kicked from this lobby');
+      window.location = '/';
+    }
+  });
+
+  socket.on('REMOVE_GAME', messageData => {
+    if (messageData.gameID === data.gameID) {
+      alert('This lobby has been closed due to a lack of players.');
       window.location = '/';
     }
   });
@@ -110,6 +122,13 @@ if (document.querySelector('.index')) {
     update('room');
     addEventListenersToLeaveButtons();
     return addEventListenersToNameInputs();
+  });
+
+  socket.on('REMOVE_GAME', messageData => {
+    if (messageData.gameID === data.gameID) {
+      alert('This lobby has been closed due to a lack of players.');
+      window.location = '/';
+    }
   });
 
   socket.on('UPDATE_SCORE', messageData => {

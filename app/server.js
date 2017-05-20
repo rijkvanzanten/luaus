@@ -12,6 +12,9 @@ const fetch = require('node-fetch');
 const render = require('./render');
 const wrapper = require('./views/wrapper');
 
+let nameApiReachable;
+let lastNameApiCheck = new Date();
+
 /**
  * Main store of all game rooms
  * Is used as in-memory database
@@ -232,13 +235,32 @@ function renderHome(req, res) {
 async function fetchName() {
   const nameEndpoint = 'http://namey.muffinlabs.com/name.json?frequency=rare&type=surname';
 
-  const reachable = await isReachable(nameEndpoint);
+  const fallbackNames = [
+    'Jacqualine',
+    'Darlena',
+    'Chantelle', 
+    'Reyna',
+    'Tawny',
+    'Marica',
+    'Ezekiel'
+  ];
 
-  if (reachable) {
+  if (nameApiReachable === undefined) {
+    nameApiReachable = await isReachable(nameEndpoint);
+    lastNameApiCheck = new Date();
+  }
+
+  // If last check was longer than 5 minutes ago, check again
+  if (!nameApiReachable && (lastNameApiCheck - new Date()) * 1000 * 60 >= 5) {
+    nameApiReachable = await isReachable(nameEndpoint);
+    lastNameApiCheck = new Date();
+  }
+
+  if (nameApiReachable) {
     return (await (await fetch(nameEndpoint)).json())[0];
   }
 
-  return 'Game Doe';
+  return fallbackNames[Math.floor(Math.random() * fallbackNames.length)];
 }
 
 /**
@@ -449,7 +471,7 @@ function endGame(gameID, playerID) {
   games[gameID].ended = true;
   games[gameID].playing = false;
 
-  debug(`[WS] Send END_GAME ${playerID}`);
+  debug(`[WS] Send END_GAME ${gameID}`);
 
   io.emit('END_GAME', {
     winner: playerID,
@@ -504,6 +526,12 @@ function leavePlayer(gameID, playerID) {
     }
     delete games[gameID].players[playerID];
     io.emit('LEAVE_PLAYER', {gameID, playerID});
+
+    // Delete game if not enough players of active game are left
+    if (games[gameID].playing && Object.keys(games[gameID].players).length < 2) {
+      io.emit('REMOVE_GAME', {gameID});
+      delete games[gameID];
+    }
   }
 }
 
