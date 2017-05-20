@@ -148,7 +148,7 @@ if (document.querySelector('.index')) {
     return update('room');
   });
 
-  socket.on('START_GAME', () => {
+  socket.on('START_GAME', messageData => {
     if (messageData.gameID === data.gameID) {
       data.game.playing = true;
     }
