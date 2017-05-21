@@ -7,7 +7,12 @@ module.exports = function (data) {
   return h('div', {className: 'index'}, [
     h('audio', {src: '/8bit-love-machine.mp3', autoplay: true, loop: true}),
     logo(),
-    h('p', {id: 'tweet'}, lastTweet),
+    lastTweet ?
+    h('p', {id: 'tweet'}, [
+      lastTweet,
+      h('span', {className: 'flash-text'}, '#luaus_live')
+    ]) :
+    null,
     gameIDs.length > 0 ?
       gameList(games) :
       h('p', {id: 'no-games'}, 'No Luaus found'),
