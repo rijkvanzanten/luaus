@@ -217,6 +217,11 @@ button:focus {
   }
 }
 
+#tweet {
+  color: yellow;
+  text-shadow: 2px 2px black;
+}
+
 /* Lobby styling */
 [data-root] > div.index {
   justify-content: space-between;
