@@ -135,7 +135,7 @@ button:focus {
 #logo {
   position: relative;
   top: -3rem;
-  width: 11rem;
+  width: 12rem;
   margin: 0 auto 6rem;
   animation: flow 1.4s ease-in-out infinite alternate;
 }
@@ -294,6 +294,7 @@ button:focus {
 }
 
 #setup input {
+  max-width: 3em;
   margin: 0 1rem;
   text-align: center;
   /* pointer-events: none; */
