@@ -33,6 +33,10 @@ body {
   height: 100%;
 }
 
+form {
+  margin: 0;
+}
+
 input {
   user-select: text;
 }
@@ -44,6 +48,7 @@ input {
   align-items: center;
   position: relative;
   height: 100%;
+  padding-bottom: 2rem;
   font-family: 'Pixel', sans-serif;
 }
 
@@ -343,14 +348,24 @@ button:focus {
   margin-top: 2em;
 }
 
-input[name=gameName] {
-  margin-top: 5em;
-  border-radius: 0;
-  background-color: transparent;
-  border: none;
+input[name="gameName"] {
+  min-width: 5em;
+  max-width: 95%;
+  margin-top: 3em;
+  padding: .5em;
+  font-size: 1.2em;
   text-align: center;
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
   border-bottom: 2px solid black;
-  padding-bottom: 1em;
+  background-color: rgba(255, 255, 255, .25);
+  transition: .1s ease-in-out;
+}
+
+input[name="gameName"]:focus {
+  width: 15em !important;
 }
 
 #players {
@@ -393,6 +408,7 @@ input[name=gameName] {
 
 #players input[type="text"] {
   min-width: 5em;
+  max-width: 90%;
   padding: .5em;
   border: none;
   text-align: center;
@@ -428,6 +444,7 @@ input[name=gameName] {
 @media (min-width: 40em) {
   #players ul {
     flex-direction: row;
+    flex-wrap: wrap;
     height: 100%;
   }
 
@@ -435,6 +452,7 @@ input[name=gameName] {
     flex-direction: column;
     justify-content: center;
     flex-grow: 1;
+    max-width: calc(100% / 6);
     height: 100%;
     min-height: initial;
     padding: 0;
