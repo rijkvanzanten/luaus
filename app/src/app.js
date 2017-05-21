@@ -50,7 +50,10 @@ if (document.querySelector('.index')) {
     return update('index', data);
   });
 
-  socket.on('TWEET', tweet => document.querySelector('#tweet').innerText = tweet);
+  socket.on('TWEET', tweet => {
+    const flashyTweet = tweet.replace('#luaus_live', '<span class="flash-text">#luaus_live</span>');
+    document.querySelector('#tweet').innerHTML = flashyTweet;
+  });
 
 } else if (document.querySelector('.controller')) {
   replaceView('controller');
