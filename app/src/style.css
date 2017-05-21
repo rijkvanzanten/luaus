@@ -367,6 +367,15 @@ input[name="gameName"]:focus {
   width: 15em !important;
 }
 
+#join-mcu {
+  max-width: 80%;
+  margin: 2rem 0;
+}
+
+#join-mcu button {
+  line-height: 1.4;
+}
+
 #players {
   flex-basis: 13em;
   position: relative;
