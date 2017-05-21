@@ -227,9 +227,21 @@ button:focus {
   }
 }
 
+/* Tweet styling */
 #tweet {
-  color: yellow;
-  text-shadow: 2px 2px black;
+  position: absolute;
+  max-width: 16em;
+  font-size: 1.4em;
+  line-height: 1.4em;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 2px 2px #000;
+  color: #ff0;
+  animation: splash-text 1s ease-in-out alternate infinite;
+}
+
+#tweet .flash-text {
+  animation: flash-text 1s ease-in-out alternate infinite;
 }
 
 /* Lobby styling */
@@ -713,5 +725,29 @@ input[name="gameName"]:focus {
 
   100% {
     background-position: 0 0
+  }
+}
+
+@keyframes splash-text {
+  from {
+    transform: translate(6em, 8em) rotate(-16deg) scale(.9);
+  }
+
+  to {
+    transform: translate(6em, 8em) rotate(-16deg) scale(1.1);
+  }
+}
+
+@keyframes flash-text {
+  0% {
+    color: #bfff00;
+  }
+
+  50% {
+    color: #ffff00;
+  }
+
+  100% {
+    color: #ffbf00;
   }
 }
