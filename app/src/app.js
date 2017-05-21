@@ -67,8 +67,8 @@ if (document.querySelector('.index')) {
   });
 
   socket.on('TWEET', tweet => {
-    const flashyTweet = tweet.replace('#luaus_live', '<span class="flash-text">#luaus_live</span>');
-    data.lastTweet = flashyTweet;
+    const noHashTweet = tweet.replace('#luaus_live', '');
+    data.lastTweet = noHashTweet;
     return update('index');
   });
 } else if (document.querySelector('.controller')) {
