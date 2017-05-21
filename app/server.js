@@ -312,6 +312,8 @@ function createRoom(req, res) {
     .then(name => {
       games[gameID] = new Game(name);
 
+      sendTweet(tweets.newGame(games[gameID].name));
+
       debug(`[WS] Send NEW_GAME ${gameID}`);
 
       io.emit('NEW_GAME', {gameID, game: games[gameID]});

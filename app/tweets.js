@@ -12,5 +12,12 @@ module.exports = {
     ];
 
     return messages[Math.floor(Math.random() * messages.length)];
+  },
+  newGame(gameName) {
+    const messages = [
+      `Come and join ${gameName}`
+    ];
+
+    return messages[Math.floor(Math.random() * messages.length)];
   }
 }
