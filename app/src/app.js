@@ -211,7 +211,7 @@ if (document.querySelector('.index')) {
             playerID: input.getAttribute('data-id'),
             name: input.value
           });
-        }, 300))
+        }, 600))
       );
     }
 
@@ -224,7 +224,7 @@ if (document.querySelector('.index')) {
             gameID: input.getAttribute('data-id'),
             name: input.value
           });
-        }, 300))
+        }, 600))
       );
     }
   }
