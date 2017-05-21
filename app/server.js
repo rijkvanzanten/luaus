@@ -133,18 +133,18 @@ server.listen(port, function onListen() {
 
 // Colors are in G, R, B
 const colors = [
-  [75, 0, 50], // Lagoon
+  [200, 0, 150], // Ice
   [25, 150, 0], // Inferno
   [100, 200, 0], // Topaz
   [150, 125, 0], // Electric
   [0, 150, 175], // Amethyst
-  [175, 0, 25], // Forest
-  [0, 175, 75], // Pink
+  [175, 0, 0], // Forest
+  [0, 175, 75], // Hotline
   [200, 75, 75], // Mint
   [50, 50, 200], // Steel
   [50, 200, 50], // Peach
   [0, 0, 175], // Sapphire
-  [175, 0, 0] // Emerald
+  [100, 0, 200] // Lagoon
 ];
 
 /**
