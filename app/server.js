@@ -9,8 +9,37 @@ const shortid = require('shortid');
 const debug = require('debug')('luaus');
 const toString = require('vdom-to-html');
 const fetch = require('node-fetch');
+const dotenv = require('dotenv');
+const Twitter = require('twitter');
 const render = require('./render');
 const wrapper = require('./views/wrapper');
+const tweets = require('./tweets.js');
+
+dotenv.config();
+
+let sendTweet = function () {
+  debug('Twitter integration not setup');
+};
+
+if (
+  process.env.TWITTER_CONSUMER_KEY !== '' &&
+  process.env.TWITTER_CONSUMER_SECRET !== '' &&
+  process.env.TWITTER_ACCESS_TOKEN_KEY !== '' &&
+  process.env.TWITTER_ACCESS_TOKEN_SECRET !== ''
+) {
+  const client = new Twitter({
+    consumer_key: process.env.TWITTER_CONSUMER_KEY,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+    access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+    access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+  });
+
+  sendTweet = function (message) {
+    client.post('statuses/update', {status: message},  function(error, tweet, response) {
+      if(error) console.log(error);
+    });
+  };
+}
 
 let nameApiReachable;
 let lastNameApiCheck = new Date();
@@ -459,6 +488,8 @@ function startGame(gameID) {
 
   io.emit('START_GAME', {gameID});
 
+  sendTweet(tweets.startGame(games[gameID].name));
+
   nodeMCUServer.broadcast(
     JSON.stringify({
       action: 'START_GAME',
@@ -478,6 +509,8 @@ function endGame(gameID, playerID) {
   games[gameID].playing = false;
 
   debug(`[WS] Send END_GAME ${gameID}`);
+
+  sendTweet(tweets.endGame(games[gameID].players[playerID].name, games[gameID].name));
 
   io.emit('END_GAME', {
     winner: playerID,
