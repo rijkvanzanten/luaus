@@ -31,6 +31,7 @@ html {
 body {
   margin: 0;
   height: 100%;
+  background-color: #222;
 }
 
 form {
@@ -278,13 +279,9 @@ button:focus {
 
 /* Setup for max-score styling */
 #setup {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
   width: 100%;
   max-width: 30rem;
-  margin-bottom: 1.6rem;
+  margin-bottom: 0;
   padding: 2rem 0;
   font-family: 'Pixel Heading', cursive;
   font-size: 3rem;
@@ -306,11 +303,27 @@ button:focus {
   background-color: transparent;
 }
 
-#setup button[type=submit] {
+#setup button[type="submit"] {
   display: block;
   width: 75%;
   max-width: initial;
   margin-top: .4em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 40em) {
+  #setup {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #setup button[type="submit"] {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 /* New player form styling */
@@ -385,7 +398,6 @@ input[name="gameName"]:focus {
 #players ul {
   display: flex;
   flex-direction: column;
-  position: absolute;
   bottom: 0;
   width: 100%;
   margin: 0;
@@ -453,6 +465,7 @@ input[name="gameName"]:focus {
   #players ul {
     flex-direction: row;
     flex-wrap: wrap;
+    position: absolute;
     height: 100%;
   }
 
