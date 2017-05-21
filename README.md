@@ -20,7 +20,7 @@ a Hawaiian party or feast, especially one accompanied by entertainment.
 Luaus is an online scoreboard for all your favorite (board) games. Wanna play a match of fooßball? Keep track of your score with Luaus!
 
 
-## Usage
+## Installation
 
 Clone the repo and install the dependencies with
 `$ npm install`
@@ -34,13 +34,14 @@ To start the server with nodemon run
 To watch for client-side file changes run
 `$ npn run dev-client`
 
-Add your own .env file with the following contents:
+Add your own .env file with the following contents, or don't*:
 ```
 TWITTER_CONSUMER_KEY=<consumer_key>
 TWITTER_CONSUMER_SECRET=<consumer_secret>
 TWITTER_ACCESS_TOKEN_KEY=<access_token_key>
 TWITTER_ACCESS_TOKEN_SECRET=<access_token_secret>
 ```
+ *We can't and won't post anything to Twitter when there are no credentials supplied. If you would like to have access to the _official_ Luaus Live Twitter bot, [email me](mailto:rijkvanzanten@me.com) or slide into my [DMs](http://twitter.com/rijkvanzanten)
 
 ## NodeMCU modules used
 | Module | Description |
@@ -58,10 +59,7 @@ TWITTER_ACCESS_TOKEN_SECRET=<access_token_secret>
 | [`ws2812`](https://nodemcu.readthedocs.io/en/master/en/modules/ws2812/) | ws2812 is a library to handle ws2812-like led strips. It works at least on WS2812, WS2812b, APA104, SK6812 (RGB or RGBW). |
 
 ## TODOs & Wishlist
--  [ ] Sound effects when updating score
--  [ ] Allow user to add name to box
--  [ ] Ability to kick players from lobby
-_Checkout the [projects page](https://github.com/rijkvanzanten/luaus/projects/1), or our [issues](https://github.com/rijkvanzanten/luaus/issues) for a more up-to-date overview_
+_Checkout the [projects page](https://github.com/rijkvanzanten/luaus/projects/1), or our [issues](https://github.com/rijkvanzanten/luaus/issues) for an up-to-date overview_
 
 ## License
 MIT License

@@ -1,12 +1,13 @@
 const h = require('virtual-dom/h');
 const logo = require('./logo');
 
-module.exports = function (games) {
+module.exports = function (data) {
+  const {lastTweet, games} = data;
   const gameIDs = Object.keys(games);
   return h('div', {className: 'index'}, [
     h('audio', {src: '/8bit-love-machine.mp3', autoplay: true, loop: true}),
     logo(),
-    h('p', {id: 'tweet'}, ''),
+    h('p', {id: 'tweet'}, lastTweet),
     gameIDs.length > 0 ?
       gameList(games) :
       h('p', {id: 'no-games'}, 'No Luaus found'),

@@ -31,6 +31,16 @@ html {
 body {
   margin: 0;
   height: 100%;
+  background-color: #222;
+}
+
+body.offline [data-root] {
+  filter: grayscale(100%) brightness(0.2) saturate(30%);
+  pointer-events: none;
+}
+
+form {
+  margin-bottom: 2rem;
 }
 
 input {
@@ -130,7 +140,7 @@ button:focus {
 #logo {
   position: relative;
   top: -3rem;
-  width: 11rem;
+  width: 12rem;
   margin: 0 auto 6rem;
   animation: flow 1.4s ease-in-out infinite alternate;
 }
@@ -291,13 +301,9 @@ button:focus {
 
 /* Setup for max-score styling */
 #setup {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
   width: 100%;
   max-width: 30rem;
-  margin-bottom: 1.6rem;
+  margin-bottom: 0;
   padding: 2rem 0;
   font-family: 'Pixel Heading', cursive;
   font-size: 3rem;
@@ -310,6 +316,7 @@ button:focus {
 }
 
 #setup input {
+  max-width: 3em;
   margin: 0 1rem;
   text-align: center;
   /* pointer-events: none; */
@@ -319,11 +326,27 @@ button:focus {
   background-color: transparent;
 }
 
-#setup button[type=submit] {
+#setup button[type="submit"] {
   display: block;
   width: 75%;
   max-width: initial;
   margin-top: .4em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 40em) {
+  #setup {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #setup button[type="submit"] {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 /* New player form styling */
@@ -360,14 +383,33 @@ button:focus {
   margin-top: 2em;
 }
 
-input[name=gameName] {
-  margin-top: 5em;
-  border-radius: 0;
-  background-color: transparent;
-  border: none;
+input[name="gameName"] {
+  min-width: 5em;
+  max-width: 95%;
+  margin-top: 3em;
+  padding: .5em;
+  font-size: 1.2em;
   text-align: center;
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
   border-bottom: 2px solid black;
-  padding-bottom: 1em;
+  background-color: rgba(255, 255, 255, .25);
+  transition: .1s ease-in-out;
+}
+
+input[name="gameName"]:focus {
+  width: 15em !important;
+}
+
+#join-mcu {
+  max-width: 80%;
+  margin: 2rem 0;
+}
+
+#join-mcu button {
+  line-height: 1.4;
 }
 
 #players {
@@ -379,7 +421,6 @@ input[name=gameName] {
 #players ul {
   display: flex;
   flex-direction: column;
-  position: absolute;
   bottom: 0;
   width: 100%;
   margin: 0;
@@ -410,6 +451,7 @@ input[name=gameName] {
 
 #players input[type="text"] {
   min-width: 5em;
+  max-width: 90%;
   padding: .5em;
   border: none;
   text-align: center;
@@ -445,6 +487,8 @@ input[name=gameName] {
 @media (min-width: 40em) {
   #players ul {
     flex-direction: row;
+    flex-wrap: wrap;
+    position: absolute;
     height: 100%;
   }
 
@@ -452,6 +496,7 @@ input[name=gameName] {
     flex-direction: column;
     justify-content: center;
     flex-grow: 1;
+    max-width: calc(100% / 6);
     height: 100%;
     min-height: initial;
     padding: 0;
@@ -583,6 +628,28 @@ input[name=gameName] {
     width: 70vh;
     height: 70vh;
   }
+}
+
+#connection-status {
+  width: 80vw;
+  color: white;
+  font-family: pixel;
+  background-color: #333;
+  padding: 1em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  transform: translateY(-105%); /* compensate for shadow */
+  transition: transform .3s ease;
+  box-shadow: 0 0 3px red;
+}
+
+#connection-status.show {
+  transform: translateY(0);
 }
 
 /* Animation declarations */

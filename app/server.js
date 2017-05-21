@@ -22,6 +22,8 @@ let sendTweet = function () {
   debug('Twitter integration not setup');
 };
 
+let lastTweet = '';
+
 if (
   process.env.TWITTER_CONSUMER_KEY &&
   process.env.TWITTER_CONSUMER_SECRET &&
@@ -39,9 +41,13 @@ if (
     client.post('statuses/update', {status: message},  function(error, tweet, response) {
       if(error) console.log(error);
     });
+
+    lastTweet = message;
+    debug(`[WS] Send TWEET ${message}`);
+    io.emit('TWEET', message);
   };
 
-  const stream = TweetStream({
+  const stream = new TweetStream({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
     consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
     token: process.env.TWITTER_ACCESS_TOKEN_KEY,
@@ -49,6 +55,7 @@ if (
   });
 
   stream.on('tweet', function (tweet) {
+    lastTweet = tweet.text;
     debug(`[WS] Send TWEET ${tweet.text}`);
     io.emit('TWEET', tweet.text);
   });
@@ -133,18 +140,18 @@ server.listen(port, function onListen() {
 
 // Colors are in G, R, B
 const colors = [
-  [75, 0, 50], // Lagoon
+  [200, 0, 150], // Ice
   [25, 150, 0], // Inferno
   [100, 200, 0], // Topaz
   [150, 125, 0], // Electric
   [0, 150, 175], // Amethyst
-  [175, 0, 25], // Forest
-  [0, 175, 75], // Pink
+  [175, 0, 0], // Forest
+  [0, 175, 75], // Hotline
   [200, 75, 75], // Mint
   [50, 50, 200], // Steel
   [50, 200, 50], // Peach
   [0, 0, 175], // Sapphire
-  [175, 0, 0] // Emerald
+  [100, 0, 200] // Lagoon
 ];
 
 /**
@@ -276,8 +283,8 @@ function renderHome(req, res) {
   debug('[GET] / Render homepage');
   res.send(
     wrapper(
-      toString(render('index', games)),
-      games
+      toString(render('index', {tweet: lastTweet, games})),
+      {lastTweet, games}
     )
   );
 }
