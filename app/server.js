@@ -42,7 +42,7 @@ if (
       if(error) console.log(error);
     });
 
-    lastTweet = '';
+    lastTweet = message;
     debug(`[WS] Send TWEET ${message}`);
     io.emit('TWEET', message);
   };
