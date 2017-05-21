@@ -23,6 +23,18 @@ module.exports = function (data) {
       h('button', {type: 'submit', disabled: Object.keys(game.players).length < 2}, 'Start')
     ]),
     game.playing || game.ended ? h('div', {id: 'score-goal'}, `First to: ${game.maxScore}`) : null,
+    game.playing || game.ended ? null : ('ul', {id: 'idle-mcus'}, data.waitingNodeMCUs.map(nodeMCUID => {
+      return h('li', {
+          attributes: {
+            'data-id': nodeMCUID
+          }
+        }
+      ), h('form', {action: `/join-mcu/`, method: 'POST'}, [
+        h('input', {type: 'hidden', value: nodeMCUID, name: 'mcuID'}),
+        h('input', {type: 'hidden', value: gameID, name: 'gameID'}),
+        h('button', {type: 'submit'}, `Add GameBox ${nodeMCUID} to game`)
+      ])
+    })),
     h('div', {id: 'players'}, [
       h('ul', Object.keys(game.players).map(playerID => {
         const player = game.players[playerID];
@@ -53,18 +65,6 @@ module.exports = function (data) {
           }, 'Kick player')
         ])
       }))
-    ]),
-    game.playing || game.ended ? null : ('ul', {id: 'idle-mcus'}, data.waitingNodeMCUs.map(nodeMCUID => {
-      return h('li', {
-          attributes: {
-            'data-id': nodeMCUID
-          }
-        }
-      ), h('form', {action: `/join-mcu/`, method: 'POST'}, [
-        h('input', {type: 'hidden', value: nodeMCUID, name: 'mcuID'}),
-        h('input', {type: 'hidden', value: gameID, name: 'gameID'}),
-        h('button', {type: 'submit'}, `Add GameBox ${nodeMCUID} to game`)
-      ])
-    }))
+    ])
   ]);
 };
