@@ -11,6 +11,24 @@ let tree;
 let rootNode;
 
 /**
+ * Show offline message
+ */
+function updateOnlineStatus(event) {
+  const notification = document.querySelector('#connection-status');
+
+  if (navigator.onLine) {
+    document.body.classList.remove('offline');
+    notification.classList.remove('show');
+  } else {
+    document.body.classList.add('offline');
+    notification.classList.add('show');
+  }
+}
+
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+
+/**
  * This is quite ugly. The eventlisteners on document wouldn't register when
  *   triggered from within a nested module. Still need to investigate why and
  *   fix the mess beneath by splitting it up into modules (this kinda acts like a router)

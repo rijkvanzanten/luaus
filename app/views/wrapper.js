@@ -14,6 +14,7 @@ module.exports = function (body, data, refresh = false) {
     <div data-root>
       ${body}
     </div>
+    <div id="connection-status">You've lost connection with the internet. Reconnecting...</div>
     <script>var initialData = '${JSON.stringify(data)}'</script>
   `;
 }
