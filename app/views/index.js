@@ -9,8 +9,8 @@ module.exports = function (data) {
     logo(),
     lastTweet ?
     h('p', {id: 'tweet'}, [
-      lastTweet,
-      h('span', {className: 'flash-text'}, '#luaus_live')
+      lastTweet.replace('#luaus_live', ''),
+      h('span', {className: 'flash-text'}, ' #luaus_live')
     ]) :
     null,
     gameIDs.length > 0 ?
