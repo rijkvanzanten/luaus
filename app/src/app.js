@@ -19,39 +19,39 @@ if (document.querySelector('.index')) {
   replaceView('index');
 
   socket.on('NEW_GAME', messageData => {
-    data[messageData.gameID] = messageData.game;
+    data.games[messageData.gameID] = messageData.game;
     update('index', data);
   });
 
   socket.on('REMOVE_GAME', messageData => {
-    delete data[messageData.gameID];
+    delete data.games[messageData.gameID];
     update('index');
   });
 
   socket.on('NEW_PLAYER', messageData => {
-    data[messageData.gameID].players[messageData.playerID] = messageData.player;
+    data.games[messageData.gameID].players[messageData.playerID] = messageData.player;
     return update('index', data);
   });
 
   socket.on('LEAVE_PLAYER', messageData => {
-    delete data[messageData.gameID].players[messageData.playerID];
+    delete data.games[messageData.gameID].players[messageData.playerID];
     return update('index');
   });
 
   socket.on('UPDATE_GAME_NAME', messageData => {
-    data[messageData.gameID].name = messageData.name;
+    data.games[messageData.gameID].name = messageData.name;
     return update('index');
   });
 
   socket.on('START_GAME', messageData => {
-    console.log(data[messageData.gameID].playing)
-    data[messageData.gameID].playing === true;
-    console.log(data[messageData.gameID].playing)
-    return update('index', data);
+    data.games[messageData.gameID].playing = true;
+    return update('index');
   });
 
-  socket.on('TWEET', tweet => document.querySelector('#tweet').innerText = tweet);
-
+  socket.on('TWEET', tweet => {
+    data.lastTweet = tweet;
+    return update('index');
+  });
 } else if (document.querySelector('.controller')) {
   replaceView('controller');
   document.querySelector('form').addEventListener('submit', onButtonPress);
