@@ -34,7 +34,7 @@ body {
 }
 
 form {
-  margin: 0;
+  margin-bottom: 2rem;
 }
 
 input {
@@ -48,7 +48,6 @@ input {
   align-items: center;
   position: relative;
   height: 100%;
-  padding-bottom: 2rem;
   font-family: 'Pixel', sans-serif;
 }
 
