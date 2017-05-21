@@ -46,6 +46,7 @@
     "express": "^4.15.2",
     "is-reachable": "^2.3.2",
     "node-fetch": "^1.6.3",
+    "node-tweet-stream": "^2.0.1",
     "shortid": "^2.2.8",
     "socket.io": "^2.0.1",
     "throttle-debounce": "^1.0.1",

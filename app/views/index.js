@@ -6,6 +6,7 @@ module.exports = function (games) {
   return h('div', {className: 'index'}, [
     h('audio', {src: '/8bit-love-machine.mp3', autoplay: true, loop: true}),
     logo(),
+    h('p', {id: 'tweet'}, ''),
     gameIDs.length > 0 ?
       gameList(games) :
       h('p', {id: 'no-games'}, 'No Luaus found'),

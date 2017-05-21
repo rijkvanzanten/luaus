@@ -50,6 +50,8 @@ if (document.querySelector('.index')) {
     return update('index', data);
   });
 
+  socket.on('TWEET', tweet => document.querySelector('#tweet').innerText = tweet);
+
 } else if (document.querySelector('.controller')) {
   replaceView('controller');
   document.querySelector('form').addEventListener('submit', onButtonPress);

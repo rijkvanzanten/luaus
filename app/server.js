@@ -11,6 +11,7 @@ const toString = require('vdom-to-html');
 const fetch = require('node-fetch');
 const dotenv = require('dotenv');
 const Twitter = require('twitter');
+const TweetStream = require('node-tweet-stream');
 const render = require('./render');
 const wrapper = require('./views/wrapper');
 const tweets = require('./tweets.js');
@@ -34,11 +35,29 @@ if (
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
   });
 
-  sendTweet = function (message) {
+  sendTweet = function(message) {
     client.post('statuses/update', {status: message},  function(error, tweet, response) {
       if(error) console.log(error);
     });
   };
+
+  const stream = TweetStream({
+    consumer_key: process.env.TWITTER_CONSUMER_KEY,
+    consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+    token: process.env.TWITTER_ACCESS_TOKEN_KEY,
+    token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+  });
+
+  stream.on('tweet', function (tweet) {
+    debug(`[WS] Send TWEET ${tweet.text}`);
+    io.emit('TWEET', tweet.text);
+  });
+
+  stream.on('error', function (err) {
+    console.log(err);
+  });
+
+  stream.track('luaus_live');
 }
 
 let nameApiReachable;
