@@ -21,7 +21,7 @@ function gameList(games) {
   return h('div', {id: 'games-list'}, [
     h('h2', 'Games'),
     h('ul', Object.keys(games).map(gameID =>
-      h('li', {className: Object.keys(games[gameID].playing) === true ? 'playing' : ''},
+      h('li', {className: games[gameID].playing ? 'playing' : ''},
         h('a', {href: '/' + gameID}, [
           games[gameID].name,
           h('span', `${Object.keys(games[gameID].players).length} ${Object.keys(games[gameID].players).length === 1 ? 'player' : 'players'}`)
