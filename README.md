@@ -27,6 +27,7 @@ The possibilities are endless! This scoreboard is designed with exactly that in 
 
 Keep track of your scores with Luaus!
 
+---
 
 ![Installation](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_installation.png)
 Want to experiment with the Luaus code yourself? Clone this repository first. You can do this by typing the following command in your terminal:  
@@ -149,6 +150,7 @@ There is a ton of other stuff implemented in Luaus and it's logic. To name them 
 ---
 
 ![NodeMCU Modules Used](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_nodemcu-modules-used.png)
+
 | Module | Description |
 |---|---|
 | [`adc`](http://nodemcu.readthedocs.io/en/master/en/modules/adc/) | The ADC module provides access to the in-built ADC. The Analog to Digital Converter of the NodeMCU |
@@ -213,6 +215,8 @@ If you think of something new to add, let me know by submitting an [issue](https
 
 ![Feedback](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_feedback.png)
 If you happen to notice a bug something else that couldn't be left undone, notify me by creating an [issue](https://github.com/rijkvanzanten/luaus/issues/new) or show me your changes by creating a [pull request](https://github.com/rijkvanzanten/luaus/pulls). Thanks in advance!
+
+---
 
 ![License](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_license.png)
 MIT License
