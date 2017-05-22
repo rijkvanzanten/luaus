@@ -1,6 +1,6 @@
 local config = {}
 
-config.address = '3a23e1af.ngrok.io'
+config.address = 'luaus.rijks.website'
 config.port = 80
 config.ssid = 'HvA Open Wi-Fi'
 config.password = ''
