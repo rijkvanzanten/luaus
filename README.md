@@ -181,7 +181,7 @@ Luaus is thought out, designed and built by a strong team of two student develop
 - Implementation of tooling and npm scripts
 - Implementation of vDom
 - Implementation of Twitter API
-- Refactorment
+- Refactoring
 - Bugfixing
 - Hosting
 
@@ -193,7 +193,7 @@ Luaus is thought out, designed and built by a strong team of two student develop
 - Game logic
 - NodeMCU wiring
 - NodeMCU Lua logic
-- Refactorment
+- Refactoring
 - Bugfixing
 - README
 
