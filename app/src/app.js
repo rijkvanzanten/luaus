@@ -19,6 +19,8 @@ function updateOnlineStatus(event) {
   if (navigator.onLine) {
     document.body.classList.remove('offline');
     notification.classList.remove('show');
+    // Refresh client when internet returns to continue session
+    location.reload();
   } else {
     document.body.classList.add('offline');
     notification.classList.add('show');
@@ -67,8 +69,7 @@ if (document.querySelector('.index')) {
   });
 
   socket.on('TWEET', tweet => {
-    const noHashTweet = tweet.replace('#luaus_live', '');
-    data.lastTweet = noHashTweet;
+    data.lastTweet = tweet;
     return update('index');
   });
 } else if (document.querySelector('.controller')) {
