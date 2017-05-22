@@ -28,7 +28,7 @@ The possibilities are endless! This scoreboard is designed with exactly that in 
 Keep track of your scores with Luaus!
 
 
-## Installation
+![Installation](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_installation.png)
 Want to experiment with the Luaus code yourself? Clone this repository first. You can do this by typing the following command in your terminal:  
 ```shell
 $ git clone https://github.com/rijkvanzanten/luaus.git
@@ -65,7 +65,7 @@ TWITTER_ACCESS_TOKEN_SECRET=<access_token_secret>
 
 ---
 
-## Features
+![Features](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_features.png)
 This scoreboard has a lot of built-in features. The next list is documented according to the flow of play, from the zero-state to the end of a game.
 
 ### Real-time traffic
@@ -82,7 +82,7 @@ Here is the exact list of real-time events:
 - Game deletion
 - Tweets
 
-### Gamelobby 
+### Game lobby 
 People who want to play a game with Luaus are first presented with the lobby. In here they'll find a list of created games, some of which are already at play. If they decide to join an already existing game, they can do so by just clicking on the name. The other option is to create a game themselves. This is done in an instant if the `Create Luau` button is clicked.  
 A new game has been created, and is given a random name (from the [Namey! API](http://namey.muffinlabs.com/)).
 
@@ -143,12 +143,12 @@ There is a ton of other stuff implemented in Luaus and it's logic. To name them 
 
 ---
 
-## Flow diagram
+![Flow Diagram](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_flow-diagram.png)
 ![Flow diagram](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/flow.png)
 
 ---
 
-## NodeMCU modules used
+![NodeMCU Modules Used](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_nodemcu-modules-used.png)
 | Module | Description |
 |---|---|
 | [`adc`](http://nodemcu.readthedocs.io/en/master/en/modules/adc/) | The ADC module provides access to the in-built ADC. The Analog to Digital Converter of the NodeMCU |
@@ -166,7 +166,7 @@ There is a ton of other stuff implemented in Luaus and it's logic. To name them 
 
 ---
 
-## Work distribution
+![Work Distribution](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_work-distribution.png)
 Luaus is thought out, designed and built by a strong team of two student developers: [Rijk van Zanten](https://github.com/rijkvanzanten) and [Berend Pronk](https://github.com/berendpronk). But who did what, exactly?
 
 ### Rijk van Zanten
@@ -199,7 +199,7 @@ If you decide to dive deeper in the exact distribution commited code, take a loo
 
 ---
 
-## Wishlist
+![Wishlist](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_wishlist.png)
 The project is pretty much done at this point, however, a project like this one is never entirely done. There are always things left to add. Here follow some fun ideas to improve on the list of features.
 
 - An account-system; to keep track of individual scores.
@@ -211,10 +211,10 @@ If you think of something new to add, let me know by submitting an [issue](https
 
 ---
 
-## Feedback
+![Feedback](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_feedback.png)
 If you happen to notice a bug something else that couldn't be left undone, notify me by creating an [issue](https://github.com/rijkvanzanten/luaus/issues/new) or show me your changes by creating a [pull request](https://github.com/rijkvanzanten/luaus/pulls). Thanks in advance!
 
-## License
+![License](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_license.png)
 MIT License
 
 Copyright &copy; 2017 [Rijk van Zanten](https://github.com/rijkvanzanten) and [Berend Pronk](https://github.com/berendpronk).
