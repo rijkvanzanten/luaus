@@ -47,9 +47,11 @@ function init()
     local data = cjson.decode(msg)
 
     if data.action == 'CHANGE_COLOR' then
-      clearStrip()
-      color = data.color
-      setStrip(data.color)
+      if tonumber(data.id) == node.chipid() then
+        clearStrip()
+        color = data.color
+        setStrip(data.color)
+      end;
 
       -- Reset servo when a new game has begun
       servo.setServo(3, 1)
