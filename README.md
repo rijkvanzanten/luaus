@@ -23,7 +23,7 @@ a Hawaiian party or feast, especially one accompanied by entertainment.
 Luaus is an online scoreboard for all your favorite (board) games.  
 Do you want to play a match of fooßball? Want to test who's best at airhockey? Or do you want to have a race with your Facebook friends, to establish who can do push-ups the fastest?
 
-The possibilities are endless! This scoreboard is designed with exactly that in mind. It doesn't matter where you are, you can either be in the same room with your friends/competitors or globally play against each other.
+This scoreboard is designed with exactly that in mind. It doesn't matter where you are, you can either be in the same room with your friends/competitors or globally play against each other. The possibilities are endless!
 
 Keep track of your scores with Luaus!
 
@@ -62,7 +62,7 @@ TWITTER_CONSUMER_SECRET=<consumer_secret>
 TWITTER_ACCESS_TOKEN_KEY=<access_token_key>
 TWITTER_ACCESS_TOKEN_SECRET=<access_token_secret>
 ```
-*Nothing will be posted to Twitter when there are no credentials supplied. If you would like to have access to the _official_ Luaus Live Twitter bot, [email Rijk](mailto:rijkvanzanten@me.com) or slide into Rijk's [DMs](http://twitter.com/rijkvanzanten).
+*Nothing will be posted to Twitter when there are no credentials supplied. If you would like to have access to the _official_ Luaus Live Twitter bot, [email Rijk](mailto:rijkvanzanten@me.com) or [slide into his DMs](http://twitter.com/rijkvanzanten).
 
 ---
 
@@ -70,7 +70,7 @@ TWITTER_ACCESS_TOKEN_SECRET=<access_token_secret>
 This scoreboard has a lot of built-in features. The next list is documented according to the flow of play, from the zero-state to the end of a game.
 
 ### Real-time traffic
-Luaus is completely real-time; meaning that everything that happens, from a player joining a game to that same player winning the game, is immediately visible for everyone who needs this information. This makes sure that there are no delays during actions.
+Luaus is completely real-time; meaning that everything that happens — from a player joining a game to that same player winning the game — is immediately visible for everyone who needs this information. This makes sure that there are no delays during actions.
 
 Here is the exact list of real-time events:
 - Game creation
@@ -88,32 +88,32 @@ People who want to play a game with Luaus are first presented with the lobby. In
 A new game has been created, and is given a random name (from the [Namey! API](http://namey.muffinlabs.com/)).
 
 ### Physical controllers
-Every game can be played on multiple devices, with the power of the internet of things! The device chosen for Luaus is the NodeMCU. It's logic is written in Lua. A large red button on top 
+Every game can be played on multiple devices, with the power of the internet of things! The device chosen for Luaus is the NodeMCU. It's logic is written in Lua. A large red button on top allows the user to play along with ease.
 When a player with this device joins a game, he/she is assigned with this icon, which the player keeps during the entire session.
 
 ![NodeMCU icon](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/nodemcu_small.png)
 
-The [config.lua](https://github.com/rijkvanzanten/luaus/blob/master/nodemcu/config.lua) file is where you can configure the NodeMCU with your specific data.
+The [config.lua](https://github.com/rijkvanzanten/luaus/blob/master/nodemcu/config.lua) file is where you can configure the NodeMCU with your specific connection information.
 ```lua
 local config = {}
 
-config.address = {{ string }}
-config.port = {{ number }}
-config.ssid = {{ string }}
-config.password = {{ string }}
+config.address = String
+config.port = Number
+config.ssid = String
+config.password = String
 
 return config
 ```
 
 ### Web application controllers
-Players who do not have a Luaus physical button in their possession, and who do want to play, have the ability to play along using the web application of Luaus. Whenever someone enters a gameroom on a mobile device, he or she is presented with a banner on top, asking to play along. If this banner is clicked, the player is asked to enter his/her name. The given name is assigned to the player, along with the following icon.
+Players who do not have a Luaus physical button in their possession have the ability to play along using the web application of Luaus. Whenever someone enters a gameroom on a mobile device, he or she is presented with a banner on top, asking the user to play along. If this banner is clicked, the player is asked to enter his/her name. The given name is assigned to the player, along with the following icon.
 
 ![Phone icon](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/phone_small.png)
 
 This combination is set for the enitre game session, unless the player decides to edit his/her name.
 
 ### Color assignment
-When a player joined, or is assigner to, a gameroom, he or she receives one of twelve colors. This is equal to the maximum amount of players able to join a single gameroom. The assigned color will be bound to that player for the rest of the game, even if the player loses connection before the game has started.  
+When a player joins, or is assigned to, a gameroom, he or she receives one of twelve colors. This is equal to the maximum amount of players able to join a single gameroom. The assigned color will be bound to that player for the rest of the game, even if the player loses connection before the game has started.  
 The colors are: Ice, Inferno, Topaz, Electric, Amethyst, Forest, Hotline, Mint, Steel, Peach, Sapphire and Lagoon.
 
 ### Changing names
@@ -173,7 +173,7 @@ Luaus is thought out, designed and built by a strong team of two student develop
 
 ### Rijk van Zanten
 - Initialization of Websockets
-- Initialization of NodeMCU's
+- Initialization of NodeMCUs
 - Server-side JavaScript
 - Client-side socket event handling
 - Routing
@@ -197,24 +197,24 @@ Luaus is thought out, designed and built by a strong team of two student develop
 - Bugfixing
 - README
 
-If you decide to dive deeper in the exact distribution commited code, take a look in the [commits](https://github.com/rijkvanzanten/luaus/commits/master) section of this repository.
+If you decide to dive deeper in the exact distribution of the commited code, take a look in the [commits](https://github.com/rijkvanzanten/luaus/commits/master) section of this repository.
 
 ---
 
 ![Wishlist](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_wishlist.png)
-The project is pretty much done at this point, however, a project like this one is never entirely done. There are always things left to add. Here follow some fun ideas to improve on the list of features.
+The core concept (mvp) is pretty much done at this point, however, a project like this is never entirely done. There are always things left to add. Here follow some fun ideas to improve on the list of features.
 
 - An account-system; to keep track of individual scores.
 - Tournament mode; with implemented tree-structure to let up to 32 teams compete with each other, to eventually reduce that number to only two in a grand finale.
 - Game categories with global leaderboards; to keep track of the person with the highest numeber of wins per game.
 - An in-game (voice) chat; so parties that aren't accompanied within the same room have a way of communicating with each other, without the need of an external service.
 
-If you think of something new to add, let me know by submitting an [issue](https://github.com/rijkvanzanten/luaus/issues/new).
+If you think of something new to add, let us know by submitting an [issue](https://github.com/rijkvanzanten/luaus/issues/new).
 
 ---
 
 ![Feedback](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_feedback.png)
-If you happen to notice a bug something else that couldn't be left undone, notify me by creating an [issue](https://github.com/rijkvanzanten/luaus/issues/new) or show me your changes by creating a [pull request](https://github.com/rijkvanzanten/luaus/pulls). Thanks in advance!
+If you happen to notice a bug something else that couldn't be left undone, notify us by creating an [issue](https://github.com/rijkvanzanten/luaus/issues/new) or show us your changes by creating a [pull request](https://github.com/rijkvanzanten/luaus/pulls). Thanks in advance!
 
 ---
 
