@@ -143,8 +143,8 @@ There is a ton of other stuff implemented in Luaus and it's logic. To name them 
 
 ---
 
-## Flow
-_still left to add_
+## Flow diagram
+![Flow diagram](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/flow.png)
 
 ---
 
