@@ -145,7 +145,7 @@ There is a ton of other stuff implemented in Luaus and it's logic. To name them 
 ---
 
 ![Flow Diagram](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/title_flow-diagram.png)
-![Flow diagram](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/flow.png)
+![Flow diagram](https://raw.githubusercontent.com/rijkvanzanten/luaus/master/media/flow-diagram.png)
 
 ---
 
