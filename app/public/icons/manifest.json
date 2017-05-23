@@ -1,0 +1,13 @@
+{
+    "name": "Luaus",
+    "icons": [
+        {
+            "src": "/icons/android-chrome-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#efbcbb",
+    "background_color": "#efbcbb",
+    "display": "standalone"
+}
